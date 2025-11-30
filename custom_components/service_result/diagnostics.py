@@ -8,9 +8,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.redact import async_redact_data
+
+from .const import CONF_SERVICE_DATA_YAML
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -18,13 +19,13 @@ if TYPE_CHECKING:
     from .data import ServiceResultEntitiesConfigEntry
 
 # Fields to redact from diagnostics - CRITICAL for security!
+# The service data YAML may contain sensitive information
 TO_REDACT = {
-    CONF_PASSWORD,
-    CONF_USERNAME,
-    "username",
+    CONF_SERVICE_DATA_YAML,
     "password",
     "api_key",
     "token",
+    "secret",
 }
 
 
@@ -34,7 +35,6 @@ async def async_get_config_entry_diagnostics(
 ) -> dict[str, Any]:
     """Return diagnostics for a config entry."""
     coordinator = entry.runtime_data.coordinator
-    client = entry.runtime_data.client
     integration = entry.runtime_data.integration
 
     # Get device and entity information
@@ -52,7 +52,6 @@ async def async_get_config_entry_diagnostics(
                 "name": device.name,
                 "manufacturer": device.manufacturer,
                 "model": device.model,
-                "sw_version": device.sw_version,
                 "entity_count": len(entities),
                 "entities": [
                     {
@@ -60,7 +59,7 @@ async def async_get_config_entry_diagnostics(
                         "platform": entity.platform,
                         "original_name": entity.original_name,
                         "disabled": entity.disabled,
-                        "disabled_by": entity.disabled_by.value if entity.disabled_by else None,
+                        "disabled_by": (entity.disabled_by.value if entity.disabled_by else None),
                     }
                     for entity in entities
                 ],
@@ -71,13 +70,8 @@ async def async_get_config_entry_diagnostics(
     coordinator_info = {
         "last_update_success": coordinator.last_update_success,
         "update_interval": str(coordinator.update_interval),
-        "data_keys": list(coordinator.data.keys()) if isinstance(coordinator.data, dict) else None,
-    }
-
-    # API client information (no sensitive data)
-    api_info = {
-        "base_endpoint": "https://jsonplaceholder.typicode.com",
-        "has_credentials": bool(client._username),  # noqa: SLF001
+        "last_error": coordinator.last_error,
+        "last_success_time": coordinator.last_success_time,
     }
 
     # Integration information
@@ -85,8 +79,6 @@ async def async_get_config_entry_diagnostics(
         "name": integration.name,
         "version": integration.version,
         "domain": integration.domain,
-        "documentation": integration.documentation,
-        "issue_tracker": integration.issue_tracker,
     }
 
     # Config entry details (with redacted sensitive data)
@@ -105,26 +97,24 @@ async def async_get_config_entry_diagnostics(
 
     # Error information
     error_info = {
-        "last_exception": str(coordinator.last_exception) if coordinator.last_exception else None,
+        "last_exception": (str(coordinator.last_exception) if coordinator.last_exception else None),
         "last_exception_type": (type(coordinator.last_exception).__name__ if coordinator.last_exception else None),
     }
 
-    # Current data sample (sanitized)
+    # Data sample info (not the actual data to avoid exposing sensitive info)
     data_sample = {}
     if coordinator.data:
         if isinstance(coordinator.data, dict):
-            # Include sample data but sanitize sensitive info
             data_sample = {
-                "title": coordinator.data.get("title"),
-                "body_length": len(coordinator.data.get("body", "")) if coordinator.data.get("body") else 0,
-                "has_user_id": "userId" in coordinator.data,
+                "has_response": "response" in coordinator.data,
+                "success": coordinator.data.get("success"),
+                "last_update": coordinator.data.get("last_update"),
             }
 
     return {
         "entry": entry_info,
         "integration": integration_info,
         "coordinator": coordinator_info,
-        "api": api_info,
         "devices": device_info,
         "data_sample": data_sample,
         "error": error_info,

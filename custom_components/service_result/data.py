@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
-    from .api import ServiceResultEntitiesApiClient
     from .coordinator import ServiceResultEntitiesDataUpdateCoordinator
 
 
@@ -20,6 +19,5 @@ type ServiceResultEntitiesConfigEntry = ConfigEntry[ServiceResultEntitiesData]
 class ServiceResultEntitiesData:
     """Data for service_result."""
 
-    client: ServiceResultEntitiesApiClient
     coordinator: ServiceResultEntitiesDataUpdateCoordinator
     integration: Integration

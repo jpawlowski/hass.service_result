@@ -1,13 +1,10 @@
 """
 Custom integration to integrate service_result with Home Assistant.
 
-This integration demonstrates best practices for:
-- Config flow setup (user, reconfigure, reauth)
-- DataUpdateCoordinator pattern for efficient data fetching
-- Multiple platform types (sensor, binary_sensor, switch, select, number)
-- Service registration and handling
-- Device and entity management
-- Proper error handling and recovery
+This integration exposes sensor entities whose attributes are populated from
+the response data of Home Assistant services/actions. Each config entry defines
+which service to call and the sensor's `data` attribute contains the full
+service response.
 
 For more details about this integration, please refer to:
 https://github.com/jpawlowski/hass.service_result
@@ -21,16 +18,13 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.const import Platform
 import homeassistant.helpers.config_validation as cv
 from homeassistant.loader import async_get_loaded_integration
 
-from .api import ServiceResultEntitiesApiClient
-from .const import DOMAIN, LOGGER
+from .const import CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS, DOMAIN, LOGGER
 from .coordinator import ServiceResultEntitiesDataUpdateCoordinator
 from .data import ServiceResultEntitiesData
-from .services import async_setup_services
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -38,13 +32,7 @@ if TYPE_CHECKING:
     from .data import ServiceResultEntitiesConfigEntry
 
 PLATFORMS: list[Platform] = [
-    Platform.BINARY_SENSOR,
-    Platform.BUTTON,
-    Platform.FAN,
-    Platform.NUMBER,
-    Platform.SELECT,
     Platform.SENSOR,
-    Platform.SWITCH,
 ]
 
 # This integration is configured via config entries only
@@ -55,13 +43,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """
     Set up the integration.
 
-    This is called once at Home Assistant startup to register services.
-    Services must be registered here (not in async_setup_entry) to ensure:
-    - Service validation works correctly
-    - Services are available even without config entries
-    - Helpful error messages are provided
-
-    This is a Silver Quality Scale requirement.
+    This is called once at Home Assistant startup.
 
     Args:
         hass: The Home Assistant instance.
@@ -69,11 +51,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
     Returns:
         True if setup was successful.
-
-    For more information:
-    https://developers.home-assistant.io/docs/dev_101_services
     """
-    await async_setup_services(hass)
     return True
 
 
@@ -85,22 +63,17 @@ async def async_setup_entry(
     Set up this integration using UI.
 
     This is called when a config entry is loaded. It:
-    1. Creates the API client with credentials from the config entry
-    2. Initializes the DataUpdateCoordinator for data fetching
-    3. Performs the first data refresh
-    4. Sets up all platforms (sensors, switches, etc.)
-    5. Registers services
-    6. Sets up reload listener for config changes
+    1. Initializes the DataUpdateCoordinator for calling services
+    2. Performs the first data refresh
+    3. Sets up the sensor platform
+    4. Sets up reload listener for config changes
 
     Data flow in this integration:
-    1. User enters username/password in config flow (config_flow.py)
-    2. Credentials stored in entry.data[CONF_USERNAME/CONF_PASSWORD]
-    3. API Client initialized with credentials (api/client.py)
-    4. Coordinator fetches data using authenticated client (coordinator/base.py)
-    5. Entities access data via self.coordinator.data (sensor/, binary_sensor/, etc.)
-
-    This pattern ensures credentials from setup flow are used throughout
-    the integration's lifecycle for API communication.
+    1. User configures service domain, service name, and YAML data in config flow
+    2. Configuration stored in entry.data
+    3. Coordinator calls the configured service with return_response=True
+    4. Service response stored in coordinator.data
+    5. Sensor entity exposes the response via its 'data' attribute
 
     Args:
         hass: The Home Assistant instance.
@@ -108,30 +81,22 @@ async def async_setup_entry(
 
     Returns:
         True if setup was successful.
-
-    For more information:
-    https://developers.home-assistant.io/docs/config_entries_index/#setting-up-an-entry
     """
-    # Initialize client first
-    client = ServiceResultEntitiesApiClient(
-        username=entry.data[CONF_USERNAME],  # From config flow setup
-        password=entry.data[CONF_PASSWORD],  # From config flow setup
-        session=async_get_clientsession(hass),
-    )
+    # Get scan interval from options, fall back to default
+    scan_interval_seconds = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS)
 
     # Initialize coordinator with config_entry
     coordinator = ServiceResultEntitiesDataUpdateCoordinator(
         hass=hass,
         logger=LOGGER,
-        name=DOMAIN,
+        name=f"{DOMAIN}_{entry.entry_id}",
         config_entry=entry,
-        update_interval=timedelta(hours=1),
-        always_update=False,  # Only update entities when data actually changes
+        update_interval=timedelta(seconds=scan_interval_seconds),
+        always_update=True,  # Always update entities to reflect latest service response
     )
 
     # Store runtime data
     entry.runtime_data = ServiceResultEntitiesData(
-        client=client,
         integration=async_get_loaded_integration(hass, entry.domain),
         coordinator=coordinator,
     )
@@ -153,10 +118,7 @@ async def async_unload_entry(
     Unload a config entry.
 
     This is called when the integration is being removed or reloaded.
-    It ensures proper cleanup of:
-    - All platform entities
-    - Registered services
-    - Update listeners
+    It ensures proper cleanup of all platform entities.
 
     Args:
         hass: The Home Assistant instance.
@@ -164,9 +126,6 @@ async def async_unload_entry(
 
     Returns:
         True if unload was successful.
-
-    For more information:
-    https://developers.home-assistant.io/docs/config_entries_index/#unloading-entries
     """
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
@@ -184,8 +143,5 @@ async def async_reload_entry(
     Args:
         hass: The Home Assistant instance.
         entry: The config entry being reloaded.
-
-    For more information:
-    https://developers.home-assistant.io/docs/config_entries_index/#reloading-entries
     """
     await hass.config_entries.async_reload(entry.entry_id)

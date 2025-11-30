@@ -6,12 +6,9 @@ for maintainability and scalability.
 
 Package structure:
 ------------------
-- config_flow.py: Main configuration flow (user setup, reauth, reconfigure)
+- config_flow.py: Main configuration flow (user setup, reconfigure)
 - options_flow.py: Options flow for post-setup configuration changes
-- subentry_flow.py: Template for implementing subentry flows (multi-device support)
-- schemas/: Voluptuous schemas for all forms (user, options, reauth, etc.)
-- validators/: Validation logic for user inputs and credentials
-- handler.py: Backwards compatibility wrapper (imports from above modules)
+- schemas/: Voluptuous schemas for all forms
 
 Usage:
 ------
