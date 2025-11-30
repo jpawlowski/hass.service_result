@@ -132,9 +132,9 @@ Break down into logical phases (typically 3-5):
 
 **Integration-specific considerations:**
 
-- Domain: `ha_integration_domain`
-- Title: Integration Blueprint
-- Class prefix: `IntegrationBlueprint`
+- Domain: `service_result`
+- Title: Service Result Entities
+- Class prefix: `ServiceResultEntities`
 - Follow patterns in `AGENTS.md` and path-specific `.instructions.md`
 
 ## Example Phase Structure
@@ -144,8 +144,8 @@ Break down into logical phases (typically 3-5):
 
 **Files to modify:**
 
-- `custom_components/ha_integration_domain/sensor/__init__.py`
-- `custom_components/ha_integration_domain/sensor/new_sensor.py` (create)
+- `custom_components/service_result/sensor/__init__.py`
+- `custom_components/service_result/sensor/new_sensor.py` (create)
 
 **Changes:**
 

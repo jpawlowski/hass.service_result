@@ -108,7 +108,7 @@ turn_on:
 
 ## Related Files
 
-Service implementations are in `custom_components/ha_integration_domain/services/`.
+Service implementations are in `custom_components/service_result/services/`.
 
 ## Validation
 
