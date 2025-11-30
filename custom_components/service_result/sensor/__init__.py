@@ -73,25 +73,29 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
         # Set translation key for proper naming
         self._attr_translation_key = "service_result"
 
-    def _get_service_info(self) -> str:
-        """Get the service name from config."""
+    def _get_service_action(self) -> str:
+        """Get the service action name from config (e.g., 'domain.service')."""
         service_action = self._entry.data.get(CONF_SERVICE_ACTION)
         if service_action and isinstance(service_action, dict):
             return service_action.get("action", "unknown")
         return "unknown"
 
-    def _extract_data_at_path(self, data: Any, path: str) -> Any:
+    def _extract_data_at_path(self, data: Any, path: str | None) -> Any:
         """
         Extract data from a nested structure using a dot-notation path.
+
+        Supports both positive and negative indices for list access.
+        Negative indices access elements from the end (e.g., -1 for last element).
 
         Args:
             data: The data structure to traverse.
             path: A dot-separated path (e.g., "results.0.values" or "data.items").
+                  Can use negative indices like "items.-1" for last element.
 
         Returns:
-            The data at the specified path, or the original data if path is empty/invalid.
+            The data at the specified path, or the original data if path is empty/None.
         """
-        if not path or not path.strip():
+        if path is None or not path.strip():
             return data
 
         current = data
@@ -99,11 +103,12 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
             if current is None:
                 return None
 
-            # Handle list indices
+            # Handle list indices (supports negative indices)
             if isinstance(current, list):
                 try:
                     index = int(key)
-                    if 0 <= index < len(current):
+                    # Validate index bounds (handles both positive and negative)
+                    if -len(current) <= index < len(current):
                         current = current[index]
                     else:
                         return None
@@ -142,8 +147,8 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
         """
         attributes: dict[str, Any] = {}
 
-        # Get service info
-        attributes["service"] = self._get_service_info()
+        # Get service action name
+        attributes["service"] = self._get_service_action()
 
         # Get configuration for data extraction
         response_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH, "")
@@ -172,6 +177,9 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
         else:
             attributes[attribute_name] = None
             attributes["success"] = False
+            # Include path info for consistency even when data is None
+            if response_path:
+                attributes["response_path"] = response_path
 
         # Include error from coordinator if any
         if self.coordinator.last_error:
