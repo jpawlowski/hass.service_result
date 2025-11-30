@@ -90,8 +90,11 @@ class ServiceResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
 
         # Parse YAML service data
         try:
-            service_data = yaml.safe_load(service_data_yaml) if service_data_yaml else {}
-            if service_data is None:
+            if service_data_yaml.strip():
+                service_data = yaml.safe_load(service_data_yaml)
+                if service_data is None:
+                    service_data = {}
+            else:
                 service_data = {}
         except yaml.YAMLError as exc:
             self.last_error = f"Invalid YAML: {exc}"

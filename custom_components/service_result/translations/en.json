@@ -47,28 +47,15 @@
   "options": {
     "step": {
       "init": {
-        "title": "Configure Service Result Options",
-        "description": "Adjust the service configuration and polling settings.",
+        "title": "Configure Options",
+        "description": "Adjust the polling interval. To change the service configuration, use Reconfigure instead.",
         "data": {
-          "name": "Name",
-          "service_domain": "Service Domain",
-          "service_name": "Service Name",
-          "service_data_yaml": "Service Data (YAML)",
           "scan_interval": "Polling Interval"
         },
         "data_description": {
-          "name": "A friendly name for this sensor",
-          "service_domain": "The domain of the service to call",
-          "service_name": "The name of the service to call",
-          "service_data_yaml": "Optional YAML data to pass to the service",
           "scan_interval": "How often to call the service (in seconds). Minimum 10 seconds."
         }
       }
-    },
-    "error": {
-      "service_not_found": "Service not found. Verify the domain and service name.",
-      "yaml_parse_error": "Invalid YAML syntax. Please check the service data.",
-      "yaml_not_dict": "Service data must be a YAML dictionary (key: value pairs)."
     }
   },
   "exceptions": {

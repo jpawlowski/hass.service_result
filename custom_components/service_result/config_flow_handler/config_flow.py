@@ -13,8 +13,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import yaml
-
 from custom_components.service_result.config_flow_handler.schemas import get_reconfigure_schema, get_user_schema
 from custom_components.service_result.const import (
     CONF_NAME,
@@ -25,6 +23,7 @@ from custom_components.service_result.const import (
     DEFAULT_SCAN_INTERVAL_SECONDS,
     DOMAIN,
 )
+from custom_components.service_result.helpers import validate_service_yaml
 from homeassistant import config_entries
 
 if TYPE_CHECKING:
@@ -81,24 +80,21 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             The config flow result, either showing a form or creating an entry.
         """
         errors: dict[str, str] = {}
+        service_data_yaml = ""
 
         if user_input is not None:
             # Validate the service exists
             service_domain = user_input.get(CONF_SERVICE_DOMAIN, "")
             service_name = user_input.get(CONF_SERVICE_NAME, "")
+            service_data_yaml = user_input.get(CONF_SERVICE_DATA_YAML, "")
 
             if not self.hass.services.has_service(service_domain, service_name):
                 errors["base"] = "service_not_found"
             else:
                 # Validate YAML
-                service_data_yaml = user_input.get(CONF_SERVICE_DATA_YAML, "")
-                if service_data_yaml:
-                    try:
-                        parsed = yaml.safe_load(service_data_yaml)
-                        if parsed is not None and not isinstance(parsed, dict):
-                            errors["base"] = "yaml_not_dict"
-                    except yaml.YAMLError:
-                        errors["base"] = "yaml_parse_error"
+                is_valid, error_key = validate_service_yaml(service_data_yaml)
+                if not is_valid and error_key is not None:
+                    errors["base"] = error_key
 
             if not errors:
                 # Create the entry
@@ -146,19 +142,15 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             # Validate the service exists
             service_domain = user_input.get(CONF_SERVICE_DOMAIN, "")
             service_name = user_input.get(CONF_SERVICE_NAME, "")
+            service_data_yaml = user_input.get(CONF_SERVICE_DATA_YAML, "")
 
             if not self.hass.services.has_service(service_domain, service_name):
                 errors["base"] = "service_not_found"
             else:
                 # Validate YAML
-                service_data_yaml = user_input.get(CONF_SERVICE_DATA_YAML, "")
-                if service_data_yaml:
-                    try:
-                        parsed = yaml.safe_load(service_data_yaml)
-                        if parsed is not None and not isinstance(parsed, dict):
-                            errors["base"] = "yaml_not_dict"
-                    except yaml.YAMLError:
-                        errors["base"] = "yaml_parse_error"
+                is_valid, error_key = validate_service_yaml(service_data_yaml)
+                if not is_valid and error_key is not None:
+                    errors["base"] = error_key
 
             if not errors:
                 name = user_input.get(CONF_NAME, f"{service_domain}.{service_name}")
