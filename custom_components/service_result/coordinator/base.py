@@ -30,8 +30,10 @@ from custom_components.service_result.const import (
     ERROR_TYPE_UNKNOWN,
     INITIAL_RETRY_DELAY_SECONDS,
     LOGGER,
+    MAX_CONSECUTIVE_ERRORS,
     MAX_RETRY_COUNT,
     MAX_RETRY_DELAY_SECONDS,
+    SERVICE_CALL_TIMEOUT_SECONDS,
 )
 from homeassistant.exceptions import HomeAssistantError, ServiceNotFound
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -253,7 +255,7 @@ class ServiceResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
                     blocking=True,
                     return_response=True,
                 ),
-                timeout=30.0,  # 30 second timeout for service calls
+                timeout=SERVICE_CALL_TIMEOUT_SECONDS,
             )
         except TimeoutError as exc:
             self.last_error = "Service call timed out"
@@ -377,8 +379,11 @@ class ServiceResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
         if self.consecutive_errors <= 0:
             return 0
 
+        # Cap consecutive_errors to prevent overflow in exponential calculation
+        capped_errors = min(self.consecutive_errors, MAX_CONSECUTIVE_ERRORS)
+
         # Exponential backoff: 30, 60, 120, 240... up to MAX_RETRY_DELAY_SECONDS
         return min(
-            INITIAL_RETRY_DELAY_SECONDS * (2 ** (self.consecutive_errors - 1)),
+            INITIAL_RETRY_DELAY_SECONDS * (2 ** (capped_errors - 1)),
             MAX_RETRY_DELAY_SECONDS,
         )

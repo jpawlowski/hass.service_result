@@ -218,8 +218,12 @@ async def async_setup_entry(
                         old_state_value,
                         new_state_value,
                     )
-                    # Schedule a coordinator refresh
-                    hass.async_create_task(coordinator.async_request_refresh())
+                    # Schedule a coordinator refresh using config entry task management
+                    entry.async_create_background_task(
+                        hass,
+                        coordinator.async_request_refresh(),
+                        f"service_result_{entry.entry_id}_refresh",
+                    )
 
             # Track state changes for the trigger entity
             entry.async_on_unload(

@@ -52,5 +52,7 @@ ERROR_TYPE_UNKNOWN = "unknown"  # Default, treat as temporary
 
 # Retry configuration
 MAX_RETRY_COUNT = 3
+MAX_CONSECUTIVE_ERRORS = 10  # Cap for exponential backoff calculation
 INITIAL_RETRY_DELAY_SECONDS = 30
+SERVICE_CALL_TIMEOUT_SECONDS = 30  # Timeout for service calls
 MAX_RETRY_DELAY_SECONDS = 300  # 5 minutes max backoff
