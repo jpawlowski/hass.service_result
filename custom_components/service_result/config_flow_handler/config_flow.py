@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from custom_components.service_result.config_flow_handler.schemas import get_reconfigure_schema, get_user_schema
+from custom_components.service_result.config_flow_handler.validators import validate_service_yaml
 from custom_components.service_result.const import (
     CONF_NAME,
     CONF_SCAN_INTERVAL,
@@ -23,7 +24,6 @@ from custom_components.service_result.const import (
     DEFAULT_SCAN_INTERVAL_SECONDS,
     DOMAIN,
 )
-from custom_components.service_result.helpers import validate_service_yaml
 from homeassistant import config_entries
 
 if TYPE_CHECKING:

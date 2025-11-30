@@ -1,4 +1,4 @@
-"""YAML validation utilities for service_result."""
+"""YAML validation for config flow service data."""
 
 from __future__ import annotations
 
