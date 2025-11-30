@@ -34,9 +34,9 @@ def validate_service_yaml(yaml_string: str) -> tuple[bool, str | None]:
 
 def parse_service_yaml(
     yaml_string: str,
-) -> tuple[dict[str, Any] | None, str | None, str | None, str | None]:
+) -> tuple[dict[str, Any] | None, str | None, str | None]:
     """
-    Parse YAML and extract service action, entry_id, and clean service data.
+    Parse YAML and extract service action and clean service data.
 
     This function handles the case where users paste full YAML from Developer Tools,
     e.g.:
@@ -46,36 +46,36 @@ def parse_service_yaml(
           include_level: true
 
     It extracts:
-    - The action (domain.service) if present
-    - The entry_id if present in data
-    - The cleaned data (without entry_id if it was extracted)
+    - The action (domain.service) if present - this is removed as we have a dropdown
+    - The data section content - all fields are preserved (entry_id, etc.)
+
+    The cleaned data contains everything from the "data:" section as-is.
+    Only the "action:" and "data:" wrapper keys are removed.
 
     Args:
         yaml_string: The YAML string to parse.
 
     Returns:
-        A tuple of (cleaned_data_dict, action, entry_id, error_key).
+        A tuple of (cleaned_data_dict, action, error_key).
         - cleaned_data_dict: Dict of service data (or None on error)
         - action: The action string like "domain.service" (or None)
-        - entry_id: The entry_id if found (or None)
         - error_key: Translation key for any error (or None if valid)
     """
     if not yaml_string or not yaml_string.strip():
-        return {}, None, None, None
+        return {}, None, None
 
     try:
         parsed = yaml.safe_load(yaml_string)
     except yaml.YAMLError:
-        return None, None, None, "yaml_parse_error"
+        return None, None, "yaml_parse_error"
 
     if parsed is None:
-        return {}, None, None, None
+        return {}, None, None
 
     if not isinstance(parsed, dict):
-        return None, None, None, "yaml_not_dict"
+        return None, None, "yaml_not_dict"
 
     action: str | None = None
-    entry_id: str | None = None
     cleaned_data: dict[str, Any] = {}
 
     # Check if this looks like full Developer Tools YAML format
@@ -84,24 +84,20 @@ def parse_service_yaml(
     if "action" in parsed or "service" in parsed:
         action = parsed.get("action") or parsed.get("service")
 
-        # Extract data section
+        # Extract data section - preserve ALL fields including entry_id
         data_section = parsed.get("data", {})
         if isinstance(data_section, dict):
             cleaned_data = dict(data_section)
-            # Extract entry_id if present
-            if "entry_id" in cleaned_data:
-                entry_id = cleaned_data.pop("entry_id")
+        elif data_section is None:
+            cleaned_data = {}
         else:
             # data section is not a dict - use more specific error
-            return None, action, None, "data_not_dict"
+            return None, action, "data_not_dict"
     else:
-        # This is just plain service data
+        # This is just plain service data - use as-is
         cleaned_data = dict(parsed)
-        # Extract entry_id if present at top level
-        if "entry_id" in cleaned_data:
-            entry_id = cleaned_data.pop("entry_id")
 
-    return cleaned_data, action, entry_id, None
+    return cleaned_data, action, None
 
 
 def dict_to_yaml(data: dict[str, Any]) -> str:

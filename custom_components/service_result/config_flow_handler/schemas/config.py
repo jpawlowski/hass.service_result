@@ -17,9 +17,19 @@ from custom_components.service_result.const import (
     CONF_ATTRIBUTE_NAME,
     CONF_NAME,
     CONF_RESPONSE_DATA_PATH,
+    CONF_SCAN_INTERVAL,
     CONF_SERVICE_ACTION,
     CONF_SERVICE_DATA_YAML,
+    CONF_TRIGGER_ENTITY,
+    CONF_TRIGGER_FROM_STATE,
+    CONF_TRIGGER_TO_STATE,
+    CONF_UPDATE_MODE,
     DEFAULT_ATTRIBUTE_NAME,
+    DEFAULT_SCAN_INTERVAL_SECONDS,
+    DEFAULT_UPDATE_MODE,
+    UPDATE_MODE_MANUAL,
+    UPDATE_MODE_POLLING,
+    UPDATE_MODE_STATE_TRIGGER,
 )
 from homeassistant.helpers import selector
 
@@ -73,6 +83,52 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
             vol.Optional(
                 CONF_ATTRIBUTE_NAME,
                 default=defaults.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    type=selector.TextSelectorType.TEXT,
+                ),
+            ),
+            vol.Optional(
+                CONF_UPDATE_MODE,
+                default=defaults.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE),
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(value=UPDATE_MODE_POLLING, label="Polling (cyclic)"),
+                        selector.SelectOptionDict(value=UPDATE_MODE_MANUAL, label="Manual (update_entity)"),
+                        selector.SelectOptionDict(value=UPDATE_MODE_STATE_TRIGGER, label="Entity State Trigger"),
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    translation_key="update_mode",
+                ),
+            ),
+            vol.Optional(
+                CONF_SCAN_INTERVAL,
+                default=defaults.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=10,
+                    max=86400,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="seconds",
+                ),
+            ),
+            vol.Optional(
+                CONF_TRIGGER_ENTITY,
+                default=defaults.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED),
+            ): selector.EntitySelector(),
+            vol.Optional(
+                CONF_TRIGGER_FROM_STATE,
+                default=defaults.get(CONF_TRIGGER_FROM_STATE, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    type=selector.TextSelectorType.TEXT,
+                ),
+            ),
+            vol.Optional(
+                CONF_TRIGGER_TO_STATE,
+                default=defaults.get(CONF_TRIGGER_TO_STATE, ""),
             ): selector.TextSelector(
                 selector.TextSelectorConfig(
                     type=selector.TextSelectorType.TEXT,
@@ -135,6 +191,52 @@ def get_reconfigure_schema(current_data: Mapping[str, Any]) -> vol.Schema:
             vol.Optional(
                 CONF_ATTRIBUTE_NAME,
                 default=current_data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    type=selector.TextSelectorType.TEXT,
+                ),
+            ),
+            vol.Optional(
+                CONF_UPDATE_MODE,
+                default=current_data.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE),
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=[
+                        selector.SelectOptionDict(value=UPDATE_MODE_POLLING, label="Polling (cyclic)"),
+                        selector.SelectOptionDict(value=UPDATE_MODE_MANUAL, label="Manual (update_entity)"),
+                        selector.SelectOptionDict(value=UPDATE_MODE_STATE_TRIGGER, label="Entity State Trigger"),
+                    ],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    translation_key="update_mode",
+                ),
+            ),
+            vol.Optional(
+                CONF_SCAN_INTERVAL,
+                default=current_data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
+            ): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=10,
+                    max=86400,
+                    step=1,
+                    mode=selector.NumberSelectorMode.BOX,
+                    unit_of_measurement="seconds",
+                ),
+            ),
+            vol.Optional(
+                CONF_TRIGGER_ENTITY,
+                default=current_data.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED),
+            ): selector.EntitySelector(),
+            vol.Optional(
+                CONF_TRIGGER_FROM_STATE,
+                default=current_data.get(CONF_TRIGGER_FROM_STATE, ""),
+            ): selector.TextSelector(
+                selector.TextSelectorConfig(
+                    type=selector.TextSelectorType.TEXT,
+                ),
+            ),
+            vol.Optional(
+                CONF_TRIGGER_TO_STATE,
+                default=current_data.get(CONF_TRIGGER_TO_STATE, ""),
             ): selector.TextSelector(
                 selector.TextSelectorConfig(
                     type=selector.TextSelectorType.TEXT,

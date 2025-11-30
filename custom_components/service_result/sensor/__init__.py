@@ -14,9 +14,13 @@ from custom_components.service_result.const import (
     CONF_RESPONSE_DATA_PATH,
     CONF_SERVICE_ACTION,
     DEFAULT_ATTRIBUTE_NAME,
+    ERROR_TYPE_PERMANENT,
+    ERROR_TYPE_TEMPORARY,
     PARALLEL_UPDATES as PARALLEL_UPDATES,
     STATE_ERROR,
     STATE_OK,
+    STATE_RETRYING,
+    STATE_UNAVAILABLE,
 )
 from custom_components.service_result.entity import ServiceResultEntitiesEntity
 from homeassistant.components.sensor import SensorEntity
@@ -48,7 +52,11 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
     """Sensor entity that exposes service response data.
 
     The main purpose of this sensor is to expose the full service response
-    in a configurable attribute. The state is a simple status indicator (ok/error).
+    in a configurable attribute. The state reflects the current status:
+    - ok: Last service call was successful
+    - error: Last service call failed with a permanent error
+    - retrying: Last service call failed, will retry automatically
+    - unavailable: Service is unavailable (e.g., integration not loaded)
     """
 
     _attr_has_entity_name = True
@@ -127,10 +135,21 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
     def native_value(self) -> str:
         """Return the state of the sensor.
 
-        Returns 'ok' if the last service call was successful, 'error' otherwise.
+        Returns different states based on the service call result:
+        - 'ok': Successful service call
+        - 'retrying': Temporary error, will retry
+        - 'error': Permanent error, needs user attention
+        - 'unavailable': Service unavailable
         """
         if not self.coordinator.last_update_success:
-            return STATE_ERROR
+            # Determine if we're retrying or permanently failed
+            if self.coordinator.is_retrying:
+                return STATE_RETRYING
+            if self.coordinator.last_error_type == ERROR_TYPE_PERMANENT:
+                return STATE_ERROR
+            if self.coordinator.last_error_type == ERROR_TYPE_TEMPORARY:
+                return STATE_RETRYING
+            return STATE_UNAVAILABLE
 
         data = self.coordinator.data
         if data and data.get("success"):
@@ -181,9 +200,16 @@ class ServiceResultSensor(SensorEntity, ServiceResultEntitiesEntity):
             if response_path:
                 attributes["response_path"] = response_path
 
-        # Include error from coordinator if any
+        # Include error information from coordinator
         if self.coordinator.last_error:
             attributes["error_message"] = self.coordinator.last_error
+            attributes["error_type"] = self.coordinator.last_error_type
+
+        # Include retry information if relevant
+        if self.coordinator.consecutive_errors > 0:
+            attributes["consecutive_errors"] = self.coordinator.consecutive_errors
+            if self.coordinator.is_retrying:
+                attributes["retry_delay_seconds"] = self.coordinator.get_retry_delay()
 
         return attributes
 

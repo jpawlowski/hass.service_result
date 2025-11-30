@@ -6,6 +6,11 @@ the response data of Home Assistant services/actions. Each config entry defines
 which service to call and the sensor's `data` attribute contains the full
 service response.
 
+Supports three update modes:
+- Polling: Cyclic updates at a configurable interval
+- Manual: Update via homeassistant.update_entity service call
+- State Trigger: Update when a watched entity's state changes
+
 For more details about this integration, please refer to:
 https://github.com/jpawlowski/hass.service_result
 
@@ -19,7 +24,9 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 
 from homeassistant.const import Platform
+from homeassistant.core import Event, EventStateChangedData, callback
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.loader import async_get_loaded_integration
 
 from .const import (
@@ -27,9 +34,16 @@ from .const import (
     CONF_SERVICE_ACTION,
     CONF_SERVICE_DOMAIN,
     CONF_SERVICE_NAME,
+    CONF_TRIGGER_ENTITY,
+    CONF_TRIGGER_FROM_STATE,
+    CONF_TRIGGER_TO_STATE,
+    CONF_UPDATE_MODE,
     DEFAULT_SCAN_INTERVAL_SECONDS,
+    DEFAULT_UPDATE_MODE,
     DOMAIN,
     LOGGER,
+    UPDATE_MODE_POLLING,
+    UPDATE_MODE_STATE_TRIGGER,
 )
 from .coordinator import ServiceResultEntitiesDataUpdateCoordinator
 from .data import ServiceResultEntitiesData
@@ -118,6 +132,7 @@ async def async_setup_entry(
     2. Performs the first data refresh
     3. Sets up the sensor platform
     4. Sets up reload listener for config changes
+    5. Sets up state change listener if using state trigger mode
 
     Data flow in this integration:
     1. User configures service via action selector and YAML data in config flow
@@ -133,8 +148,17 @@ async def async_setup_entry(
     Returns:
         True if setup was successful.
     """
-    # Get scan interval from options, fall back to default
-    scan_interval_seconds = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS)
+    # Get update mode and scan interval from config
+    update_mode = entry.data.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE)
+    scan_interval_seconds = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS)
+
+    # Determine update_interval based on mode
+    # For manual and state_trigger modes, we don't want automatic polling
+    if update_mode == UPDATE_MODE_POLLING:
+        update_interval = timedelta(seconds=scan_interval_seconds)
+    else:
+        # No automatic updates for manual or state trigger modes
+        update_interval = None
 
     # Initialize coordinator with config_entry
     coordinator = ServiceResultEntitiesDataUpdateCoordinator(
@@ -142,7 +166,7 @@ async def async_setup_entry(
         logger=LOGGER,
         name=f"{DOMAIN}_{entry.entry_id}",
         config_entry=entry,
-        update_interval=timedelta(seconds=scan_interval_seconds),
+        update_interval=update_interval,
         always_update=True,  # Always update entities to reflect latest service response
     )
 
@@ -156,6 +180,63 @@ async def async_setup_entry(
     await coordinator.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    # Set up state change listener for state_trigger mode
+    if update_mode == UPDATE_MODE_STATE_TRIGGER:
+        trigger_entity = entry.data.get(CONF_TRIGGER_ENTITY, "")
+        if trigger_entity:
+            trigger_from_state = entry.data.get(CONF_TRIGGER_FROM_STATE, "")
+            trigger_to_state = entry.data.get(CONF_TRIGGER_TO_STATE, "")
+
+            @callback
+            def async_state_change_listener(event: Event[EventStateChangedData]) -> None:
+                """Handle state changes of the trigger entity."""
+                old_state = event.data.get("old_state")
+                new_state = event.data.get("new_state")
+
+                if new_state is None:
+                    return
+
+                old_state_value = old_state.state if old_state else None
+                new_state_value = new_state.state
+
+                # Check if the state change matches our criteria
+                should_trigger = True
+
+                # Check from_state filter
+                if trigger_from_state and old_state_value != trigger_from_state:
+                    should_trigger = False
+
+                # Check to_state filter
+                if trigger_to_state and new_state_value != trigger_to_state:
+                    should_trigger = False
+
+                if should_trigger:
+                    LOGGER.debug(
+                        "State trigger activated for %s: %s -> %s",
+                        trigger_entity,
+                        old_state_value,
+                        new_state_value,
+                    )
+                    # Schedule a coordinator refresh
+                    hass.async_create_task(coordinator.async_request_refresh())
+
+            # Track state changes for the trigger entity
+            entry.async_on_unload(
+                async_track_state_change_event(
+                    hass,
+                    [trigger_entity],
+                    async_state_change_listener,
+                )
+            )
+
+            LOGGER.info(
+                "Set up state trigger for entity %s (from: %s, to: %s)",
+                trigger_entity,
+                trigger_from_state or "any",
+                trigger_to_state or "any",
+            )
+
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     return True
