@@ -96,13 +96,28 @@ Example template to access the data:
 |--------|---------|-------------|
 | Polling Interval | 300s | How often to call the service (10-86400 seconds) |
 
-## 📝 Example: Tibber Price Info
+## 📝 Example Configurations
+
+### Example 1: Tibber Price Info
 
 **Service Domain**: `tibber`  
 **Service Name**: `get_price_info`  
 **Polling Interval**: 3600 (1 hour)
 
 The sensor's `data` attribute will contain the price information returned by Tibber.
+
+### Example 2: Simple Test (No External Services Required)
+
+To test the integration without requiring external integrations:
+
+**Service Domain**: `homeassistant`  
+**Service Name**: `reload_core_config`  
+**Service Data (YAML)**: *(leave empty)*  
+**Polling Interval**: 300
+
+This will call a built-in Home Assistant service. The sensor state will show `ok` if successful.
+
+> **Note**: This service doesn't return data, so the `data` attribute will be `None`. Use a service that returns data (like `tibber.get_price_info`) to see actual response data.
 
 ## 🔧 Troubleshooting
 
