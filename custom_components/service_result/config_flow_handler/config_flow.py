@@ -2,15 +2,13 @@
 Config flow for service_result.
 
 This module implements the main configuration flow including:
-- Initial user setup (service configuration)
-- Reconfiguration of existing entries
+- Initial user setup (service configuration) - multi-step
+- Reconfiguration of existing entries - multi-step
 
-The config flow features:
-- Service action dropdown selector for easy service selection
-- Automatic parsing of full YAML from Developer Tools
-- Service validation before accepting configuration
-- Cleaning of redundant data from pasted YAML
-- Update mode selection (polling, manual, state trigger)
+The config flow is organized in steps:
+1. Basic configuration (Name, Service Action, Service Data YAML)
+2. Update mode selection (Polling, Manual, State Trigger)
+3. Mode-specific settings with collapsible advanced options
 
 For more information:
 https://developers.home-assistant.io/docs/config_entries_config_flow_handler
@@ -22,7 +20,15 @@ from typing import TYPE_CHECKING, Any
 
 import yaml
 
-from custom_components.service_result.config_flow_handler.schemas import get_reconfigure_schema, get_user_schema
+from custom_components.service_result.config_flow_handler.schemas import (
+    SECTION_ADVANCED_OPTIONS,
+    get_manual_settings_schema,
+    get_polling_settings_schema,
+    get_reconfigure_schema,
+    get_state_trigger_settings_schema,
+    get_update_mode_schema,
+    get_user_schema,
+)
 from custom_components.service_result.config_flow_handler.validators import dict_to_yaml, parse_service_yaml
 from custom_components.service_result.const import (
     CONF_ATTRIBUTE_NAME,
@@ -40,6 +46,9 @@ from custom_components.service_result.const import (
     DEFAULT_UPDATE_MODE,
     DOMAIN,
     LOGGER,
+    UPDATE_MODE_MANUAL,
+    UPDATE_MODE_POLLING,
+    UPDATE_MODE_STATE_TRIGGER,
 )
 from homeassistant import config_entries
 from homeassistant.exceptions import HomeAssistantError, ServiceNotFound
@@ -56,20 +65,30 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
     initial setup and reconfiguration.
 
     Supported flows:
-    - user: Initial setup via UI (configure service to call)
-    - reconfigure: Update existing configuration
+    - user: Initial setup via UI (Step 1: Basic configuration)
+    - update_mode: Step 2: Select update mode
+    - polling_settings / state_trigger_settings / manual_settings: Step 3: Mode-specific settings
+    - reconfigure: Multi-step reconfiguration of existing entries
 
     Features:
+    - Multi-step wizard for clearer configuration
     - Service action dropdown selector for easy selection
     - Auto-detection of action from pasted YAML
     - Service validation before accepting
-    - Cleaning of redundant YAML data
+    - Collapsible advanced options section
+    - Mode-specific settings only shown when relevant
 
     For more details:
     https://developers.home-assistant.io/docs/config_entries_config_flow_handler
     """
 
     VERSION = 2  # Bumped for new config format
+
+    def __init__(self) -> None:
+        """Initialize the config flow."""
+        super().__init__()
+        # Store data between steps
+        self._step_data: dict[str, Any] = {}
 
     @staticmethod
     def async_get_options_flow(
@@ -184,13 +203,13 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
         user_input: dict[str, Any] | None = None,
     ) -> config_entries.ConfigFlowResult:
         """
-        Handle a flow initialized by the user.
+        Handle Step 1: Basic configuration.
 
-        This is the entry point when a user adds the integration from the UI.
         User can:
-        1. Select a service from the dropdown
-        2. Optionally paste full YAML from Developer Tools
-        3. The system auto-extracts action and cleans the data
+        1. Enter a name for the sensor
+        2. Select a service from the dropdown
+        3. Optionally paste full YAML from Developer Tools
+        4. The system auto-extracts action and cleans the data
 
         Action Precedence Logic:
         - If user pastes YAML containing "action:" key, that takes priority
@@ -202,7 +221,7 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             user_input: The user input from the config flow form, or None for initial display.
 
         Returns:
-            The config flow result, either showing a form or creating an entry.
+            The config flow result, either showing a form or proceeding to next step.
         """
         errors: dict[str, str] = {}
         updated_input: dict[str, Any] = {}
@@ -264,31 +283,15 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
                             description_placeholders["error_message"] = error_msg
 
             if not errors:
-                # Create the entry
+                # Store data for next step
                 name = user_input.get(CONF_NAME, f"{domain}.{service_name}")
-                response_path = user_input.get(CONF_RESPONSE_DATA_PATH, "")
-                attribute_name = user_input.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
-                update_mode = user_input.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE)
-                scan_interval = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS)
-                trigger_entity = user_input.get(CONF_TRIGGER_ENTITY, "")
-                trigger_from_state = user_input.get(CONF_TRIGGER_FROM_STATE, "")
-                trigger_to_state = user_input.get(CONF_TRIGGER_TO_STATE, "")
-
-                return self.async_create_entry(
-                    title=name,
-                    data={
-                        CONF_NAME: name,
-                        CONF_SERVICE_ACTION: action_selector_data,
-                        CONF_SERVICE_DATA_YAML: updated_input.get(CONF_SERVICE_DATA_YAML, clean_yaml),
-                        CONF_RESPONSE_DATA_PATH: response_path,
-                        CONF_ATTRIBUTE_NAME: attribute_name,
-                        CONF_UPDATE_MODE: update_mode,
-                        CONF_SCAN_INTERVAL: scan_interval,
-                        CONF_TRIGGER_ENTITY: trigger_entity,
-                        CONF_TRIGGER_FROM_STATE: trigger_from_state,
-                        CONF_TRIGGER_TO_STATE: trigger_to_state,
-                    },
-                )
+                self._step_data = {
+                    CONF_NAME: name,
+                    CONF_SERVICE_ACTION: updated_input.get(CONF_SERVICE_ACTION, action_selector_data),
+                    CONF_SERVICE_DATA_YAML: updated_input.get(CONF_SERVICE_DATA_YAML, clean_yaml),
+                }
+                # Proceed to update mode selection
+                return await self.async_step_update_mode()
 
             # If we have updates to apply (e.g., action extracted from YAML),
             # merge them into user_input for the form defaults
@@ -302,12 +305,162 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             description_placeholders=description_placeholders if description_placeholders else None,
         )
 
+    async def async_step_update_mode(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle Step 2: Update mode selection.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or proceeding to mode-specific settings.
+        """
+        if user_input is not None:
+            update_mode = user_input.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE)
+            self._step_data[CONF_UPDATE_MODE] = update_mode
+
+            # Route to the appropriate settings step based on mode
+            if update_mode == UPDATE_MODE_POLLING:
+                return await self.async_step_polling_settings()
+            if update_mode == UPDATE_MODE_STATE_TRIGGER:
+                return await self.async_step_state_trigger_settings()
+            # Manual mode
+            return await self.async_step_manual_settings()
+
+        return self.async_show_form(
+            step_id="update_mode",
+            data_schema=get_update_mode_schema(self._step_data),
+        )
+
+    async def async_step_polling_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle Step 3: Polling mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or creating an entry.
+        """
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_create_entry(
+                title=self._step_data[CONF_NAME],
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_POLLING,
+                    CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: "",
+                    CONF_TRIGGER_FROM_STATE: "",
+                    CONF_TRIGGER_TO_STATE: "",
+                },
+            )
+
+        return self.async_show_form(
+            step_id="polling_settings",
+            data_schema=get_polling_settings_schema(self._step_data),
+        )
+
+    async def async_step_state_trigger_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle Step 3: State trigger mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or creating an entry.
+        """
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_create_entry(
+                title=self._step_data[CONF_NAME],
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_STATE_TRIGGER,
+                    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL_SECONDS,
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: user_input.get(CONF_TRIGGER_ENTITY, ""),
+                    CONF_TRIGGER_FROM_STATE: user_input.get(CONF_TRIGGER_FROM_STATE, ""),
+                    CONF_TRIGGER_TO_STATE: user_input.get(CONF_TRIGGER_TO_STATE, ""),
+                },
+            )
+
+        return self.async_show_form(
+            step_id="state_trigger_settings",
+            data_schema=get_state_trigger_settings_schema(self._step_data),
+        )
+
+    async def async_step_manual_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle Step 3: Manual mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or creating an entry.
+        """
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_create_entry(
+                title=self._step_data[CONF_NAME],
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_MANUAL,
+                    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL_SECONDS,
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: "",
+                    CONF_TRIGGER_FROM_STATE: "",
+                    CONF_TRIGGER_TO_STATE: "",
+                },
+            )
+
+        return self.async_show_form(
+            step_id="manual_settings",
+            data_schema=get_manual_settings_schema(self._step_data),
+        )
+
     async def async_step_reconfigure(
         self,
         user_input: dict[str, Any] | None = None,
     ) -> config_entries.ConfigFlowResult:
         """
-        Handle reconfiguration of the integration.
+        Handle reconfiguration Step 1: Basic configuration.
 
         Allows users to update the service configuration without removing
         and re-adding the integration.
@@ -316,7 +469,7 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             user_input: The user input from the reconfigure form, or None for initial display.
 
         Returns:
-            The config flow result, either showing a form or updating the entry.
+            The config flow result, either showing a form or proceeding to next step.
         """
         entry = self._get_reconfigure_entry()
         errors: dict[str, str] = {}
@@ -376,30 +529,23 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
                             description_placeholders["error_message"] = error_msg
 
             if not errors:
+                # Store data for next step, preserving existing values
                 name = user_input.get(CONF_NAME, f"{domain}.{service_name}")
-                response_path = user_input.get(CONF_RESPONSE_DATA_PATH, "")
-                attribute_name = user_input.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
-                update_mode = user_input.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE)
-                scan_interval = user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS)
-                trigger_entity = user_input.get(CONF_TRIGGER_ENTITY, "")
-                trigger_from_state = user_input.get(CONF_TRIGGER_FROM_STATE, "")
-                trigger_to_state = user_input.get(CONF_TRIGGER_TO_STATE, "")
-
-                return self.async_update_reload_and_abort(
-                    entry,
-                    data={
-                        CONF_NAME: name,
-                        CONF_SERVICE_ACTION: action_selector_data,
-                        CONF_SERVICE_DATA_YAML: updated_input.get(CONF_SERVICE_DATA_YAML, clean_yaml),
-                        CONF_RESPONSE_DATA_PATH: response_path,
-                        CONF_ATTRIBUTE_NAME: attribute_name,
-                        CONF_UPDATE_MODE: update_mode,
-                        CONF_SCAN_INTERVAL: scan_interval,
-                        CONF_TRIGGER_ENTITY: trigger_entity,
-                        CONF_TRIGGER_FROM_STATE: trigger_from_state,
-                        CONF_TRIGGER_TO_STATE: trigger_to_state,
-                    },
-                )
+                self._step_data = {
+                    CONF_NAME: name,
+                    CONF_SERVICE_ACTION: updated_input.get(CONF_SERVICE_ACTION, action_selector_data),
+                    CONF_SERVICE_DATA_YAML: updated_input.get(CONF_SERVICE_DATA_YAML, clean_yaml),
+                    # Preserve existing settings as defaults
+                    CONF_UPDATE_MODE: entry.data.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE),
+                    CONF_SCAN_INTERVAL: entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
+                    CONF_RESPONSE_DATA_PATH: entry.data.get(CONF_RESPONSE_DATA_PATH, ""),
+                    CONF_ATTRIBUTE_NAME: entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+                    CONF_TRIGGER_ENTITY: entry.data.get(CONF_TRIGGER_ENTITY, ""),
+                    CONF_TRIGGER_FROM_STATE: entry.data.get(CONF_TRIGGER_FROM_STATE, ""),
+                    CONF_TRIGGER_TO_STATE: entry.data.get(CONF_TRIGGER_TO_STATE, ""),
+                }
+                # Proceed to update mode selection
+                return await self.async_step_reconfigure_update_mode()
 
             if updated_input:
                 user_input = {**user_input, **updated_input}
@@ -409,6 +555,162 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
             data_schema=get_reconfigure_schema(entry.data),
             errors=errors,
             description_placeholders=description_placeholders if description_placeholders else None,
+        )
+
+    async def async_step_reconfigure_update_mode(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle reconfigure Step 2: Update mode selection.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or proceeding to mode-specific settings.
+        """
+        if user_input is not None:
+            update_mode = user_input.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE)
+            self._step_data[CONF_UPDATE_MODE] = update_mode
+
+            # Route to the appropriate settings step based on mode
+            if update_mode == UPDATE_MODE_POLLING:
+                return await self.async_step_reconfigure_polling_settings()
+            if update_mode == UPDATE_MODE_STATE_TRIGGER:
+                return await self.async_step_reconfigure_state_trigger_settings()
+            # Manual mode
+            return await self.async_step_reconfigure_manual_settings()
+
+        return self.async_show_form(
+            step_id="reconfigure_update_mode",
+            data_schema=get_update_mode_schema(self._step_data),
+        )
+
+    async def async_step_reconfigure_polling_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle reconfigure Step 3: Polling mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or updating the entry.
+        """
+        entry = self._get_reconfigure_entry()
+
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_update_reload_and_abort(
+                entry,
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_POLLING,
+                    CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: "",
+                    CONF_TRIGGER_FROM_STATE: "",
+                    CONF_TRIGGER_TO_STATE: "",
+                },
+            )
+
+        return self.async_show_form(
+            step_id="reconfigure_polling_settings",
+            data_schema=get_polling_settings_schema(self._step_data),
+        )
+
+    async def async_step_reconfigure_state_trigger_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle reconfigure Step 3: State trigger mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or updating the entry.
+        """
+        entry = self._get_reconfigure_entry()
+
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_update_reload_and_abort(
+                entry,
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_STATE_TRIGGER,
+                    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL_SECONDS,
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: user_input.get(CONF_TRIGGER_ENTITY, ""),
+                    CONF_TRIGGER_FROM_STATE: user_input.get(CONF_TRIGGER_FROM_STATE, ""),
+                    CONF_TRIGGER_TO_STATE: user_input.get(CONF_TRIGGER_TO_STATE, ""),
+                },
+            )
+
+        return self.async_show_form(
+            step_id="reconfigure_state_trigger_settings",
+            data_schema=get_state_trigger_settings_schema(self._step_data),
+        )
+
+    async def async_step_reconfigure_manual_settings(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """
+        Handle reconfigure Step 3: Manual mode settings.
+
+        Args:
+            user_input: The user input from the form, or None for initial display.
+
+        Returns:
+            The config flow result, either showing a form or updating the entry.
+        """
+        entry = self._get_reconfigure_entry()
+
+        if user_input is not None:
+            # Extract advanced options from section
+            advanced = user_input.get(SECTION_ADVANCED_OPTIONS, {})
+            response_path = advanced.get(CONF_RESPONSE_DATA_PATH, "")
+            attribute_name = advanced.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+
+            return self.async_update_reload_and_abort(
+                entry,
+                data={
+                    CONF_NAME: self._step_data[CONF_NAME],
+                    CONF_SERVICE_ACTION: self._step_data[CONF_SERVICE_ACTION],
+                    CONF_SERVICE_DATA_YAML: self._step_data[CONF_SERVICE_DATA_YAML],
+                    CONF_UPDATE_MODE: UPDATE_MODE_MANUAL,
+                    CONF_SCAN_INTERVAL: DEFAULT_SCAN_INTERVAL_SECONDS,
+                    CONF_RESPONSE_DATA_PATH: response_path,
+                    CONF_ATTRIBUTE_NAME: attribute_name,
+                    CONF_TRIGGER_ENTITY: "",
+                    CONF_TRIGGER_FROM_STATE: "",
+                    CONF_TRIGGER_TO_STATE: "",
+                },
+            )
+
+        return self.async_show_form(
+            step_id="reconfigure_manual_settings",
+            data_schema=get_manual_settings_schema(self._step_data),
         )
 
 

@@ -7,26 +7,89 @@
         "data": {
           "name": "Name",
           "service_action": "Service-Aktion",
-          "service_data_yaml": "Service-Daten (YAML)",
-          "response_data_path": "Antwort-Datenpfad",
-          "attribute_name": "Attributname",
-          "update_mode": "Aktualisierungsmodus",
-          "scan_interval": "Abfrageintervall",
+          "service_data_yaml": "Service-Daten (YAML)"
+        },
+        "data_description": {
+          "name": "Ein benutzerfreundlicher Name für diesen Sensor (z.B. 'Tibber Preise')",
+          "service_action": "Wähle die aufzurufende Service-Aktion. Wenn du unten vollständiges YAML einfügst, wird dies automatisch erkannt.",
+          "service_data_yaml": "Optionale Service-Daten. Du kannst das vollständige YAML aus den Entwicklerwerkzeugen einfügen - alle Felder unter 'data:' werden übernommen."
+        }
+      },
+      "update_mode": {
+        "title": "Aktualisierungsmodus",
+        "description": "Wähle, wie der Service aufgerufen werden soll, um den Sensor zu aktualisieren.",
+        "data": {
+          "update_mode": "Aktualisierungsmodus"
+        },
+        "data_description": {
+          "update_mode": "Wie Aktualisierungen ausgelöst werden: Polling (zyklisch im Intervall), Manuell (via update_entity Service), oder Entitäts-Status-Trigger (wenn eine andere Entität ihren Status ändert)."
+        }
+      },
+      "polling_settings": {
+        "title": "Polling-Einstellungen",
+        "description": "Konfiguriere das Polling-Intervall für automatische Aktualisierungen.",
+        "data": {
+          "scan_interval": "Abfrageintervall"
+        },
+        "data_description": {
+          "scan_interval": "Wie oft der Service aufgerufen wird in Sekunden. Minimum 10 Sekunden."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
+        }
+      },
+      "state_trigger_settings": {
+        "title": "Status-Trigger-Einstellungen",
+        "description": "Konfiguriere, welche Entitäts-Statusänderungen einen Service-Aufruf auslösen sollen.",
+        "data": {
           "trigger_entity": "Trigger-Entität",
           "trigger_from_state": "Trigger von Status",
           "trigger_to_state": "Trigger zu Status"
         },
         "data_description": {
-          "name": "Ein benutzerfreundlicher Name für diesen Sensor (z.B. 'Tibber Preise')",
-          "service_action": "Wähle die aufzurufende Service-Aktion. Wenn du unten vollständiges YAML einfügst, wird dies automatisch erkannt.",
-          "service_data_yaml": "Optionale Service-Daten. Du kannst das vollständige YAML aus den Entwicklerwerkzeugen einfügen - alle Felder unter 'data:' werden übernommen.",
-          "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
-          "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'.",
-          "update_mode": "Wie Aktualisierungen ausgelöst werden: Polling (zyklisch im Intervall), Manuell (via update_entity Service), oder Entitäts-Status-Trigger (wenn eine andere Entität ihren Status ändert).",
-          "scan_interval": "Wie oft der Service aufgerufen wird in Sekunden (nur für Polling-Modus). Minimum 10 Sekunden.",
-          "trigger_entity": "Entität, deren Statusänderungen überwacht werden (nur für Entitäts-Status-Trigger-Modus).",
+          "trigger_entity": "Entität, deren Statusänderungen überwacht werden.",
           "trigger_from_state": "Nur auslösen beim Wechsel von diesem Status (optional). Leer lassen für jeden vorherigen Status.",
           "trigger_to_state": "Nur auslösen beim Wechsel zu diesem Status (optional). Leer lassen für jeden neuen Status."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
+        }
+      },
+      "manual_settings": {
+        "title": "Manuelle Aktualisierungseinstellungen",
+        "description": "Der Sensor wird nur aktualisiert, wenn du den homeassistant.update_entity Service aufrufst.",
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
         }
       },
       "reconfigure": {
@@ -35,26 +98,89 @@
         "data": {
           "name": "Name",
           "service_action": "Service-Aktion",
-          "service_data_yaml": "Service-Daten (YAML)",
-          "response_data_path": "Antwort-Datenpfad",
-          "attribute_name": "Attributname",
-          "update_mode": "Aktualisierungsmodus",
-          "scan_interval": "Abfrageintervall",
+          "service_data_yaml": "Service-Daten (YAML)"
+        },
+        "data_description": {
+          "name": "Ein benutzerfreundlicher Name für diesen Sensor",
+          "service_action": "Wähle die aufzurufende Service-Aktion",
+          "service_data_yaml": "Optionale Service-Daten. Du kannst das vollständige YAML aus den Entwicklerwerkzeugen einfügen - alle Felder unter 'data:' werden übernommen."
+        }
+      },
+      "reconfigure_update_mode": {
+        "title": "Aktualisierungsmodus",
+        "description": "Wähle, wie der Service aufgerufen werden soll, um den Sensor zu aktualisieren.",
+        "data": {
+          "update_mode": "Aktualisierungsmodus"
+        },
+        "data_description": {
+          "update_mode": "Wie Aktualisierungen ausgelöst werden: Polling (zyklisch im Intervall), Manuell (via update_entity Service), oder Entitäts-Status-Trigger (wenn eine andere Entität ihren Status ändert)."
+        }
+      },
+      "reconfigure_polling_settings": {
+        "title": "Polling-Einstellungen",
+        "description": "Konfiguriere das Polling-Intervall für automatische Aktualisierungen.",
+        "data": {
+          "scan_interval": "Abfrageintervall"
+        },
+        "data_description": {
+          "scan_interval": "Wie oft der Service aufgerufen wird in Sekunden. Minimum 10 Sekunden."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
+        }
+      },
+      "reconfigure_state_trigger_settings": {
+        "title": "Status-Trigger-Einstellungen",
+        "description": "Konfiguriere, welche Entitäts-Statusänderungen einen Service-Aufruf auslösen sollen.",
+        "data": {
           "trigger_entity": "Trigger-Entität",
           "trigger_from_state": "Trigger von Status",
           "trigger_to_state": "Trigger zu Status"
         },
         "data_description": {
-          "name": "Ein benutzerfreundlicher Name für diesen Sensor",
-          "service_action": "Wähle die aufzurufende Service-Aktion",
-          "service_data_yaml": "Optionale Service-Daten. Du kannst das vollständige YAML aus den Entwicklerwerkzeugen einfügen - alle Felder unter 'data:' werden übernommen.",
-          "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
-          "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'.",
-          "update_mode": "Wie Aktualisierungen ausgelöst werden: Polling (zyklisch im Intervall), Manuell (via update_entity Service), oder Entitäts-Status-Trigger (wenn eine andere Entität ihren Status ändert).",
-          "scan_interval": "Wie oft der Service aufgerufen wird in Sekunden (nur für Polling-Modus). Minimum 10 Sekunden.",
-          "trigger_entity": "Entität, deren Statusänderungen überwacht werden (nur für Entitäts-Status-Trigger-Modus).",
+          "trigger_entity": "Entität, deren Statusänderungen überwacht werden.",
           "trigger_from_state": "Nur auslösen beim Wechsel von diesem Status (optional). Leer lassen für jeden vorherigen Status.",
           "trigger_to_state": "Nur auslösen beim Wechsel zu diesem Status (optional). Leer lassen für jeden neuen Status."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
+        }
+      },
+      "reconfigure_manual_settings": {
+        "title": "Manuelle Aktualisierungseinstellungen",
+        "description": "Der Sensor wird nur aktualisiert, wenn du den homeassistant.update_entity Service aufrufst.",
+        "sections": {
+          "advanced_options": {
+            "name": "Erweiterte Optionen",
+            "data": {
+              "response_data_path": "Antwort-Datenpfad",
+              "attribute_name": "Attributname"
+            },
+            "data_description": {
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+            }
+          }
         }
       }
     },

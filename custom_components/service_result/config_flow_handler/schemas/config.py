@@ -2,8 +2,13 @@
 Config flow schemas.
 
 Schemas for the main configuration flow steps:
-- User setup (configure service to call)
-- Reconfiguration
+- User setup (configure service to call) - multi-step
+- Reconfiguration - multi-step
+
+The flow is organized in steps:
+1. Basic configuration (Name, Service Action, Service Data)
+2. Update mode selection
+3. Mode-specific settings + advanced options
 """
 
 from __future__ import annotations
@@ -31,12 +36,16 @@ from custom_components.service_result.const import (
     UPDATE_MODE_POLLING,
     UPDATE_MODE_STATE_TRIGGER,
 )
+from homeassistant import data_entry_flow
 from homeassistant.helpers import selector
+
+# Section key for advanced options
+SECTION_ADVANCED_OPTIONS = "advanced_options"
 
 
 def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
     """
-    Get schema for user step (initial setup).
+    Get schema for user step (initial setup - Step 1: Basic configuration).
 
     The schema uses a service action selector (dropdown) for easy service selection.
     Users can optionally paste full YAML from Developer Tools; the system will
@@ -72,22 +81,23 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
                     multiline=True,
                 ),
             ),
-            vol.Optional(
-                CONF_RESPONSE_DATA_PATH,
-                default=defaults.get(CONF_RESPONSE_DATA_PATH, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
-            vol.Optional(
-                CONF_ATTRIBUTE_NAME,
-                default=defaults.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
+        },
+    )
+
+
+def get_update_mode_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
+    """
+    Get schema for update mode selection step (Step 2).
+
+    Args:
+        defaults: Optional dictionary of default values to pre-populate the form.
+
+    Returns:
+        Voluptuous schema for update mode selection.
+    """
+    defaults = defaults or {}
+    return vol.Schema(
+        {
             vol.Optional(
                 CONF_UPDATE_MODE,
                 default=defaults.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE),
@@ -102,6 +112,25 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
                     translation_key="update_mode",
                 ),
             ),
+        },
+    )
+
+
+def get_polling_settings_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
+    """
+    Get schema for polling mode settings (Step 3 - Polling mode).
+
+    Args:
+        defaults: Optional dictionary of default values to pre-populate the form.
+
+    Returns:
+        Voluptuous schema for polling settings.
+    """
+    defaults = defaults or {}
+    advanced_defaults = defaults.get(SECTION_ADVANCED_OPTIONS, {})
+
+    return vol.Schema(
+        {
             vol.Optional(
                 CONF_SCAN_INTERVAL,
                 default=defaults.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
@@ -114,6 +143,54 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
                     unit_of_measurement="seconds",
                 ),
             ),
+            vol.Optional(SECTION_ADVANCED_OPTIONS): data_entry_flow.section(
+                vol.Schema(
+                    {
+                        vol.Optional(
+                            CONF_RESPONSE_DATA_PATH,
+                            default=advanced_defaults.get(
+                                CONF_RESPONSE_DATA_PATH,
+                                defaults.get(CONF_RESPONSE_DATA_PATH, ""),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                        vol.Optional(
+                            CONF_ATTRIBUTE_NAME,
+                            default=advanced_defaults.get(
+                                CONF_ATTRIBUTE_NAME,
+                                defaults.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                    },
+                ),
+                {"collapsed": True},
+            ),
+        },
+    )
+
+
+def get_state_trigger_settings_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
+    """
+    Get schema for state trigger mode settings (Step 3 - State Trigger mode).
+
+    Args:
+        defaults: Optional dictionary of default values to pre-populate the form.
+
+    Returns:
+        Voluptuous schema for state trigger settings.
+    """
+    defaults = defaults or {}
+    advanced_defaults = defaults.get(SECTION_ADVANCED_OPTIONS, {})
+
+    return vol.Schema(
+        {
             vol.Optional(
                 CONF_TRIGGER_ENTITY,
                 default=defaults.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED),
@@ -134,13 +211,92 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
                     type=selector.TextSelectorType.TEXT,
                 ),
             ),
+            vol.Optional(SECTION_ADVANCED_OPTIONS): data_entry_flow.section(
+                vol.Schema(
+                    {
+                        vol.Optional(
+                            CONF_RESPONSE_DATA_PATH,
+                            default=advanced_defaults.get(
+                                CONF_RESPONSE_DATA_PATH,
+                                defaults.get(CONF_RESPONSE_DATA_PATH, ""),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                        vol.Optional(
+                            CONF_ATTRIBUTE_NAME,
+                            default=advanced_defaults.get(
+                                CONF_ATTRIBUTE_NAME,
+                                defaults.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                    },
+                ),
+                {"collapsed": True},
+            ),
+        },
+    )
+
+
+def get_manual_settings_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
+    """
+    Get schema for manual mode settings (Step 3 - Manual mode).
+
+    Manual mode has no interval or trigger settings, only advanced options.
+
+    Args:
+        defaults: Optional dictionary of default values to pre-populate the form.
+
+    Returns:
+        Voluptuous schema for manual mode settings.
+    """
+    defaults = defaults or {}
+    advanced_defaults = defaults.get(SECTION_ADVANCED_OPTIONS, {})
+
+    return vol.Schema(
+        {
+            vol.Optional(SECTION_ADVANCED_OPTIONS): data_entry_flow.section(
+                vol.Schema(
+                    {
+                        vol.Optional(
+                            CONF_RESPONSE_DATA_PATH,
+                            default=advanced_defaults.get(
+                                CONF_RESPONSE_DATA_PATH,
+                                defaults.get(CONF_RESPONSE_DATA_PATH, ""),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                        vol.Optional(
+                            CONF_ATTRIBUTE_NAME,
+                            default=advanced_defaults.get(
+                                CONF_ATTRIBUTE_NAME,
+                                defaults.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
+                            ),
+                        ): selector.TextSelector(
+                            selector.TextSelectorConfig(
+                                type=selector.TextSelectorType.TEXT,
+                            ),
+                        ),
+                    },
+                ),
+                {"collapsed": True},
+            ),
         },
     )
 
 
 def get_reconfigure_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     """
-    Get schema for reconfigure step.
+    Get schema for reconfigure step (Step 1: Basic configuration).
 
     Args:
         current_data: Current configuration data to pre-fill in the form.
@@ -180,73 +336,16 @@ def get_reconfigure_schema(current_data: Mapping[str, Any]) -> vol.Schema:
                     multiline=True,
                 ),
             ),
-            vol.Optional(
-                CONF_RESPONSE_DATA_PATH,
-                default=current_data.get(CONF_RESPONSE_DATA_PATH, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
-            vol.Optional(
-                CONF_ATTRIBUTE_NAME,
-                default=current_data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
-            vol.Optional(
-                CONF_UPDATE_MODE,
-                default=current_data.get(CONF_UPDATE_MODE, DEFAULT_UPDATE_MODE),
-            ): selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=[
-                        selector.SelectOptionDict(value=UPDATE_MODE_POLLING, label="Polling (cyclic)"),
-                        selector.SelectOptionDict(value=UPDATE_MODE_MANUAL, label="Manual (update_entity)"),
-                        selector.SelectOptionDict(value=UPDATE_MODE_STATE_TRIGGER, label="Entity State Trigger"),
-                    ],
-                    mode=selector.SelectSelectorMode.DROPDOWN,
-                    translation_key="update_mode",
-                ),
-            ),
-            vol.Optional(
-                CONF_SCAN_INTERVAL,
-                default=current_data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL_SECONDS),
-            ): selector.NumberSelector(
-                selector.NumberSelectorConfig(
-                    min=10,
-                    max=86400,
-                    step=1,
-                    mode=selector.NumberSelectorMode.BOX,
-                    unit_of_measurement="seconds",
-                ),
-            ),
-            vol.Optional(
-                CONF_TRIGGER_ENTITY,
-                default=current_data.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED),
-            ): selector.EntitySelector(),
-            vol.Optional(
-                CONF_TRIGGER_FROM_STATE,
-                default=current_data.get(CONF_TRIGGER_FROM_STATE, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
-            vol.Optional(
-                CONF_TRIGGER_TO_STATE,
-                default=current_data.get(CONF_TRIGGER_TO_STATE, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
         },
     )
 
 
 __all__ = [
+    "SECTION_ADVANCED_OPTIONS",
+    "get_manual_settings_schema",
+    "get_polling_settings_schema",
     "get_reconfigure_schema",
+    "get_state_trigger_settings_schema",
+    "get_update_mode_schema",
     "get_user_schema",
 ]

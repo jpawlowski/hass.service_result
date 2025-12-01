@@ -9,10 +9,23 @@ All schemas are re-exported from this __init__.py for convenient imports.
 
 from __future__ import annotations
 
-from custom_components.service_result.config_flow_handler.schemas.config import get_reconfigure_schema, get_user_schema
+from custom_components.service_result.config_flow_handler.schemas.config import (
+    SECTION_ADVANCED_OPTIONS,
+    get_manual_settings_schema,
+    get_polling_settings_schema,
+    get_reconfigure_schema,
+    get_state_trigger_settings_schema,
+    get_update_mode_schema,
+    get_user_schema,
+)
 
 # Re-export all schemas for convenient imports
 __all__ = [
+    "SECTION_ADVANCED_OPTIONS",
+    "get_manual_settings_schema",
+    "get_polling_settings_schema",
     "get_reconfigure_schema",
+    "get_state_trigger_settings_schema",
+    "get_update_mode_schema",
     "get_user_schema",
 ]
