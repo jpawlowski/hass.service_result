@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Pārkonfigurēt Pakalpojuma Rezultātu",
-        "description": "Atjauniniet pakalpojuma konfigurāciju šim sensoram.",
+        "description": "Atjauniniet pakalpojuma konfigurāciju šim sensoram.\n\nLai pārdēvētu šo ierakstu, izmantojiet Iestatījumi → Ierīces un pakalpojumi → [ieraksts] → trīs punktu izvēlne → Pārdēvēt.",
         "data": {
-          "name": "Nosaukums",
           "service_action": "Pakalpojuma darbība",
           "service_data_yaml": "Pakalpojuma dati (YAML)",
           "response_data_path": "Atbildes datu ceļš",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Aktivizēt uz stāvokli"
         },
         "data_description": {
-          "name": "Draudzīgs nosaukums šim sensoram",
           "service_action": "Izvēlieties pakalpojumu/darbību, ko izsaukt",
           "service_data_yaml": "Neobligāti pakalpojuma dati. Jūs varat ielīmēt pilnu YAML no Izstrādātāja rīkiem - visi lauki zem 'data:' tiek saglabāti.",
           "response_data_path": "Neobligāts ceļš datu izvilkšanai no atbildes (piem., 'results.0.items'). Atstājiet tukšu pilnai atbildei.",

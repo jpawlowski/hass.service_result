@@ -530,9 +530,10 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
 
             if not errors:
                 # Store data for next step, preserving existing values
-                name = user_input.get(CONF_NAME, f"{domain}.{service_name}")
+                # Note: Name is preserved from entry.data - it cannot be changed in reconfigure.
+                # Users should use Home Assistant's built-in renaming mechanism instead.
                 self._step_data = {
-                    CONF_NAME: name,
+                    CONF_NAME: entry.data.get(CONF_NAME, entry.title),
                     CONF_SERVICE_ACTION: updated_input.get(CONF_SERVICE_ACTION, action_selector_data),
                     CONF_SERVICE_DATA_YAML: updated_input.get(CONF_SERVICE_DATA_YAML, clean_yaml),
                     # Preserve existing settings as defaults

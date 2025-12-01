@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Překonfigurovat Výsledek Služby",
-        "description": "Aktualizujte konfiguraci služby pro tento senzor.",
+        "description": "Aktualizujte konfiguraci služby pro tento senzor.\n\nChcete-li tento záznam přejmenovat, použijte Nastavení → Zařízení a služby → [záznam] → tříbodové menu → Přejmenovat.",
         "data": {
-          "name": "Název",
           "service_action": "Akce služby",
           "service_data_yaml": "Data služby (YAML)",
           "response_data_path": "Cesta k datům odpovědi",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Spustit do stavu"
         },
         "data_description": {
-          "name": "Přátelský název pro tento senzor",
           "service_action": "Vyberte službu/akci k zavolání",
           "service_data_yaml": "Volitelná data služby. Můžete vložit úplný YAML z Vývojářských nástrojů - všechna pole pod 'data:' jsou zachována.",
           "response_data_path": "Volitelná cesta pro extrakci dat z odpovědi (např. 'results.0.items'). Nechte prázdné pro úplnou odpověď.",

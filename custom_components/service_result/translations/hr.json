@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Rekonfiguriraj Rezultat Usluge",
-        "description": "Ažurirajte konfiguraciju usluge za ovaj senzor.",
+        "description": "Ažurirajte konfiguraciju usluge za ovaj senzor.\n\nZa preimenovanje ovog unosa, koristite Postavke → Uređaji i usluge → [unos] → izbornik s tri točke → Preimenuj.",
         "data": {
-          "name": "Naziv",
           "service_action": "Akcija usluge",
           "service_data_yaml": "Podaci usluge (YAML)",
           "response_data_path": "Put podataka odgovora",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Okidač u stanje"
         },
         "data_description": {
-          "name": "Prijateljski naziv za ovaj senzor",
           "service_action": "Odaberite uslugu/akciju za poziv",
           "service_data_yaml": "Opcionalni podaci usluge. Možete zalijepiti potpuni YAML iz Razvojnih alata - sva polja pod 'data:' su sačuvana.",
           "response_data_path": "Opcionalni put za izdvajanje podataka iz odgovora (npr. 'results.0.items'). Ostavite prazno za potpuni odgovor.",

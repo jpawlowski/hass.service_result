@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Omkonfigurera Serviceresultat",
-        "description": "Uppdatera servicekonfigurationen för denna sensor.",
+        "description": "Uppdatera servicekonfigurationen för denna sensor.\n\nFör att byta namn på denna post, använd Inställningar → Enheter & tjänster → [post] → trepunktsmenyn → Byt namn.",
         "data": {
-          "name": "Namn",
           "service_action": "Serviceåtgärd",
           "service_data_yaml": "Servicedata (YAML)",
           "response_data_path": "Svarsdatasökväg",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigga till tillstånd"
         },
         "data_description": {
-          "name": "Ett vänligt namn för denna sensor",
           "service_action": "Välj tjänsten/åtgärden att anropa",
           "service_data_yaml": "Valfri servicedata. Du kan klistra in fullständig YAML från Utvecklarverktyg - alla fält under 'data:' bevaras.",
           "response_data_path": "Valfri sökväg för att extrahera data från svaret (t.ex. 'results.0.items'). Lämna tomt för fullständigt svar.",

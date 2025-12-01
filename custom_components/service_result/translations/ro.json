@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Reconfigurare Rezultat Serviciu",
-        "description": "Actualizați configurația serviciului pentru acest senzor.",
+        "description": "Actualizați configurația serviciului pentru acest senzor.\n\nPentru a redenumi această intrare, folosește Setări → Dispozitive și servicii → [intrare] → meniu cu trei puncte → Redenumește.",
         "data": {
-          "name": "Nume",
           "service_action": "Acțiune serviciu",
           "service_data_yaml": "Date serviciu (YAML)",
           "response_data_path": "Cale date răspuns",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Declanșează la stare"
         },
         "data_description": {
-          "name": "Un nume prietenos pentru acest senzor",
           "service_action": "Selectați serviciul/acțiunea de apelat",
           "service_data_yaml": "Date serviciu opționale. Puteți lipi YAML complet din Instrumente Dezvoltator - toate câmpurile sub 'data:' sunt păstrate.",
           "response_data_path": "Cale opțională pentru extragerea datelor din răspuns (ex. 'results.0.items'). Lăsați gol pentru răspunsul complet.",

@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Omkonfigurer Serviceresultat",
-        "description": "Opdater servicekonfigurationen for denne sensor.",
+        "description": "Opdater servicekonfigurationen for denne sensor.\n\nFor at omdøbe denne post, brug Indstillinger → Enheder & Tjenester → [post] → trepunkts-menu → Omdøb.",
         "data": {
-          "name": "Navn",
           "service_action": "Servicehandling",
           "service_data_yaml": "Servicedata (YAML)",
           "response_data_path": "Svardatasti",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigger til tilstand"
         },
         "data_description": {
-          "name": "Et venligt navn for denne sensor",
           "service_action": "Vælg tjenesten/handlingen der skal kaldes",
           "service_data_yaml": "Valgfri servicedata. Du kan indsætte fuld YAML fra Udviklerværktøjer - alle felter under 'data:' bevares.",
           "response_data_path": "Valgfri sti til at udtrække data fra svaret (f.eks. 'results.0.items'). Lad være tom for fuldt svar.",

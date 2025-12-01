@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Rekonfiguruj Wynik Usługi",
-        "description": "Zaktualizuj konfigurację usługi dla tego czujnika.",
+        "description": "Zaktualizuj konfigurację usługi dla tego czujnika.\n\nAby zmienić nazwę tego wpisu, użyj Ustawienia → Urządzenia i usługi → [wpis] → menu trzech kropek → Zmień nazwę.",
         "data": {
-          "name": "Nazwa",
           "service_action": "Akcja usługi",
           "service_data_yaml": "Dane usługi (YAML)",
           "response_data_path": "Ścieżka danych odpowiedzi",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Wyzwalaj do stanu"
         },
         "data_description": {
-          "name": "Przyjazna nazwa dla tego czujnika",
           "service_action": "Wybierz usługę/akcję do wywołania",
           "service_data_yaml": "Opcjonalne dane usługi. Możesz wkleić pełny YAML z Narzędzi deweloperskich - wszystkie pola pod 'data:' są zachowane.",
           "response_data_path": "Opcjonalna ścieżka do wyodrębnienia danych z odpowiedzi (np. 'results.0.items'). Pozostaw puste dla pełnej odpowiedzi.",

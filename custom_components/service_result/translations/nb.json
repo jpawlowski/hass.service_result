@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Omkonfigurer Tjenesteesultat",
-        "description": "Oppdater tjenestekonfigurasjonen for denne sensoren.",
+        "description": "Oppdater tjenestekonfigurasjonen for denne sensoren.\n\nFor å gi nytt navn til denne oppføringen, bruk Innstillinger → Enheter og tjenester → [oppføring] → trepunktsmenyen → Gi nytt navn.",
         "data": {
-          "name": "Navn",
           "service_action": "Tjenestehandling",
           "service_data_yaml": "Tjenestedata (YAML)",
           "response_data_path": "Svardatasti",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigger til tilstand"
         },
         "data_description": {
-          "name": "Et vennlig navn for denne sensoren",
           "service_action": "Velg tjenesten/handlingen som skal kalles",
           "service_data_yaml": "Valgfri tjenestedata. Du kan lime inn full YAML fra Utviklerverktøy - alle felt under 'data:' bevares.",
           "response_data_path": "Valgfri sti for å trekke ut data fra svaret (f.eks. 'results.0.items'). La være tom for fullt svar.",

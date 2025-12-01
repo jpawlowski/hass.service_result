@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Teenuse Tulemuse Ümberseadistamine",
-        "description": "Uuendage teenuse seadistust selle anduri jaoks.",
+        "description": "Uuendage teenuse seadistust selle anduri jaoks.\n\nSelle kirje ümbernimetamiseks kasuta Seaded → Seadmed ja teenused → [kirje] → kolme punkti menüü → Nimeta ümber.",
         "data": {
-          "name": "Nimi",
           "service_action": "Teenuse toiming",
           "service_data_yaml": "Teenuse andmed (YAML)",
           "response_data_path": "Vastuse andmete tee",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Päästik olekusse"
         },
         "data_description": {
-          "name": "Sõbralik nimi sellele andurile",
           "service_action": "Valige kutsutav teenus/toiming",
           "service_data_yaml": "Valikulised teenuse andmed. Saate kleepida täieliku YAML Arendaja tööriistadest - kõik 'data:' all olevad väljad säilitatakse.",
           "response_data_path": "Valikuline tee andmete eraldamiseks vastusest (nt 'results.0.items'). Jätke tühjaks täieliku vastuse jaoks.",

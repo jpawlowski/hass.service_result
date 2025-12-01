@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Määritä Palvelutulos uudelleen",
-        "description": "Päivitä palvelukonfiguraatio tälle sensorille.",
+        "description": "Päivitä palvelukonfiguraatio tälle sensorille.\n\nNimetäksesi tämän merkinnän uudelleen, käytä Asetukset → Laitteet ja palvelut → [merkintä] → kolmen pisteen valikko → Nimeä uudelleen.",
         "data": {
-          "name": "Nimi",
           "service_action": "Palvelutoiminto",
           "service_data_yaml": "Palveludata (YAML)",
           "response_data_path": "Vastausdatan polku",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Laukaise tilaan"
         },
         "data_description": {
-          "name": "Ystävällinen nimi tälle sensorille",
           "service_action": "Valitse kutsuttava palvelu/toiminto",
           "service_data_yaml": "Valinnainen palveludata. Voit liittää täydellisen YAML:n Kehittäjätyökaluista - kaikki kentät 'data:'-osion alla säilytetään.",
           "response_data_path": "Valinnainen polku datan poimimiseen vastauksesta (esim. 'results.0.items'). Jätä tyhjäksi täydelle vastaukselle.",

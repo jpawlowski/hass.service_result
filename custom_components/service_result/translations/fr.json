@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Reconfigurer le résultat du service",
-        "description": "Met à jour la configuration du service pour ce capteur.",
+        "description": "Met à jour la configuration du service pour ce capteur.\n\nPour renommer cette entrée, utilise Paramètres → Appareils et services → [entrée] → menu trois points → Renommer.",
         "data": {
-          "name": "Nom",
           "service_action": "Action du service",
           "service_data_yaml": "Données du service (YAML)",
           "response_data_path": "Chemin des données de réponse",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Déclencher vers l'état"
         },
         "data_description": {
-          "name": "Un nom convivial pour ce capteur",
           "service_action": "Sélectionne le service/action à appeler",
           "service_data_yaml": "Données de service optionnelles. Tu peux coller le YAML complet des Outils de développement - tous les champs sous 'data:' sont préservés.",
           "response_data_path": "Chemin optionnel pour extraire des données de la réponse (par ex. 'results.0.items'). Laisser vide pour la réponse complète.",

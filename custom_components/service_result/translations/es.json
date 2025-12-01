@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Reconfigurar Resultado del Servicio",
-        "description": "Actualiza la configuración del servicio para este sensor.",
+        "description": "Actualiza la configuración del servicio para este sensor.\n\nPara renombrar esta entrada, usa Configuración → Dispositivos y Servicios → [entrada] → menú de tres puntos → Renombrar.",
         "data": {
-          "name": "Nombre",
           "service_action": "Acción del servicio",
           "service_data_yaml": "Datos del servicio (YAML)",
           "response_data_path": "Ruta de datos de respuesta",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Disparar hacia estado"
         },
         "data_description": {
-          "name": "Un nombre amigable para este sensor",
           "service_action": "Selecciona el servicio/acción a llamar",
           "service_data_yaml": "Datos de servicio opcionales. Puedes pegar el YAML completo de Herramientas de desarrollo - todos los campos bajo 'data:' se preservan.",
           "response_data_path": "Ruta opcional para extraer datos de la respuesta (ej. 'results.0.items'). Dejar vacío para la respuesta completa.",

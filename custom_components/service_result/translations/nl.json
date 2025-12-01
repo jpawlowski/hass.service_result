@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Service Resultaat Herconfigureren",
-        "description": "Werk de serviceconfiguratie voor deze sensor bij.",
+        "description": "Werk de serviceconfiguratie voor deze sensor bij.\n\nOm deze invoer te hernoemen, gebruik Instellingen → Apparaten & Services → [invoer] → driepuntsmenu → Hernoemen.",
         "data": {
-          "name": "Naam",
           "service_action": "Service actie",
           "service_data_yaml": "Service gegevens (YAML)",
           "response_data_path": "Antwoord gegevenspad",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigger naar status"
         },
         "data_description": {
-          "name": "Een vriendelijke naam voor deze sensor",
           "service_action": "Selecteer de service/actie om aan te roepen",
           "service_data_yaml": "Optionele service gegevens. Je kunt de volledige YAML uit Ontwikkelaarshulpmiddelen plakken - alle velden onder 'data:' worden behouden.",
           "response_data_path": "Optioneel pad om gegevens uit het antwoord te extraheren (bijv. 'results.0.items'). Laat leeg voor volledig antwoord.",

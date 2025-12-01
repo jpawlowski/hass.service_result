@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Ponovno Nastavi Rezultat Storitve",
-        "description": "Posodobite konfiguracijo storitve za ta senzor.",
+        "description": "Posodobite konfiguracijo storitve za ta senzor.\n\nČe želite preimenovati ta vnos, uporabite Nastavitve → Naprave in storitve → [vnos] → meni s tremi pikami → Preimenuj.",
         "data": {
-          "name": "Ime",
           "service_action": "Dejanje storitve",
           "service_data_yaml": "Podatki storitve (YAML)",
           "response_data_path": "Pot podatkov odgovora",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Sproži v stanje"
         },
         "data_description": {
-          "name": "Prijazno ime za ta senzor",
           "service_action": "Izberite storitev/dejanje za klic",
           "service_data_yaml": "Neobvezni podatki storitve. Lahko prilepite celoten YAML iz Razvojnih orodij - vsa polja pod 'data:' so ohranjena.",
           "response_data_path": "Neobvezna pot za izvleček podatkov iz odgovora (npr. 'results.0.items'). Pustite prazno za celoten odgovor.",

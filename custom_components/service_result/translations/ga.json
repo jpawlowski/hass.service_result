@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Athchumraigh Toradh Seirbhíse",
-        "description": "Nuashonraigh cumraíocht na seirbhíse don bhraiteoir seo.",
+        "description": "Nuashonraigh cumraíocht na seirbhíse don bhraiteoir seo.\n\nChun an iontráil seo a athainmniú, úsáid Socruithe → Gléasanna & Seirbhísí → [iontráil] → roghchlár trí phonc → Athainmnigh.",
         "data": {
-          "name": "Ainm",
           "service_action": "Gníomh seirbhíse",
           "service_data_yaml": "Sonraí seirbhíse (YAML)",
           "response_data_path": "Cosán sonraí freagartha",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Truicear go staid"
         },
         "data_description": {
-          "name": "Ainm cairdiúil don bhraiteoir seo",
           "service_action": "Roghnaigh an tseirbhís/gníomh le glaoch",
           "service_data_yaml": "Sonraí seirbhíse roghnach. Is féidir leat YAML iomlán a ghreamú ó Uirlisí Forbróra - coimeádtar gach réimse faoi 'data:'.",
           "response_data_path": "Cosán roghnach chun sonraí a bhaint as an bhfreagra (m.sh. 'results.0.items'). Fág folamh le haghaidh freagartha iomláin.",

@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Erġa' Kkonfigura Riżultat tas-Servizz",
-        "description": "Aġġorna l-konfigurazzjoni tas-servizz għal dan is-sensur.",
+        "description": "Aġġorna l-konfigurazzjoni tas-servizz għal dan is-sensur.\n\nBiex issemmi mill-ġdid din l-entrata, uża Settings → Devices & Services → [entrata] → menu bi tliet tikek → Semmi mill-ġdid.",
         "data": {
-          "name": "Isem",
           "service_action": "Azzjoni tas-servizz",
           "service_data_yaml": "Data tas-servizz (YAML)",
           "response_data_path": "Triq tad-data tar-risposta",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigger għall-istat"
         },
         "data_description": {
-          "name": "Isem ta' ħbiberija għal dan is-sensur",
           "service_action": "Agħżel is-servizz/azzjoni biex issejjaħ",
           "service_data_yaml": "Data tas-servizz fakultattiva. Tista' twaħħal YAML sħiħ mill-Għodod tal-Iżvilupp - il-kolonnelli kollha taħt 'data:' jinżammu.",
           "response_data_path": "Triq fakultattiva biex tiġbed data mir-risposta (eż. 'results.0.items'). Ħalli vojt għar-risposta sħiħa.",

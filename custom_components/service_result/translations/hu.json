@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Szolgáltatás Eredmény Újrakonfigurálása",
-        "description": "Frissítse a szolgáltatás konfigurációját ehhez a szenzorhoz.",
+        "description": "Frissítse a szolgáltatás konfigurációját ehhez a szenzorhoz.\n\nA bejegyzés átnevezéséhez használd a Beállítások → Eszközök és szolgáltatások → [bejegyzés] → hárompontos menü → Átnevezés lehetőséget.",
         "data": {
-          "name": "Név",
           "service_action": "Szolgáltatás művelet",
           "service_data_yaml": "Szolgáltatás adatok (YAML)",
           "response_data_path": "Válasz adatok útvonala",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Trigger állapotba"
         },
         "data_description": {
-          "name": "Barátságos név ehhez a szenzorhoz",
           "service_action": "Válassza ki a hívandó szolgáltatást/műveletet",
           "service_data_yaml": "Opcionális szolgáltatás adatok. Beillesztheti a teljes YAML-t a Fejlesztői eszközökből - a 'data:' alatti összes mező megőrzésre kerül.",
           "response_data_path": "Opcionális útvonal az adatok kinyeréséhez a válaszból (pl. 'results.0.items'). Hagyja üresen a teljes válaszhoz.",

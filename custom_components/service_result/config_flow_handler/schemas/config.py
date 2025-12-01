@@ -260,7 +260,11 @@ def get_manual_settings_schema(defaults: Mapping[str, Any] | None = None) -> vol
 
 def get_reconfigure_schema(current_data: Mapping[str, Any]) -> vol.Schema:
     """
-    Get schema for reconfigure step (Step 1: Basic configuration).
+    Get schema for reconfigure step (Step 1: Service configuration).
+
+    Note: The name field is not included here because renaming should be done
+    through Home Assistant's built-in entity renaming mechanism after initial setup.
+    The integration uses the config entry's entry_id as a stable unique identifier.
 
     Args:
         current_data: Current configuration data to pre-fill in the form.
@@ -279,14 +283,6 @@ def get_reconfigure_schema(current_data: Mapping[str, Any]) -> vol.Schema:
 
     return vol.Schema(
         {
-            vol.Required(
-                CONF_NAME,
-                default=current_data.get(CONF_NAME, ""),
-            ): selector.TextSelector(
-                selector.TextSelectorConfig(
-                    type=selector.TextSelectorType.TEXT,
-                ),
-            ),
             vol.Optional(
                 CONF_SERVICE_ACTION,
                 default=service_action if service_action else vol.UNDEFINED,

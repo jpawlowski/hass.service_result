@@ -94,14 +94,12 @@
       },
       "reconfigure": {
         "title": "Service-Ergebnis neu konfigurieren",
-        "description": "Aktualisiere die Service-Konfiguration für diesen Sensor.",
+        "description": "Aktualisiere die Service-Konfiguration für diesen Sensor.\n\nUm diesen Eintrag umzubenennen, nutze Einstellungen → Geräte & Dienste → [Eintrag] → Dreipunkt-Menü → Umbenennen.",
         "data": {
-          "name": "Name",
           "service_action": "Service-Aktion",
           "service_data_yaml": "Service-Daten (YAML)"
         },
         "data_description": {
-          "name": "Ein benutzerfreundlicher Name für diesen Sensor",
           "service_action": "Wähle die aufzurufende Service-Aktion",
           "service_data_yaml": "Optionale Service-Daten. Du kannst das vollständige YAML aus den Entwicklerwerkzeugen einfügen - alle Felder unter 'data:' werden übernommen."
         }

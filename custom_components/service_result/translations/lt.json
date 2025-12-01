@@ -31,9 +31,8 @@
       },
       "reconfigure": {
         "title": "Perkonfigūruoti Paslaugos Rezultatą",
-        "description": "Atnaujinkite paslaugos konfigūraciją šiam jutikliui.",
+        "description": "Atnaujinkite paslaugos konfigūraciją šiam jutikliui.\n\nNorėdami pervadinti šį įrašą, naudokite Nustatymai → Įrenginiai ir paslaugos → [įrašas] → trijų taškų meniu → Pervadinti.",
         "data": {
-          "name": "Pavadinimas",
           "service_action": "Paslaugos veiksmas",
           "service_data_yaml": "Paslaugos duomenys (YAML)",
           "response_data_path": "Atsakymo duomenų kelias",
@@ -45,7 +44,6 @@
           "trigger_to_state": "Paleisti į būseną"
         },
         "data_description": {
-          "name": "Draugiškas pavadinimas šiam jutikliui",
           "service_action": "Pasirinkite paslaugą/veiksmą iškviesti",
           "service_data_yaml": "Neprivalomi paslaugos duomenys. Galite įklijuoti pilną YAML iš Kūrėjo įrankių - visi laukai po 'data:' išsaugomi.",
           "response_data_path": "Neprivalomas kelias duomenims išgauti iš atsakymo (pvz., 'results.0.items'). Palikite tuščią pilnam atsakymui.",
