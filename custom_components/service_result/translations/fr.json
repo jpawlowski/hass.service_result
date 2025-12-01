@@ -65,7 +65,8 @@
       "service_call_failed": "L'appel du service a échoué : {error_message}",
       "trigger_entity_not_found": "L'entité déclencheur n'existe pas. Sélectionne une entité valide.",
       "invalid_trigger_state": "L'état déclencheur spécifié n'est pas valide pour l'entité sélectionnée.",
-      "unknown": "Une erreur inattendue s'est produite. Consulte les logs pour plus de détails."
+      "unknown": "Une erreur inattendue s'est produite. Consulte les logs pour plus de détails.",
+      "service_no_response": "Ce service ne renvoie pas de données de réponse. Sélectionne un service qui prend en charge le renvoi de données."
     },
     "abort": {
       "already_configured": "Cette entrée est déjà configurée."

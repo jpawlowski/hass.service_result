@@ -189,6 +189,7 @@
       "data_not_dict": "The 'data' section in the YAML must be a dictionary (key: value pairs).",
       "no_service_selected": "Please select a service action from the dropdown or provide it in the YAML.",
       "service_call_failed": "Service call failed: {error_message}",
+      "service_no_response": "This service does not return response data. Please select a service that supports returning data.",
       "trigger_entity_not_found": "The trigger entity does not exist. Please select a valid entity.",
       "invalid_trigger_state": "The specified trigger state is not valid for the selected entity.",
       "unknown": "An unexpected error occurred. Please check the logs for details."

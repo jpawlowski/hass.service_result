@@ -65,7 +65,8 @@
       "service_call_failed": "Chiamata al servizio fallita: {error_message}",
       "trigger_entity_not_found": "L'entità trigger non esiste. Per favore seleziona un'entità valida.",
       "invalid_trigger_state": "Lo stato trigger specificato non è valido per l'entità selezionata.",
-      "unknown": "Si è verificato un errore imprevisto. Per favore controlla i log per i dettagli."
+      "unknown": "Si è verificato un errore imprevisto. Per favore controlla i log per i dettagli.",
+      "service_no_response": "Questo servizio non restituisce dati di risposta. Seleziona un servizio che supporti la restituzione dei dati."
     },
     "abort": {
       "already_configured": "Questa voce è già configurata."

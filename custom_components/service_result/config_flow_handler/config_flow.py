@@ -51,6 +51,7 @@ from custom_components.service_result.const import (
     UPDATE_MODE_STATE_TRIGGER,
 )
 from homeassistant import config_entries
+from homeassistant.core import SupportsResponse
 from homeassistant.exceptions import HomeAssistantError, ServiceNotFound
 
 if TYPE_CHECKING:
@@ -261,6 +262,12 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
                 elif not self.hass.services.has_service(domain, service_name):
                     errors["base"] = "service_not_found"
                 else:
+                    # Check if service supports returning response data
+                    supports_response = self.hass.services.supports_response(domain, service_name)
+                    if supports_response == SupportsResponse.NONE:
+                        errors["base"] = "service_no_response"
+
+                if not errors and domain and service_name:
                     # Convert cleaned data back to YAML
                     clean_yaml = dict_to_yaml(cleaned_data or {})
                     updated_input[CONF_SERVICE_DATA_YAML] = clean_yaml
@@ -507,6 +514,12 @@ class ServiceResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=D
                 elif not self.hass.services.has_service(domain, service_name):
                     errors["base"] = "service_not_found"
                 else:
+                    # Check if service supports returning response data
+                    supports_response = self.hass.services.supports_response(domain, service_name)
+                    if supports_response == SupportsResponse.NONE:
+                        errors["base"] = "service_no_response"
+
+                if not errors and domain and service_name:
                     # Convert cleaned data back to YAML
                     clean_yaml = dict_to_yaml(cleaned_data or {})
                     updated_input[CONF_SERVICE_DATA_YAML] = clean_yaml

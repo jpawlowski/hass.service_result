@@ -65,7 +65,8 @@
       "service_call_failed": "Pakalpojuma izsaukums neizdevās: {error_message}",
       "trigger_entity_not_found": "Aktivizētāja entītija neeksistē. Izvēlieties derīgu entītiju.",
       "invalid_trigger_state": "Norādītais aktivizētāja stāvoklis nav derīgs izvēlētajai entītijai.",
-      "unknown": "Radās neparedzēta kļūda. Pārbaudiet žurnālus, lai iegūtu detaļas."
+      "unknown": "Radās neparedzēta kļūda. Pārbaudiet žurnālus, lai iegūtu detaļas.",
+      "service_no_response": "Šis pakalpojums neatgriež atbildes datus. Lūdzu, izvēlieties pakalpojumu, kas atbalsta datu atgriešanu."
     },
     "abort": {
       "already_configured": "Šis ieraksts jau ir konfigurēts."

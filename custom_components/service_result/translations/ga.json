@@ -65,7 +65,8 @@
       "service_call_failed": "Theip ar ghlao seirbhíse: {error_message}",
       "trigger_entity_not_found": "Níl an eintiteas truicir ann. Roghnaigh eintiteas bailí.",
       "invalid_trigger_state": "Níl an staid truicir sonraithe bailí don eintiteas roghnaithe.",
-      "unknown": "Tharla earráid gan choinne. Seiceáil na logaí le haghaidh sonraí."
+      "unknown": "Tharla earráid gan choinne. Seiceáil na logaí le haghaidh sonraí.",
+      "service_no_response": "Ní fhilleann an tseirbhís seo sonraí freagartha. Roghnaigh seirbhís a thacaíonn le sonraí a fhilleadh."
     },
     "abort": {
       "already_configured": "Tá an iontráil seo cumraithe cheana féin."

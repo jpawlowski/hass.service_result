@@ -65,7 +65,8 @@
       "service_call_failed": "Paslaugos iškvietimas nepavyko: {error_message}",
       "trigger_entity_not_found": "Paleidimo esybė neegzistuoja. Pasirinkite tinkamą esybę.",
       "invalid_trigger_state": "Nurodyta paleidimo būsena nėra tinkama pasirinktai esybei.",
-      "unknown": "Įvyko netikėta klaida. Patikrinkite žurnalus dėl detalių."
+      "unknown": "Įvyko netikėta klaida. Patikrinkite žurnalus dėl detalių.",
+      "service_no_response": "Ši paslauga negrąžina atsakymo duomenų. Pasirinkite paslaugą, kuri palaiko duomenų grąžinimą."
     },
     "abort": {
       "already_configured": "Šis įrašas jau sukonfigūruotas."

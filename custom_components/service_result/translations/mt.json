@@ -65,7 +65,8 @@
       "service_call_failed": "Is-sejħa tas-servizz falliet: {error_message}",
       "trigger_entity_not_found": "L-entità tat-trigger ma teżistix. Agħżel entità valida.",
       "invalid_trigger_state": "L-istat tat-trigger speċifikat mhuwiex validu għall-entità magħżula.",
-      "unknown": "Sar żball mhux mistenni. Iċċekkja l-logs għad-dettalji."
+      "unknown": "Sar żball mhux mistenni. Iċċekkja l-logs għad-dettalji.",
+      "service_no_response": "Dan is-servizz ma jirritornax data ta' risposta. Jekk jogħġbok agħżel servizz li jappoġġja r-ritorn tad-data."
     },
     "abort": {
       "already_configured": "Din id-dħul diġà kkonfigurata."

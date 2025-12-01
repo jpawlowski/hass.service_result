@@ -65,7 +65,8 @@
       "service_call_failed": "Poziv usluge nije uspio: {error_message}",
       "trigger_entity_not_found": "Okidač entitet ne postoji. Odaberite važeći entitet.",
       "invalid_trigger_state": "Navedeno okidač stanje nije važeće za odabrani entitet.",
-      "unknown": "Došlo je do neočekivane pogreške. Provjerite zapisnike za detalje."
+      "unknown": "Došlo je do neočekivane pogreške. Provjerite zapisnike za detalje.",
+      "service_no_response": "Ova usluga ne vraća podatke odgovora. Molimo odaberite uslugu koja podržava vraćanje podataka."
     },
     "abort": {
       "already_configured": "Ovaj unos je već konfiguriran."

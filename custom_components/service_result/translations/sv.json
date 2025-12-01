@@ -65,7 +65,8 @@
       "service_call_failed": "Serviceanrop misslyckades: {error_message}",
       "trigger_entity_not_found": "Triggerentiteten finns inte. Välj en giltig entitet.",
       "invalid_trigger_state": "Det angivna triggertillståndet är inte giltigt för den valda entiteten.",
-      "unknown": "Ett oväntat fel inträffade. Kontrollera loggarna för detaljer."
+      "unknown": "Ett oväntat fel inträffade. Kontrollera loggarna för detaljer.",
+      "service_no_response": "Denna tjänst returnerar inte svarsdata. Välj en tjänst som stöder returnering av data."
     },
     "abort": {
       "already_configured": "Denna post är redan konfigurerad."

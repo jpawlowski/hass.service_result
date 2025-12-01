@@ -65,7 +65,8 @@
       "service_call_failed": "Service-aanroep mislukt: {error_message}",
       "trigger_entity_not_found": "De trigger-entiteit bestaat niet. Selecteer een geldige entiteit.",
       "invalid_trigger_state": "De opgegeven triggerstatus is niet geldig voor de geselecteerde entiteit.",
-      "unknown": "Er is een onverwachte fout opgetreden. Controleer de logs voor details."
+      "unknown": "Er is een onverwachte fout opgetreden. Controleer de logs voor details.",
+      "service_no_response": "Deze service retourneert geen responsgegevens. Selecteer een service die het retourneren van gegevens ondersteunt."
     },
     "abort": {
       "already_configured": "Deze invoer is al geconfigureerd."

@@ -65,7 +65,8 @@
       "service_call_failed": "Wywołanie usługi nie powiodło się: {error_message}",
       "trigger_entity_not_found": "Encja wyzwalająca nie istnieje. Wybierz prawidłową encję.",
       "invalid_trigger_state": "Określony stan wyzwalający nie jest prawidłowy dla wybranej encji.",
-      "unknown": "Wystąpił nieoczekiwany błąd. Sprawdź logi, aby uzyskać szczegóły."
+      "unknown": "Wystąpił nieoczekiwany błąd. Sprawdź logi, aby uzyskać szczegóły.",
+      "service_no_response": "Ta usługa nie zwraca danych odpowiedzi. Proszę wybrać usługę, która obsługuje zwracanie danych."
     },
     "abort": {
       "already_configured": "Ten wpis jest już skonfigurowany."

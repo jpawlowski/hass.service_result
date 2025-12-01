@@ -65,7 +65,8 @@
       "service_call_failed": "Klic storitve ni uspel: {error_message}",
       "trigger_entity_not_found": "Sprožilna entiteta ne obstaja. Izberite veljavno entiteto.",
       "invalid_trigger_state": "Navedeno sprožilno stanje ni veljavno za izbrano entiteto.",
-      "unknown": "Prišlo je do nepričakovane napake. Preverite dnevnike za podrobnosti."
+      "unknown": "Prišlo je do nepričakovane napake. Preverite dnevnike za podrobnosti.",
+      "service_no_response": "Ta storitev ne vrača podatkov odziva. Prosimo, izberite storitev, ki podpira vračanje podatkov."
     },
     "abort": {
       "already_configured": "Ta vnos je že nastavljen."

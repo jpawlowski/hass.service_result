@@ -65,7 +65,8 @@
       "service_call_failed": "Szolgáltatás hívás sikertelen: {error_message}",
       "trigger_entity_not_found": "A trigger entitás nem létezik. Válasszon érvényes entitást.",
       "invalid_trigger_state": "A megadott trigger állapot nem érvényes a kiválasztott entitáshoz.",
-      "unknown": "Váratlan hiba történt. Ellenőrizze a naplókat a részletekért."
+      "unknown": "Váratlan hiba történt. Ellenőrizze a naplókat a részletekért.",
+      "service_no_response": "Ez a szolgáltatás nem ad vissza válaszadatokat. Kérlek válassz olyan szolgáltatást, amely támogatja az adatok visszaadását."
     },
     "abort": {
       "already_configured": "Ez a bejegyzés már konfigurálva van."

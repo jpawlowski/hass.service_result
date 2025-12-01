@@ -65,7 +65,8 @@
       "service_call_failed": "Apelul serviciului a eșuat: {error_message}",
       "trigger_entity_not_found": "Entitatea declanșator nu există. Selectați o entitate validă.",
       "invalid_trigger_state": "Starea declanșator specificată nu este validă pentru entitatea selectată.",
-      "unknown": "A apărut o eroare neașteptată. Verificați jurnalele pentru detalii."
+      "unknown": "A apărut o eroare neașteptată. Verificați jurnalele pentru detalii.",
+      "service_no_response": "Acest serviciu nu returnează date de răspuns. Te rugăm să selectezi un serviciu care suportă returnarea datelor."
     },
     "abort": {
       "already_configured": "Această intrare este deja configurată."

@@ -65,7 +65,8 @@
       "service_call_failed": "Chamada do serviço falhou: {error_message}",
       "trigger_entity_not_found": "A entidade gatilho não existe. Por favor selecione uma entidade válida.",
       "invalid_trigger_state": "O estado gatilho especificado não é válido para a entidade selecionada.",
-      "unknown": "Ocorreu um erro inesperado. Por favor verifique os logs para detalhes."
+      "unknown": "Ocorreu um erro inesperado. Por favor verifique os logs para detalhes.",
+      "service_no_response": "Este serviço não retorna dados de resposta. Por favor selecione um serviço que suporte retorno de dados."
     },
     "abort": {
       "already_configured": "Esta entrada já está configurada."

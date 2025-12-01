@@ -65,7 +65,8 @@
       "service_call_failed": "Volanie služby zlyhalo: {error_message}",
       "trigger_entity_not_found": "Spúšťacia entita neexistuje. Vyberte platnú entitu.",
       "invalid_trigger_state": "Zadaný spúšťací stav nie je platný pre vybranú entitu.",
-      "unknown": "Došlo k neočakávanej chybe. Skontrolujte logy pre podrobnosti."
+      "unknown": "Došlo k neočakávanej chybe. Skontrolujte logy pre podrobnosti.",
+      "service_no_response": "Táto služba nevracia odpoveďové dáta. Prosím vyberte službu, ktorá podporuje vracanie dát."
     },
     "abort": {
       "already_configured": "Táto položka je už nakonfigurovaná."

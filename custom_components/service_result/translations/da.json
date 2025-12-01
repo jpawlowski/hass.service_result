@@ -65,7 +65,8 @@
       "service_call_failed": "Servicekald mislykkedes: {error_message}",
       "trigger_entity_not_found": "Triggerentiteten eksisterer ikke. Vælg en gyldig entitet.",
       "invalid_trigger_state": "Den angivne triggertilstand er ikke gyldig for den valgte entitet.",
-      "unknown": "Der opstod en uventet fejl. Kontroller logfilerne for detaljer."
+      "unknown": "Der opstod en uventet fejl. Kontroller logfilerne for detaljer.",
+      "service_no_response": "Denne tjeneste returnerer ikke svardata. Vælg venligst en tjeneste, der understøtter returnering af data."
     },
     "abort": {
       "already_configured": "Denne post er allerede konfigureret."

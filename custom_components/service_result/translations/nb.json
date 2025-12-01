@@ -65,7 +65,8 @@
       "service_call_failed": "Tjenestekall mislyktes: {error_message}",
       "trigger_entity_not_found": "Triggerentiteten eksisterer ikke. Velg en gyldig entitet.",
       "invalid_trigger_state": "Den angitte triggertilstanden er ikke gyldig for den valgte entiteten.",
-      "unknown": "En uventet feil oppstod. Sjekk loggene for detaljer."
+      "unknown": "En uventet feil oppstod. Sjekk loggene for detaljer.",
+      "service_no_response": "Denne tjenesten returnerer ikke responsdata. Vennligst velg en tjeneste som støtter retur av data."
     },
     "abort": {
       "already_configured": "Denne oppføringen er allerede konfigurert."

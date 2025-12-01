@@ -65,7 +65,8 @@
       "service_call_failed": "Palvelukutsu epäonnistui: {error_message}",
       "trigger_entity_not_found": "Laukaisuentiteettiä ei ole olemassa. Valitse kelvollinen entiteetti.",
       "invalid_trigger_state": "Määritetty laukaisutila ei ole kelvollinen valitulle entiteetille.",
-      "unknown": "Odottamaton virhe tapahtui. Tarkista lokit lisätietoja varten."
+      "unknown": "Odottamaton virhe tapahtui. Tarkista lokit lisätietoja varten.",
+      "service_no_response": "Tämä palvelu ei palauta vastausdataa. Valitse palvelu, joka tukee datan palauttamista."
     },
     "abort": {
       "already_configured": "Tämä merkintä on jo määritetty."

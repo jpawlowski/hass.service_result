@@ -65,7 +65,8 @@
       "service_call_failed": "La llamada al servicio falló: {error_message}",
       "trigger_entity_not_found": "La entidad disparadora no existe. Por favor selecciona una entidad válida.",
       "invalid_trigger_state": "El estado disparador especificado no es válido para la entidad seleccionada.",
-      "unknown": "Ocurrió un error inesperado. Por favor revisa los registros para más detalles."
+      "unknown": "Ocurrió un error inesperado. Por favor revisa los registros para más detalles.",
+      "service_no_response": "Este servicio no devuelve datos de respuesta. Por favor selecciona un servicio que soporte devolver datos."
     },
     "abort": {
       "already_configured": "Esta entrada ya está configurada."

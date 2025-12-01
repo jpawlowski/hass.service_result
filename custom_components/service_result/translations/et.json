@@ -65,7 +65,8 @@
       "service_call_failed": "Teenuse kutsung ebaõnnestus: {error_message}",
       "trigger_entity_not_found": "Päästiku olem ei eksisteeri. Valige kehtiv olem.",
       "invalid_trigger_state": "Määratud päästiku olek pole valitud olemi jaoks kehtiv.",
-      "unknown": "Ilmnes ootamatu viga. Kontrollige logisid üksikasjade saamiseks."
+      "unknown": "Ilmnes ootamatu viga. Kontrollige logisid üksikasjade saamiseks.",
+      "service_no_response": "See teenus ei tagasta vastuse andmeid. Palun vali teenus, mis toetab andmete tagastamist."
     },
     "abort": {
       "already_configured": "See kirje on juba seadistatud."
