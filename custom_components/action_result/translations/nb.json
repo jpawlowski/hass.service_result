@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurer Tjenesteesultat",
+        "description": "Konfigurer en sensor som viser svaret fra et Home Assistant tjeneste-kall.\n\nVelg og konfigurer en tjenestehandling ved å bruke den visuelle editoren nedenfor.",
+        "data": {
+          "name": "Navn",
+          "service_action": "Tjenestehandling",
+          "response_data_path": "Svardatasti",
+          "attribute_name": "Attributtnavn",
+          "update_mode": "Oppdateringsmodus",
+          "scan_interval": "Pollingsintervall",
+          "trigger_entity": "Triggerentitet",
+          "trigger_from_state": "Trigger fra tilstand",
+          "trigger_to_state": "Trigger til tilstand"
+        },
+        "data_description": {
+          "name": "Et vennlig navn for denne sensoren (f.eks. 'Tibber-priser')",
+          "service_action": "Velg tjenesten/handlingen som skal kalles og konfigurer parameterne. Bruk 'Vis YAML' for å lime inn eller redigere YAML direkte.",
+          "response_data_path": "Valgfri sti for å trekke ut data fra svaret (f.eks. 'results.0.items'). La være tom for fullt svar.",
+          "attribute_name": "Navn på attributten som vil inneholde svardataene. Standard er 'data'.",
+          "update_mode": "Hvordan oppdateringer utløses: Polling (syklisk med intervall), Manuell (via update_entity-tjeneste), eller Entitetstilstandstrigger (når en annen entitet endrer tilstand).",
+          "scan_interval": "Hvor ofte tjenesten kalles i sekunder (kun for Pollingsmodus). Minimum 10 sekunder.",
+          "trigger_entity": "Entitet som skal overvåkes for tilstandsendringer (kun for Entitetstilstandstrigger-modus).",
+          "trigger_from_state": "Utløs kun ved endring fra denne tilstanden (valgfritt). La være tom for alle tidligere tilstander.",
+          "trigger_to_state": "Utløs kun ved endring til denne tilstanden (valgfritt). La være tom for alle nye tilstander."
+        }
+      },
+      "reconfigure": {
+        "title": "Omkonfigurer Tjenesteesultat",
+        "description": "Oppdater tjenestekonfigurasjonen for denne sensoren.\n\nFor å gi nytt navn til denne oppføringen, bruk Innstillinger → Enheter og tjenester → [oppføring] → trepunktsmenyen → Gi nytt navn.",
+        "data": {
+          "service_action": "Tjenestehandling",
+          "response_data_path": "Svardatasti",
+          "attribute_name": "Attributtnavn",
+          "update_mode": "Oppdateringsmodus",
+          "scan_interval": "Pollingsintervall",
+          "trigger_entity": "Triggerentitet",
+          "trigger_from_state": "Trigger fra tilstand",
+          "trigger_to_state": "Trigger til tilstand"
+        },
+        "data_description": {
+          "service_action": "Velg tjenesten/handlingen som skal kalles og konfigurer parameterne. Bruk 'Vis YAML' for å lime inn eller redigere YAML direkte.",
+          "response_data_path": "Valgfri sti for å trekke ut data fra svaret (f.eks. 'results.0.items'). La være tom for fullt svar.",
+          "attribute_name": "Navn på attributten som vil inneholde svardataene. Standard er 'data'.",
+          "update_mode": "Hvordan oppdateringer utløses: Polling (syklisk med intervall), Manuell (via update_entity-tjeneste), eller Entitetstilstandstrigger (når en annen entitet endrer tilstand).",
+          "scan_interval": "Hvor ofte tjenesten kalles i sekunder (kun for Pollingsmodus). Minimum 10 sekunder.",
+          "trigger_entity": "Entitet som skal overvåkes for tilstandsendringer (kun for Entitetstilstandstrigger-modus).",
+          "trigger_from_state": "Utløs kun ved endring fra denne tilstanden (valgfritt). La være tom for alle tidligere tilstander.",
+          "trigger_to_state": "Utløs kun ved endring til denne tilstanden (valgfritt). La være tom for alle nye tilstander."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Tjeneste ikke funnet. Bekreft at den valgte handlingen eksisterer og integrasjonen er lastet.",
+      "yaml_parse_error": "Ugyldig YAML-syntaks. Sjekk tjeneste dataformatet.",
+      "yaml_not_dict": "Tjenestedata må være en YAML-ordbok (nøkkel: verdi-par).",
+      "data_not_dict": "Seksjonen 'data' i YAML må være en ordbok (nøkkel: verdi-par).",
+      "no_service_selected": "Velg en tjenestehandling fra rullegardinmenyen eller oppgi den i YAML.",
+      "service_call_failed": "Tjenestekall mislyktes: {error_message}",
+      "trigger_entity_not_found": "Triggerentiteten eksisterer ikke. Velg en gyldig entitet.",
+      "invalid_trigger_state": "Den angitte triggertilstanden er ikke gyldig for den valgte entiteten.",
+      "unknown": "En uventet feil oppstod. Sjekk loggene for detaljer.",
+      "service_no_response": "Denne tjenesten returnerer ikke responsdata. Vennligst velg en tjeneste som støtter retur av data."
+    },
+    "abort": {
+      "already_configured": "Denne oppføringen er allerede konfigurert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Konfigurer Alternativer",
+        "description": "Juster pollingsintervallet. For å endre tjenestekonfigurasjonen, bruk Omkonfigurer i stedet.",
+        "data": {
+          "scan_interval": "Pollingsintervall"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte tjenesten kalles (i sekunder). Minimum 10 sekunder."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Polling (syklisk)",
+        "manual": "Manuell (update_entity)",
+        "state_trigger": "Entitetstilstandstrigger"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Kunne ikke parse tjenestedata-YAML: {error}"
+    },
+    "service_not_found": {
+      "message": "Den konfigurerte tjenesten \"{service}\" ble ikke funnet. Integrasjonen kan ha blitt fjernet eller er ikke lastet."
+    },
+    "service_call_failed": {
+      "message": "Kunne ikke kalle tjenesten \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Tjenesten \"{service}\" er midlertidig utilgjengelig. Prøver igjen automatisk."
+    },
+    "response_path_invalid": {
+      "message": "Den konfigurerte svarstien \"{path}\" eksisterer ikke i tjenestesvaret."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Triggerentiteten \"{entity}\" er utilgjengelig."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Tjenesteesultat",
+        "state": {
+          "ok": "OK",
+          "error": "Feil",
+          "unavailable": "Utilgjengelig",
+          "retrying": "Prøver igjen"
+        }
+      }
+    }
+  }
+}

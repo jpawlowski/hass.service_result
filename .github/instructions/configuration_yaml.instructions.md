@@ -21,13 +21,13 @@ For development and testing, keep configuration minimal:
 default_config:
 
 # Enable your integration
-service_result:
+action_result:
 
 # Logging for development
 logger:
   default: info
   logs:
-    custom_components.service_result: debug
+    custom_components.action_result: debug
 ```
 
 ## Modern Syntax Only
@@ -82,7 +82,7 @@ logger:
   default: warning
   logs:
     # Your integration - verbose
-    custom_components.service_result: debug
+    custom_components.action_result: debug
 
     # Reduce noise from other components
     homeassistant.components.http: warning

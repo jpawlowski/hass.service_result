@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurovať Výsledok Služby",
+        "description": "Nakonfiguruj senzor, ktorý zobrazuje odpoveď z volania služby Home Assistant.\n\nVyber a nakonfiguruj akciu služby pomocou vizuálneho editora nižšie.",
+        "data": {
+          "name": "Názov",
+          "service_action": "Akcia služby",
+          "response_data_path": "Cesta k dátam odpovede",
+          "attribute_name": "Názov atribútu",
+          "update_mode": "Režim aktualizácie",
+          "scan_interval": "Interval dotazovania",
+          "trigger_entity": "Spúšťacia entita",
+          "trigger_from_state": "Spustiť zo stavu",
+          "trigger_to_state": "Spustiť do stavu"
+        },
+        "data_description": {
+          "name": "Priateľský názov pre tento senzor (napr. 'Ceny Tibber')",
+          "service_action": "Vyber službu/akciu na zavolanie a nakonfiguruj jej parametre. Použi 'Zobraziť YAML' na priame vloženie alebo úpravu YAML.",
+          "response_data_path": "Voliteľná cesta pre extrakciu dát z odpovede (napr. 'results.0.items'). Nechajte prázdne pre úplnú odpoveď.",
+          "attribute_name": "Názov atribútu, ktorý bude obsahovať dáta odpovede. Predvolené je 'data'.",
+          "update_mode": "Ako sa spúšťajú aktualizácie: Dotazovanie (cyklické v intervale), Manuálne (cez službu update_entity), alebo Spúšťač stavu entity (keď iná entita zmení stav).",
+          "scan_interval": "Ako často sa volá služba v sekundách (iba pre režim Dotazovania). Minimum 10 sekúnd.",
+          "trigger_entity": "Entita, ktorej zmeny stavu sa sledujú (iba pre režim Spúšťača stavu).",
+          "trigger_from_state": "Spustiť iba pri zmene z tohto stavu (voliteľné). Nechajte prázdne pre akýkoľvek predchádzajúci stav.",
+          "trigger_to_state": "Spustiť iba pri zmene do tohto stavu (voliteľné). Nechajte prázdne pre akýkoľvek nový stav."
+        }
+      },
+      "reconfigure": {
+        "title": "Prekonfigurovať Výsledok Služby",
+        "description": "Aktualizujte konfiguráciu služby pre tento senzor.\n\nAk chcete tento záznam premenovať, použite Nastavenia → Zariadenia a služby → [záznam] → trojbodkové menu → Premenovať.",
+        "data": {
+          "service_action": "Akcia služby",
+          "response_data_path": "Cesta k dátam odpovede",
+          "attribute_name": "Názov atribútu",
+          "update_mode": "Režim aktualizácie",
+          "scan_interval": "Interval dotazovania",
+          "trigger_entity": "Spúšťacia entita",
+          "trigger_from_state": "Spustiť zo stavu",
+          "trigger_to_state": "Spustiť do stavu"
+        },
+        "data_description": {
+          "service_action": "Vyber službu/akciu na zavolanie a nakonfiguruj jej parametre. Použi 'Zobraziť YAML' na priame vloženie alebo úpravu YAML.",
+          "response_data_path": "Voliteľná cesta pre extrakciu dát z odpovede (napr. 'results.0.items'). Nechajte prázdne pre úplnú odpoveď.",
+          "attribute_name": "Názov atribútu, ktorý bude obsahovať dáta odpovede. Predvolené je 'data'.",
+          "update_mode": "Ako sa spúšťajú aktualizácie: Dotazovanie (cyklické v intervale), Manuálne (cez službu update_entity), alebo Spúšťač stavu entity (keď iná entita zmení stav).",
+          "scan_interval": "Ako často sa volá služba v sekundách (iba pre režim Dotazovania). Minimum 10 sekúnd.",
+          "trigger_entity": "Entita, ktorej zmeny stavu sa sledujú (iba pre režim Spúšťača stavu).",
+          "trigger_from_state": "Spustiť iba pri zmene z tohto stavu (voliteľné). Nechajte prázdne pre akýkoľvek predchádzajúci stav.",
+          "trigger_to_state": "Spustiť iba pri zmene do tohto stavu (voliteľné). Nechajte prázdne pre akýkoľvek nový stav."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Služba nebola nájdená. Overte, že vybraná akcia existuje a integrácia je načítaná.",
+      "yaml_parse_error": "Neplatná syntax YAML. Skontrolujte formát dát služby.",
+      "yaml_not_dict": "Dáta služby musia byť YAML slovník (páry kľúč: hodnota).",
+      "data_not_dict": "Sekcia 'data' v YAML musí byť slovník (páry kľúč: hodnota).",
+      "no_service_selected": "Vyberte akciu služby z rozbaľovacej ponuky alebo ju zadajte v YAML.",
+      "service_call_failed": "Volanie služby zlyhalo: {error_message}",
+      "trigger_entity_not_found": "Spúšťacia entita neexistuje. Vyberte platnú entitu.",
+      "invalid_trigger_state": "Zadaný spúšťací stav nie je platný pre vybranú entitu.",
+      "unknown": "Došlo k neočakávanej chybe. Skontrolujte logy pre podrobnosti.",
+      "service_no_response": "Táto služba nevracia odpoveďové dáta. Prosím vyberte službu, ktorá podporuje vracanie dát."
+    },
+    "abort": {
+      "already_configured": "Táto položka je už nakonfigurovaná."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Konfigurovať Možnosti",
+        "description": "Upravte interval dotazovania. Pre zmenu konfigurácie služby použite namiesto toho Prekonfigurovať.",
+        "data": {
+          "scan_interval": "Interval dotazovania"
+        },
+        "data_description": {
+          "scan_interval": "Ako často sa volá služba (v sekundách). Minimum 10 sekúnd."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Dotazovanie (cyklické)",
+        "manual": "Manuálne (update_entity)",
+        "state_trigger": "Spúšťač stavu entity"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Nepodarilo sa analyzovať YAML dát služby: {error}"
+    },
+    "service_not_found": {
+      "message": "Nakonfigurovaná služba \"{service}\" nebola nájdená. Integrácia mohla byť odstránená alebo nie je načítaná."
+    },
+    "service_call_failed": {
+      "message": "Nepodarilo sa zavolať službu \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Služba \"{service}\" je dočasne nedostupná. Automaticky sa pokúsi znova."
+    },
+    "response_path_invalid": {
+      "message": "Nakonfigurovaná cesta odpovede \"{path}\" v odpovedi služby neexistuje."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Spúšťacia entita \"{entity}\" nie je dostupná."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Výsledok Služby",
+        "state": {
+          "ok": "OK",
+          "error": "Chyba",
+          "unavailable": "Nedostupný",
+          "retrying": "Skúša znova"
+        }
+      }
+    }
+  }
+}

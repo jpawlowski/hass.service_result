@@ -1,5 +1,5 @@
 {
-  "name": "HA service_result Dev Container",
+  "name": "HA action_result Dev Container",
   "image": "mcr.microsoft.com/devcontainers/python:3.13",
   "postCreateCommand": "bash .devcontainer/setup-shell.sh && bash .devcontainer/setup-git.sh && script/setup/setup",
   "containerEnv": {

@@ -1,6 +1,6 @@
 # GitHub Codespaces Development Guide
 
-Service Result Entities is fully compatible with GitHub Codespaces for cloud-based development.
+Action Result Entities is fully compatible with GitHub Codespaces for cloud-based development.
 
 ## Quick Start
 

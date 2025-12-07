@@ -12,9 +12,9 @@ This file provides specific guidance for GitHub Copilot when generating code for
 
 This integration:
 
-- **Domain:** `service_result`
-- **Title:** Service Result Entities
-- **Class prefix:** `ServiceResultEntities`
+- **Domain:** `action_result`
+- **Title:** Action Result Entities
+- **Class prefix:** `ActionResultEntities`
 
 Use these exact identifiers throughout the codebase. Never hardcode different values.
 
@@ -42,13 +42,13 @@ Generate code that passes these checks on first run.
 
 - `coordinator/` - DataUpdateCoordinator (base.py + data_processing.py + error_handling.py + listeners.py)
 - `api/` - External API client with async aiohttp
-- `entity/` - Base entity class (`ServiceResultEntitiesEntity`)
+- `entity/` - Base entity class (`ActionResultEntitiesEntity`)
 - `config_flow_handler/` - Config flow with schemas/ and validators/ subdirs
 - `[platform]/` - One directory per platform (sensor, switch, etc.), one class per file
 
 **Key Patterns:**
 
-- All entities inherit: `(PlatformEntity, ServiceResultEntitiesEntity)` - order matters for MRO
+- All entities inherit: `(PlatformEntity, ActionResultEntitiesEntity)` - order matters for MRO
 - Unique ID format: `{entry_id}_{description.key}` (set in base entity)
 - Services registered in `async_setup()`, NOT `async_setup_entry()` (Quality Scale requirement)
 - Config entry data accessed via `entry.runtime_data.client` and `entry.runtime_data.coordinator`
@@ -127,7 +127,7 @@ pkill -f "hass --config" || true && pkill -f "debugpy.*5678" || true && ./script
 
 - Live: Terminal where `./script/develop` runs
 - File: `config/home-assistant.log` (most recent), `config/home-assistant.log.1` (previous)
-- Adjust log level: `custom_components.service_result: debug` in `config/configuration.yaml`
+- Adjust log level: `custom_components.action_result: debug` in `config/configuration.yaml`
 
 ## Working With the Developer
 

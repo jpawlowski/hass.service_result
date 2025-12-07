@@ -20,7 +20,7 @@ If not provided, ask for:
 
 ### 1. Define Service in `services.yaml`
 
-**File:** `custom_components/service_result/services.yaml`
+**File:** `custom_components/action_result/services.yaml`
 
 Add service definition:
 
@@ -34,7 +34,7 @@ Add service definition:
     entity:
       domain: [platform] # sensor, switch, etc.
       # OR
-      integration: service_result
+      integration: action_result
 
   # Service parameters
   fields:
@@ -65,10 +65,10 @@ Add service definition:
 
 **Option A: Simple service in `services/` directory**
 
-Create `custom_components/service_result/services/[service_name].py`:
+Create `custom_components/action_result/services/[service_name].py`:
 
 ```python
-"""[Service name] service for Service Result Entities."""
+"""[Service name] service for Action Result Entities."""
 
 from __future__ import annotations
 
@@ -168,7 +168,7 @@ async def async_setup_service(hass: HomeAssistant) -> None:
 
 ### 3. Register Service in `__init__.py`
 
-**File:** `custom_components/service_result/__init__.py`
+**File:** `custom_components/action_result/__init__.py`
 
 **CRITICAL:** Services must register in `async_setup` or `setup`, NOT in `async_setup_entry`!
 
@@ -222,7 +222,7 @@ async def async_setup_entry(...) -> None:
 
 ### 4. Add Service Constants
 
-**File:** `custom_components/service_result/const.py`
+**File:** `custom_components/action_result/const.py`
 
 ```python
 # Service names
@@ -436,7 +436,7 @@ async def async_handle_service(call: ServiceCall) -> None:
 
 1. Start Home Assistant: `script/develop`
 2. Go to Developer Tools > Services
-3. Find service: `service_result.[service_name]`
+3. Find service: `action_result.[service_name]`
 4. Test with valid parameters
 5. Test with invalid parameters (should show validation errors)
 6. Test with edge cases
@@ -444,9 +444,9 @@ async def async_handle_service(call: ServiceCall) -> None:
 
 ## Integration Context
 
-- **Domain:** `service_result`
-- **Services directory:** `custom_components/service_result/services/`
-- **Services definition:** `custom_components/service_result/services.yaml`
+- **Domain:** `action_result`
+- **Services directory:** `custom_components/action_result/services/`
+- **Services definition:** `custom_components/action_result/services.yaml`
 
 Follow patterns from existing services in the integration.
 

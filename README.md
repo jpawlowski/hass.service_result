@@ -1,4 +1,4 @@
-# Service Result Entities
+# Action Result Entities
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
@@ -41,7 +41,7 @@ This is a "**service response → attribute bridge**" that allows Dashboards and
 
 **Prerequisites:** This integration requires [HACS](https://hacs.xyz/) (Home Assistant Community Store).
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jpawlowski&repository=hass.service_result&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jpawlowski&repository=hass.action_result&category=integration)
 
 Then:
 
@@ -50,7 +50,7 @@ Then:
 
 ### Step 2: Add a Service Result Entity
 
-[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=service_result)
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=action_result)
 
 Configure:
 
@@ -141,14 +141,14 @@ Check your YAML syntax. The service data must be valid YAML with key: value pair
 logger:
   default: info
   logs:
-    custom_components.service_result: debug
+    custom_components.action_result: debug
 ```
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please open an issue or pull request.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/jpawlowski/hass.service_result?quickstart=1)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/jpawlowski/hass.action_result?quickstart=1)
 
 ## 📄 License
 
@@ -160,12 +160,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/jpawlowski/hass.service_result.svg?style=for-the-badge
-[commits]: https://github.com/jpawlowski/hass.service_result/commits/main
+[commits-shield]: https://img.shields.io/github/commit-activity/y/jpawlowski/hass.action_result.svg?style=for-the-badge
+[commits]: https://github.com/jpawlowski/hass.action_result/commits/main
 [hacs]: https://github.com/hacs/integration
 [hacsbadge]: https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge
-[license-shield]: https://img.shields.io/github/license/jpawlowski/hass.service_result.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/jpawlowski/hass.action_result.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%40jpawlowski-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/jpawlowski/hass.service_result.svg?style=for-the-badge
-[releases]: https://github.com/jpawlowski/hass.service_result/releases
+[releases-shield]: https://img.shields.io/github/release/jpawlowski/hass.action_result.svg?style=for-the-badge
+[releases]: https://github.com/jpawlowski/hass.action_result/releases
 [user_profile]: https://github.com/jpawlowski

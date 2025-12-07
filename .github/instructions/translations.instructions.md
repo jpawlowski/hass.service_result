@@ -4,7 +4,7 @@ applyTo: "**/translations/*.json"
 
 # Translation Files Instructions
 
-**Applies to:** `custom_components/service_result/translations/*.json`
+**Applies to:** `custom_components/action_result/translations/*.json`
 
 ## Schema Validation
 
@@ -37,7 +37,7 @@ Translation files define user-facing text for config flows, options, entities, a
   "config": {
     "error": {
       "invalid_auth": "Invalid credentials",
-      "stale_auth": "[%key:component::service_result::config::error::invalid_auth%]"
+      "stale_auth": "[%key:component::action_result::config::error::invalid_auth%]"
     }
   }
 }

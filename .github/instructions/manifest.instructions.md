@@ -4,7 +4,7 @@ applyTo: "**/manifest.json"
 
 # Manifest Instructions
 
-**Applies to:** `custom_components/service_result/manifest.json`
+**Applies to:** `custom_components/action_result/manifest.json`
 
 ## Schema Validation
 
@@ -16,14 +16,14 @@ This schema combines Home Assistant's official manifest requirements with HACS-s
 
 ```json
 {
-  "domain": "service_result",
-  "name": "Service Result Entities",
+  "domain": "action_result",
+  "name": "Action Result Entities",
   "codeowners": ["@jpawlowski"],
   "config_flow": true,
-  "documentation": "https://github.com/jpawlowski/hass.service_result",
+  "documentation": "https://github.com/jpawlowski/hass.action_result",
   "integration_type": "device",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/jpawlowski/hass.service_result/issues",
+  "issue_tracker": "https://github.com/jpawlowski/hass.action_result/issues",
   "requirements": [],
   "version": "0.0.0"
 }

@@ -8,13 +8,13 @@ This is a Home Assistant custom integration that was generated from a blueprint 
 
 **Integration details:**
 
-- **Domain:** `service_result`
-- **Title:** Service Result Entities
-- **Repository:** jpawlowski/hass.service_result
+- **Domain:** `action_result`
+- **Title:** Action Result Entities
+- **Repository:** jpawlowski/hass.action_result
 
 **Key directories:**
 
-- `custom_components/service_result/` - Main integration code
+- `custom_components/action_result/` - Main integration code
 - `config/` - Home Assistant configuration for local testing
 - `tests/` - Unit and integration tests
 - `script/` - Development and validation scripts
@@ -36,7 +36,7 @@ Test the integration using `./script/develop`. Important:
 
 **Adjusting log levels:**
 
-- Integration logs: `custom_components.service_result: debug` in `config/configuration.yaml`
+- Integration logs: `custom_components.action_result: debug` in `config/configuration.yaml`
 - You can modify log levels when debugging - just restart HA after changes
 
 **Context-specific instructions:**
@@ -157,15 +157,15 @@ As an AI agent, **aim for Silver or Gold Quality Scale** when generating code:
 
 This integration uses the following identifiers consistently:
 
-- **Domain:** `service_result`
-- **Title:** Service Result Entities
-- **Class prefix:** `ServiceResultEntities`
+- **Domain:** `action_result`
+- **Title:** Action Result Entities
+- **Class prefix:** `ActionResultEntities`
 
 **When creating new files:**
 
-- Use the domain `service_result` for all DOMAIN references
-- Prefix all integration-specific classes with `ServiceResultEntities`
-- Use "Service Result Entities" as the display title
+- Use the domain `action_result` for all DOMAIN references
+- Prefix all integration-specific classes with `ActionResultEntities`
+- Use "Action Result Entities" as the display title
 - Never hardcode different values
 
 ### Integration Structure
@@ -305,7 +305,7 @@ See `.github/instructions/coordinator.instructions.md` and `.github/instructions
 
 **Entities:**
 
-- Inherit from platform base + `ServiceResultEntitiesEntity`
+- Inherit from platform base + `ActionResultEntitiesEntity`
 - Read from `coordinator.data`, never call API directly
 - Use `EntityDescription` for static metadata
 
@@ -421,7 +421,7 @@ See `.github/instructions/python.instructions.md` for linter overrides and error
 
 **Test structure:**
 
-- `tests/` mirrors `custom_components/service_result/` structure
+- `tests/` mirrors `custom_components/action_result/` structure
 - Use fixtures for common setup (Home Assistant mock, coordinator, etc.)
 - Mock external API calls
 

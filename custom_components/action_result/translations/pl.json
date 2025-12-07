@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguruj Wynik Usługi",
+        "description": "Skonfiguruj sensor, który wyświetla odpowiedź z wywołania usługi Home Assistant.\n\nWybierz i skonfiguruj akcję usługi za pomocą edytora wizualnego poniżej.",
+        "data": {
+          "name": "Nazwa",
+          "service_action": "Akcja usługi",
+          "response_data_path": "Ścieżka danych odpowiedzi",
+          "attribute_name": "Nazwa atrybutu",
+          "update_mode": "Tryb aktualizacji",
+          "scan_interval": "Interwał odpytywania",
+          "trigger_entity": "Encja wyzwalająca",
+          "trigger_from_state": "Wyzwalaj ze stanu",
+          "trigger_to_state": "Wyzwalaj do stanu"
+        },
+        "data_description": {
+          "name": "Przyjazna nazwa dla tego czujnika (np. 'Ceny Tibber')",
+          "service_action": "Wybierz usługę/akcję do wywołania i skonfiguruj jej parametry. Użyj 'Pokaż YAML' aby bezpośrednio wkleić lub edytować YAML.",
+          "response_data_path": "Opcjonalna ścieżka do wyodrębnienia danych z odpowiedzi (np. 'results.0.items'). Pozostaw puste dla pełnej odpowiedzi.",
+          "attribute_name": "Nazwa atrybutu, który będzie zawierał dane odpowiedzi. Domyślnie 'data'.",
+          "update_mode": "Jak wyzwalać aktualizacje: Odpytywanie (cykliczne w interwale), Ręczne (przez usługę update_entity) lub Wyzwalacz stanu encji (gdy inna encja zmieni stan).",
+          "scan_interval": "Jak często wywoływać usługę w sekundach (tylko dla trybu Odpytywania). Minimum 10 sekund.",
+          "trigger_entity": "Encja do monitorowania zmian stanu (tylko dla trybu Wyzwalacza stanu).",
+          "trigger_from_state": "Wyzwalaj tylko przy zmianie z tego stanu (opcjonalne). Pozostaw puste dla dowolnego poprzedniego stanu.",
+          "trigger_to_state": "Wyzwalaj tylko przy zmianie do tego stanu (opcjonalne). Pozostaw puste dla dowolnego nowego stanu."
+        }
+      },
+      "reconfigure": {
+        "title": "Rekonfiguruj Wynik Usługi",
+        "description": "Zaktualizuj konfigurację usługi dla tego czujnika.\n\nAby zmienić nazwę tego wpisu, użyj Ustawienia → Urządzenia i usługi → [wpis] → menu trzech kropek → Zmień nazwę.",
+        "data": {
+          "service_action": "Akcja usługi",
+          "response_data_path": "Ścieżka danych odpowiedzi",
+          "attribute_name": "Nazwa atrybutu",
+          "update_mode": "Tryb aktualizacji",
+          "scan_interval": "Interwał odpytywania",
+          "trigger_entity": "Encja wyzwalająca",
+          "trigger_from_state": "Wyzwalaj ze stanu",
+          "trigger_to_state": "Wyzwalaj do stanu"
+        },
+        "data_description": {
+          "service_action": "Wybierz usługę/akcję do wywołania i skonfiguruj jej parametry. Użyj 'Pokaż YAML' aby bezpośrednio wkleić lub edytować YAML.",
+          "response_data_path": "Opcjonalna ścieżka do wyodrębnienia danych z odpowiedzi (np. 'results.0.items'). Pozostaw puste dla pełnej odpowiedzi.",
+          "attribute_name": "Nazwa atrybutu, który będzie zawierał dane odpowiedzi. Domyślnie 'data'.",
+          "update_mode": "Jak wyzwalać aktualizacje: Odpytywanie (cykliczne w interwale), Ręczne (przez usługę update_entity) lub Wyzwalacz stanu encji (gdy inna encja zmieni stan).",
+          "scan_interval": "Jak często wywoływać usługę w sekundach (tylko dla trybu Odpytywania). Minimum 10 sekund.",
+          "trigger_entity": "Encja do monitorowania zmian stanu (tylko dla trybu Wyzwalacza stanu).",
+          "trigger_from_state": "Wyzwalaj tylko przy zmianie z tego stanu (opcjonalne). Pozostaw puste dla dowolnego poprzedniego stanu.",
+          "trigger_to_state": "Wyzwalaj tylko przy zmianie do tego stanu (opcjonalne). Pozostaw puste dla dowolnego nowego stanu."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Usługa nie znaleziona. Sprawdź, czy wybrana akcja istnieje i integracja jest załadowana.",
+      "yaml_parse_error": "Nieprawidłowa składnia YAML. Sprawdź format danych usługi.",
+      "yaml_not_dict": "Dane usługi muszą być słownikiem YAML (pary klucz: wartość).",
+      "data_not_dict": "Sekcja 'data' w YAML musi być słownikiem (pary klucz: wartość).",
+      "no_service_selected": "Wybierz akcję usługi z listy rozwijanej lub podaj ją w YAML.",
+      "service_call_failed": "Wywołanie usługi nie powiodło się: {error_message}",
+      "trigger_entity_not_found": "Encja wyzwalająca nie istnieje. Wybierz prawidłową encję.",
+      "invalid_trigger_state": "Określony stan wyzwalający nie jest prawidłowy dla wybranej encji.",
+      "unknown": "Wystąpił nieoczekiwany błąd. Sprawdź logi, aby uzyskać szczegóły.",
+      "service_no_response": "Ta usługa nie zwraca danych odpowiedzi. Proszę wybrać usługę, która obsługuje zwracanie danych."
+    },
+    "abort": {
+      "already_configured": "Ten wpis jest już skonfigurowany."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Konfiguruj Opcje",
+        "description": "Dostosuj interwał odpytywania. Aby zmienić konfigurację usługi, użyj zamiast tego Rekonfiguruj.",
+        "data": {
+          "scan_interval": "Interwał odpytywania"
+        },
+        "data_description": {
+          "scan_interval": "Jak często wywoływać usługę (w sekundach). Minimum 10 sekund."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Odpytywanie (cykliczne)",
+        "manual": "Ręczne (update_entity)",
+        "state_trigger": "Wyzwalacz stanu encji"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Nie udało się przeanalizować danych YAML usługi: {error}"
+    },
+    "service_not_found": {
+      "message": "Skonfigurowana usługa \"{service}\" nie została znaleziona. Integracja mogła zostać usunięta lub nie jest załadowana."
+    },
+    "service_call_failed": {
+      "message": "Nie udało się wywołać usługi \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Usługa \"{service}\" jest tymczasowo niedostępna. Nastąpi automatyczna ponowna próba."
+    },
+    "response_path_invalid": {
+      "message": "Skonfigurowana ścieżka odpowiedzi \"{path}\" nie istnieje w odpowiedzi usługi."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Encja wyzwalająca \"{entity}\" jest niedostępna."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Wynik Usługi",
+        "state": {
+          "ok": "OK",
+          "error": "Błąd",
+          "unavailable": "Niedostępny",
+          "retrying": "Ponawianie"
+        }
+      }
+    }
+  }
+}

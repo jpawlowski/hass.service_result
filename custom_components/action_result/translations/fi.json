@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Määritä Palvelutulos",
+        "description": "Määritä anturi, joka näyttää vastauksen Home Assistant -palvelukutsusta.\n\nValitse ja määritä palvelutoiminto alla olevalla visuaalisella editorilla.",
+        "data": {
+          "name": "Nimi",
+          "service_action": "Palvelutoiminto",
+          "response_data_path": "Vastausdatan polku",
+          "attribute_name": "Attribuutin nimi",
+          "update_mode": "Päivitystila",
+          "scan_interval": "Pollausväli",
+          "trigger_entity": "Laukaisuentiteetti",
+          "trigger_from_state": "Laukaise tilasta",
+          "trigger_to_state": "Laukaise tilaan"
+        },
+        "data_description": {
+          "name": "Ystävällinen nimi tälle sensorille (esim. 'Tibber-hinnat')",
+          "service_action": "Valitse kutsuttava palvelu/toiminto ja määritä sen parametrit. Käytä 'Näytä YAML' liittääksesi tai muokataksesi YAML:ia suoraan.",
+          "response_data_path": "Valinnainen polku datan poimimiseen vastauksesta (esim. 'results.0.items'). Jätä tyhjäksi täydelle vastaukselle.",
+          "attribute_name": "Attribuutin nimi, joka sisältää vastausdatan. Oletus on 'data'.",
+          "update_mode": "Miten päivitykset laukaistaan: Pollaus (syklinen välein), Manuaalinen (update_entity-palvelun kautta) tai Entiteettitilan laukaisin (kun toinen entiteetti vaihtaa tilaa).",
+          "scan_interval": "Kuinka usein palvelua kutsutaan sekunneissa (vain Pollaustilassa). Vähintään 10 sekuntia.",
+          "trigger_entity": "Seurattava entiteetti tilamuutoksille (vain Entiteettitilan laukaisin -tilassa).",
+          "trigger_from_state": "Laukaise vain kun vaihdetaan tästä tilasta (valinnainen). Jätä tyhjäksi kaikille aiemmille tiloille.",
+          "trigger_to_state": "Laukaise vain kun vaihdetaan tähän tilaan (valinnainen). Jätä tyhjäksi kaikille uusille tiloille."
+        }
+      },
+      "reconfigure": {
+        "title": "Määritä Palvelutulos uudelleen",
+        "description": "Päivitä palvelukonfiguraatio tälle sensorille.\n\nNimetäksesi tämän merkinnän uudelleen, käytä Asetukset → Laitteet ja palvelut → [merkintä] → kolmen pisteen valikko → Nimeä uudelleen.",
+        "data": {
+          "service_action": "Palvelutoiminto",
+          "response_data_path": "Vastausdatan polku",
+          "attribute_name": "Attribuutin nimi",
+          "update_mode": "Päivitystila",
+          "scan_interval": "Pollausväli",
+          "trigger_entity": "Laukaisuentiteetti",
+          "trigger_from_state": "Laukaise tilasta",
+          "trigger_to_state": "Laukaise tilaan"
+        },
+        "data_description": {
+          "service_action": "Valitse kutsuttava palvelu/toiminto ja määritä sen parametrit. Käytä 'Näytä YAML' liittääksesi tai muokataksesi YAML:ia suoraan.",
+          "response_data_path": "Valinnainen polku datan poimimiseen vastauksesta (esim. 'results.0.items'). Jätä tyhjäksi täydelle vastaukselle.",
+          "attribute_name": "Attribuutin nimi, joka sisältää vastausdatan. Oletus on 'data'.",
+          "update_mode": "Miten päivitykset laukaistaan: Pollaus (syklinen välein), Manuaalinen (update_entity-palvelun kautta) tai Entiteettitilan laukaisin (kun toinen entiteetti vaihtaa tilaa).",
+          "scan_interval": "Kuinka usein palvelua kutsutaan sekunneissa (vain Pollaustilassa). Vähintään 10 sekuntia.",
+          "trigger_entity": "Seurattava entiteetti tilamuutoksille (vain Entiteettitilan laukaisin -tilassa).",
+          "trigger_from_state": "Laukaise vain kun vaihdetaan tästä tilasta (valinnainen). Jätä tyhjäksi kaikille aiemmille tiloille.",
+          "trigger_to_state": "Laukaise vain kun vaihdetaan tähän tilaan (valinnainen). Jätä tyhjäksi kaikille uusille tiloille."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Palvelua ei löydy. Varmista, että valittu toiminto on olemassa ja integraatio on ladattu.",
+      "yaml_parse_error": "Virheellinen YAML-syntaksi. Tarkista palveludatan muoto.",
+      "yaml_not_dict": "Palveludatan tulee olla YAML-sanakirja (avain: arvo -parit).",
+      "data_not_dict": "'data'-osion YAML:ssa tulee olla sanakirja (avain: arvo -parit).",
+      "no_service_selected": "Valitse palvelutoiminto pudotusvalikosta tai anna se YAML:ssa.",
+      "service_call_failed": "Palvelukutsu epäonnistui: {error_message}",
+      "trigger_entity_not_found": "Laukaisuentiteettiä ei ole olemassa. Valitse kelvollinen entiteetti.",
+      "invalid_trigger_state": "Määritetty laukaisutila ei ole kelvollinen valitulle entiteetille.",
+      "unknown": "Odottamaton virhe tapahtui. Tarkista lokit lisätietoja varten.",
+      "service_no_response": "Tämä palvelu ei palauta vastausdataa. Valitse palvelu, joka tukee datan palauttamista."
+    },
+    "abort": {
+      "already_configured": "Tämä merkintä on jo määritetty."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Määritä Asetukset",
+        "description": "Säädä pollausväliä. Palvelukonfiguraation muuttamiseksi käytä sen sijaan Määritä uudelleen.",
+        "data": {
+          "scan_interval": "Pollausväli"
+        },
+        "data_description": {
+          "scan_interval": "Kuinka usein palvelua kutsutaan (sekunneissa). Vähintään 10 sekuntia."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Pollaus (syklinen)",
+        "manual": "Manuaalinen (update_entity)",
+        "state_trigger": "Entiteettitilan laukaisin"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Palveludata-YAML:n jäsentäminen epäonnistui: {error}"
+    },
+    "service_not_found": {
+      "message": "Määritettyä palvelua \"{service}\" ei löydy. Integraatio on ehkä poistettu tai sitä ei ole ladattu."
+    },
+    "service_call_failed": {
+      "message": "Palvelun \"{service}\" kutsuminen epäonnistui: {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Palvelu \"{service}\" on tilapäisesti poissa käytöstä. Yritetään uudelleen automaattisesti."
+    },
+    "response_path_invalid": {
+      "message": "Määritettyä vastauspolkua \"{path}\" ei ole palveluvastauksessa."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Laukaisuentiteetti \"{entity}\" ei ole käytettävissä."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Palvelutulos",
+        "state": {
+          "ok": "OK",
+          "error": "Virhe",
+          "unavailable": "Ei käytettävissä",
+          "retrying": "Yritetään uudelleen"
+        }
+      }
+    }
+  }
+}

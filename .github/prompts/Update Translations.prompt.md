@@ -120,8 +120,8 @@ If not provided, ask for:
 
 **Related Files:**
 
-- English: [#file:custom_components/service_result/translations/en.json]
-- German: [#file:custom_components/service_result/translations/de.json]
+- English: [#file:custom_components/action_result/translations/en.json]
+- German: [#file:custom_components/action_result/translations/de.json]
 - Schema: [#file:schemas/json/translation_schema.json]
 - Documentation: Reference [#file:.github/instructions/translations.instructions.md]
 

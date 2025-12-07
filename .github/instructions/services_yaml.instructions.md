@@ -108,7 +108,7 @@ turn_on:
 
 ## Related Files
 
-Service implementations are in `custom_components/service_result/services/`.
+Service implementations are in `custom_components/action_result/services/`.
 
 ## Validation
 

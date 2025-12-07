@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurer le résultat du service",
+        "description": "Configure un capteur qui expose la réponse d'un appel de service Home Assistant.\n\nSélectionne et configure une action de service avec l'éditeur visuel ci-dessous.",
+        "data": {
+          "name": "Nom",
+          "service_action": "Action du service",
+          "response_data_path": "Chemin des données de réponse",
+          "attribute_name": "Nom de l'attribut",
+          "update_mode": "Mode de mise à jour",
+          "scan_interval": "Intervalle de polling",
+          "trigger_entity": "Entité déclencheur",
+          "trigger_from_state": "Déclencher depuis l'état",
+          "trigger_to_state": "Déclencher vers l'état"
+        },
+        "data_description": {
+          "name": "Un nom convivial pour ce capteur (par ex. 'Prix Tibber')",
+          "service_action": "Sélectionne le service/action à appeler et configure ses paramètres. Utilise 'Afficher YAML' pour coller ou modifier le YAML directement.",
+          "response_data_path": "Chemin optionnel pour extraire des données de la réponse (par ex. 'results.0.items'). Laisser vide pour la réponse complète.",
+          "attribute_name": "Nom de l'attribut qui contiendra les données de réponse. Par défaut 'data'.",
+          "update_mode": "Comment déclencher les mises à jour : Polling (cyclique à intervalle), Manuel (via service update_entity), ou Déclencheur d'état d'entité (quand une autre entité change d'état).",
+          "scan_interval": "Fréquence d'appel du service en secondes (uniquement pour le mode Polling). Minimum 10 secondes.",
+          "trigger_entity": "Entité à surveiller pour les changements d'état (uniquement pour le mode Déclencheur d'état).",
+          "trigger_from_state": "Déclencher uniquement lors du changement depuis cet état (optionnel). Laisser vide pour tout état précédent.",
+          "trigger_to_state": "Déclencher uniquement lors du changement vers cet état (optionnel). Laisser vide pour tout nouvel état."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurer le résultat du service",
+        "description": "Met à jour la configuration du service pour ce capteur.\n\nPour renommer cette entrée, utilise Paramètres → Appareils et services → [entrée] → menu trois points → Renommer.",
+        "data": {
+          "service_action": "Action du service",
+          "response_data_path": "Chemin des données de réponse",
+          "attribute_name": "Nom de l'attribut",
+          "update_mode": "Mode de mise à jour",
+          "scan_interval": "Intervalle de polling",
+          "trigger_entity": "Entité déclencheur",
+          "trigger_from_state": "Déclencher depuis l'état",
+          "trigger_to_state": "Déclencher vers l'état"
+        },
+        "data_description": {
+          "service_action": "Sélectionne le service/action à appeler et configure ses paramètres. Utilise 'Afficher YAML' pour coller ou modifier le YAML directement.",
+          "response_data_path": "Chemin optionnel pour extraire des données de la réponse (par ex. 'results.0.items'). Laisser vide pour la réponse complète.",
+          "attribute_name": "Nom de l'attribut qui contiendra les données de réponse. Par défaut 'data'.",
+          "update_mode": "Comment déclencher les mises à jour : Polling (cyclique à intervalle), Manuel (via service update_entity), ou Déclencheur d'état d'entité (quand une autre entité change d'état).",
+          "scan_interval": "Fréquence d'appel du service en secondes (uniquement pour le mode Polling). Minimum 10 secondes.",
+          "trigger_entity": "Entité à surveiller pour les changements d'état (uniquement pour le mode Déclencheur d'état).",
+          "trigger_from_state": "Déclencher uniquement lors du changement depuis cet état (optionnel). Laisser vide pour tout état précédent.",
+          "trigger_to_state": "Déclencher uniquement lors du changement vers cet état (optionnel). Laisser vide pour tout nouvel état."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Service non trouvé. Vérifie que l'action sélectionnée existe et que l'intégration est chargée.",
+      "yaml_parse_error": "Syntaxe YAML invalide. Vérifie le format des données du service.",
+      "yaml_not_dict": "Les données du service doivent être un dictionnaire YAML (paires clé: valeur).",
+      "data_not_dict": "La section 'data' dans le YAML doit être un dictionnaire (paires clé: valeur).",
+      "no_service_selected": "Sélectionne une action de service dans la liste déroulante ou fournis-la dans le YAML.",
+      "service_call_failed": "L'appel du service a échoué : {error_message}",
+      "trigger_entity_not_found": "L'entité déclencheur n'existe pas. Sélectionne une entité valide.",
+      "invalid_trigger_state": "L'état déclencheur spécifié n'est pas valide pour l'entité sélectionnée.",
+      "unknown": "Une erreur inattendue s'est produite. Consulte les logs pour plus de détails.",
+      "service_no_response": "Ce service ne renvoie pas de données de réponse. Sélectionne un service qui prend en charge le renvoi de données."
+    },
+    "abort": {
+      "already_configured": "Cette entrée est déjà configurée."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configurer les options",
+        "description": "Ajuste l'intervalle de polling. Pour modifier la configuration du service, utilise Reconfigurer à la place.",
+        "data": {
+          "scan_interval": "Intervalle de polling"
+        },
+        "data_description": {
+          "scan_interval": "Fréquence d'appel du service (en secondes). Minimum 10 secondes."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Polling (cyclique)",
+        "manual": "Manuel (update_entity)",
+        "state_trigger": "Déclencheur d'état d'entité"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Échec de l'analyse du YAML des données du service : {error}"
+    },
+    "service_not_found": {
+      "message": "Le service configuré \"{service}\" n'a pas été trouvé. L'intégration a peut-être été supprimée ou n'est pas chargée."
+    },
+    "service_call_failed": {
+      "message": "Échec de l'appel du service \"{service}\" : {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Le service \"{service}\" est temporairement indisponible. Nouvelle tentative automatique."
+    },
+    "response_path_invalid": {
+      "message": "Le chemin de réponse configuré \"{path}\" n'existe pas dans la réponse du service."
+    },
+    "trigger_entity_unavailable": {
+      "message": "L'entité déclencheur \"{entity}\" est indisponible."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Résultat du service",
+        "state": {
+          "ok": "OK",
+          "error": "Erreur",
+          "unavailable": "Indisponible",
+          "retrying": "Nouvelle tentative"
+        }
+      }
+    }
+  }
+}

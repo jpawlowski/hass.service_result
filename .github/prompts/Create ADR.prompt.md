@@ -96,8 +96,8 @@ Create a new ADR in `docs/development/adr/NNNN-title-of-decision.md`:
 
 **Files affected:**
 
-- `custom_components/service_result/[file1.py]`
-- `custom_components/service_result/[file2.py]`
+- `custom_components/action_result/[file1.py]`
+- `custom_components/action_result/[file2.py]`
 
 **Code pattern to follow:**
 
@@ -216,8 +216,8 @@ Create a new ADR in `docs/development/adr/NNNN-title-of-decision.md`:
 
 ## Integration Context
 
-- **Domain:** `service_result`
-- **Class prefix:** `ServiceResultEntities`
+- **Domain:** `action_result`
+- **Class prefix:** `ActionResultEntities`
 - **Architecture docs:** `docs/development/ARCHITECTURE.md`
 - **Decisions log:** `docs/development/DECISIONS.md`
 

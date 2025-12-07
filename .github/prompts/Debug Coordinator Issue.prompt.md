@@ -49,7 +49,7 @@ Your goal is to diagnose and fix issues with the data update coordinator.
      ```yaml
      logger:
        logs:
-         custom_components.service_result: debug
+         custom_components.action_result: debug
      ```
    - Restart Home Assistant: `./script/develop`
 
@@ -119,9 +119,9 @@ super().__init__(
 
 ## Related Files to Review
 
-- [#file:custom_components/service_result/coordinator/base.py]
-- [#file:custom_components/service_result/api/client.py]
-- [#file:custom_components/service_result/entity/base.py]
+- [#file:custom_components/action_result/coordinator/base.py]
+- [#file:custom_components/action_result/api/client.py]
+- [#file:custom_components/action_result/entity/base.py]
 - [#file:config/configuration.yaml] - for log levels
 - [#file:config/home-assistant.log] - for error traces
 

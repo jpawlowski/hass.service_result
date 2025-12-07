@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurare Rezultat Serviciu",
+        "description": "Configurează un senzor care afișează răspunsul de la un apel de serviciu Home Assistant.\n\nSelectează și configurează o acțiune de serviciu folosind editorul vizual de mai jos.",
+        "data": {
+          "name": "Nume",
+          "service_action": "Acțiune serviciu",
+          "response_data_path": "Cale date răspuns",
+          "attribute_name": "Nume atribut",
+          "update_mode": "Mod actualizare",
+          "scan_interval": "Interval interogare",
+          "trigger_entity": "Entitate declanșator",
+          "trigger_from_state": "Declanșează din stare",
+          "trigger_to_state": "Declanșează la stare"
+        },
+        "data_description": {
+          "name": "Un nume prietenos pentru acest senzor (ex. 'Prețuri Tibber')",
+          "service_action": "Selectează serviciul/acțiunea de apelat și configurează-i parametrii. Folosește 'Arată YAML' pentru a lipi sau edita YAML direct.",
+          "response_data_path": "Cale opțională pentru extragerea datelor din răspuns (ex. 'results.0.items'). Lăsați gol pentru răspunsul complet.",
+          "attribute_name": "Numele atributului care va conține datele răspunsului. Implicit este 'data'.",
+          "update_mode": "Cum se declanșează actualizările: Interogare (ciclică la interval), Manual (prin serviciu update_entity), sau Declanșator stare entitate (când altă entitate își schimbă starea).",
+          "scan_interval": "Cât de des se apelează serviciul în secunde (doar pentru modul Interogare). Minim 10 secunde.",
+          "trigger_entity": "Entitate de monitorizat pentru schimbări de stare (doar pentru modul Declanșator stare).",
+          "trigger_from_state": "Declanșează doar la schimbarea din această stare (opțional). Lăsați gol pentru orice stare anterioară.",
+          "trigger_to_state": "Declanșează doar la schimbarea la această stare (opțional). Lăsați gol pentru orice stare nouă."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurare Rezultat Serviciu",
+        "description": "Actualizați configurația serviciului pentru acest senzor.\n\nPentru a redenumi această intrare, folosește Setări → Dispozitive și servicii → [intrare] → meniu cu trei puncte → Redenumește.",
+        "data": {
+          "service_action": "Acțiune serviciu",
+          "response_data_path": "Cale date răspuns",
+          "attribute_name": "Nume atribut",
+          "update_mode": "Mod actualizare",
+          "scan_interval": "Interval interogare",
+          "trigger_entity": "Entitate declanșator",
+          "trigger_from_state": "Declanșează din stare",
+          "trigger_to_state": "Declanșează la stare"
+        },
+        "data_description": {
+          "service_action": "Selectează serviciul/acțiunea de apelat și configurează-i parametrii. Folosește 'Arată YAML' pentru a lipi sau edita YAML direct.",
+          "response_data_path": "Cale opțională pentru extragerea datelor din răspuns (ex. 'results.0.items'). Lăsați gol pentru răspunsul complet.",
+          "attribute_name": "Numele atributului care va conține datele răspunsului. Implicit este 'data'.",
+          "update_mode": "Cum se declanșează actualizările: Interogare (ciclică la interval), Manual (prin serviciu update_entity), sau Declanșator stare entitate (când altă entitate își schimbă starea).",
+          "scan_interval": "Cât de des se apelează serviciul în secunde (doar pentru modul Interogare). Minim 10 secunde.",
+          "trigger_entity": "Entitate de monitorizat pentru schimbări de stare (doar pentru modul Declanșator stare).",
+          "trigger_from_state": "Declanșează doar la schimbarea din această stare (opțional). Lăsați gol pentru orice stare anterioară.",
+          "trigger_to_state": "Declanșează doar la schimbarea la această stare (opțional). Lăsați gol pentru orice stare nouă."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Serviciu negăsit. Verificați că acțiunea selectată există și integrarea este încărcată.",
+      "yaml_parse_error": "Sintaxă YAML invalidă. Verificați formatul datelor serviciului.",
+      "yaml_not_dict": "Datele serviciului trebuie să fie un dicționar YAML (perechi cheie: valoare).",
+      "data_not_dict": "Secțiunea 'data' din YAML trebuie să fie un dicționar (perechi cheie: valoare).",
+      "no_service_selected": "Selectați o acțiune de serviciu din meniul derulant sau furnizați-o în YAML.",
+      "service_call_failed": "Apelul serviciului a eșuat: {error_message}",
+      "trigger_entity_not_found": "Entitatea declanșator nu există. Selectați o entitate validă.",
+      "invalid_trigger_state": "Starea declanșator specificată nu este validă pentru entitatea selectată.",
+      "unknown": "A apărut o eroare neașteptată. Verificați jurnalele pentru detalii.",
+      "service_no_response": "Acest serviciu nu returnează date de răspuns. Te rugăm să selectezi un serviciu care suportă returnarea datelor."
+    },
+    "abort": {
+      "already_configured": "Această intrare este deja configurată."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configurare Opțiuni",
+        "description": "Ajustați intervalul de interogare. Pentru a schimba configurația serviciului, folosiți Reconfigurare în schimb.",
+        "data": {
+          "scan_interval": "Interval interogare"
+        },
+        "data_description": {
+          "scan_interval": "Cât de des se apelează serviciul (în secunde). Minim 10 secunde."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Interogare (ciclică)",
+        "manual": "Manual (update_entity)",
+        "state_trigger": "Declanșator stare entitate"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Nu s-a putut analiza YAML-ul datelor serviciului: {error}"
+    },
+    "service_not_found": {
+      "message": "Serviciul configurat \"{service}\" nu a fost găsit. Integrarea poate fi fost eliminată sau nu este încărcată."
+    },
+    "service_call_failed": {
+      "message": "Nu s-a putut apela serviciul \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Serviciul \"{service}\" este temporar indisponibil. Se va reîncerca automat."
+    },
+    "response_path_invalid": {
+      "message": "Calea de răspuns configurată \"{path}\" nu există în răspunsul serviciului."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Entitatea declanșator \"{entity}\" este indisponibilă."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Rezultat Serviciu",
+        "state": {
+          "ok": "OK",
+          "error": "Eroare",
+          "unavailable": "Indisponibil",
+          "retrying": "Se reîncearcă"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
-# Getting Started with Service Result Entities
+# Getting Started with Action Result Entities
 
-This guide will help you install and set up the Service Result Entities custom integration for Home Assistant.
+This guide will help you install and set up the Action Result Entities custom integration for Home Assistant.
 
 ## Prerequisites
 
@@ -16,18 +16,18 @@ This guide will help you install and set up the Service Result Entities custom i
 2. Go to "Integrations"
 3. Click the three dots in the top right corner
 4. Select "Custom repositories"
-5. Add this repository URL: `https://github.com/jpawlowski/hass.service_result`
+5. Add this repository URL: `https://github.com/jpawlowski/hass.action_result`
 6. Set category to "Integration"
 7. Click "Add"
-8. Find "Service Result Entities" in the integration list
+8. Find "Action Result Entities" in the integration list
 9. Click "Download"
 10. Restart Home Assistant
 
 ### Manual Installation
 
-1. Download the latest release from the [releases page](https://github.com/jpawlowski/hass.service_result/releases)
-2. Extract the `service_result` folder from the archive
-3. Copy it to `custom_components/service_result/` in your Home Assistant configuration directory
+1. Download the latest release from the [releases page](https://github.com/jpawlowski/hass.action_result/releases)
+2. Extract the `action_result` folder from the archive
+3. Copy it to `custom_components/action_result/` in your Home Assistant configuration directory
 4. Restart Home Assistant
 
 ## Initial Setup
@@ -36,7 +36,7 @@ After installation, add the integration:
 
 1. Go to **Settings** → **Devices & Services**
 2. Click **+ Add Integration**
-3. Search for "Service Result Entities"
+3. Search for "Action Result Entities"
 4. Follow the configuration steps:
 
 ### Step 1: Connection Information
@@ -99,13 +99,13 @@ Add entities to your dashboard:
 1. Go to your dashboard
 2. Click **Edit Dashboard** → **Add Card**
 3. Choose card type (e.g., "Entities", "Glance")
-4. Select entities from "Service Result Entities"
+4. Select entities from "Action Result Entities"
 
 Example entities card:
 
 ```yaml
 type: entities
-title: Service Result Entities
+title: Action Result Entities
 entities:
   - sensor.device_name_sensor
   - binary_sensor.device_name_connectivity
@@ -172,7 +172,7 @@ Enable debug logging to troubleshoot issues:
 logger:
   default: warning
   logs:
-    custom_components.service_result: debug
+    custom_components.action_result: debug
 ```
 
 Add this to `configuration.yaml`, restart, and reproduce the issue. Check logs for detailed information.
@@ -181,11 +181,11 @@ Add this to `configuration.yaml`, restart, and reproduce the issue. Check logs f
 
 - See [CONFIGURATION.md](./CONFIGURATION.md) for detailed configuration options
 - See [EXAMPLES.md](./EXAMPLES.md) for more automation examples
-- Report issues at [GitHub Issues](https://github.com/jpawlowski/hass.service_result/issues)
+- Report issues at [GitHub Issues](https://github.com/jpawlowski/hass.action_result/issues)
 
 ## Support
 
 For help and discussion:
 
-- [GitHub Discussions](https://github.com/jpawlowski/hass.service_result/discussions)
+- [GitHub Discussions](https://github.com/jpawlowski/hass.action_result/discussions)
 - [Home Assistant Community Forum](https://community.home-assistant.io/)

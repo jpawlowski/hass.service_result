@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigūruoti Paslaugos Rezultatą",
+        "description": "Sukonfigūruok jutiklį, kuris rodo atsakymą iš Home Assistant paslaugos iškvietimo.\n\nPasirink ir sukonfigūruok paslaugos veiksmą naudojant žemiau esantį vaizdinį redaktorių.",
+        "data": {
+          "name": "Pavadinimas",
+          "service_action": "Paslaugos veiksmas",
+          "response_data_path": "Atsakymo duomenų kelias",
+          "attribute_name": "Atributo pavadinimas",
+          "update_mode": "Atnaujinimo režimas",
+          "scan_interval": "Apklausos intervalas",
+          "trigger_entity": "Paleidimo esybė",
+          "trigger_from_state": "Paleisti iš būsenos",
+          "trigger_to_state": "Paleisti į būseną"
+        },
+        "data_description": {
+          "name": "Draugiškas pavadinimas šiam jutikliui (pvz., 'Tibber kainos')",
+          "service_action": "Pasirink kvietimą paslaugą/veiksmą ir sukonfigūruok jo parametrus. Naudok 'Rodyti YAML' norėdamas tiesiogiai įklijuoti ar redaguoti YAML.",
+          "response_data_path": "Neprivalomas kelias duomenims išgauti iš atsakymo (pvz., 'results.0.items'). Palikite tuščią pilnam atsakymui.",
+          "attribute_name": "Atributo, kuriame bus atsakymo duomenys, pavadinimas. Numatytasis yra 'data'.",
+          "update_mode": "Kaip paleidžiami atnaujinimai: Apklausa (ciklinė su intervalu), Rankinė (per update_entity paslaugą) arba Esybės būsenos paleidiklis (kai kita esybė pakeičia būseną).",
+          "scan_interval": "Kaip dažnai iškviečiama paslauga sekundėmis (tik Apklausos režimui). Mažiausiai 10 sekundžių.",
+          "trigger_entity": "Esybė stebėti būsenos pokyčiams (tik Būsenos paleidiklio režimui).",
+          "trigger_from_state": "Paleisti tik keičiantis iš šios būsenos (neprivaloma). Palikite tuščią bet kuriai ankstesnei būsenai.",
+          "trigger_to_state": "Paleisti tik keičiantis į šią būseną (neprivaloma). Palikite tuščią bet kuriai naujai būsenai."
+        }
+      },
+      "reconfigure": {
+        "title": "Perkonfigūruoti Paslaugos Rezultatą",
+        "description": "Atnaujinkite paslaugos konfigūraciją šiam jutikliui.\n\nNorėdami pervadinti šį įrašą, naudokite Nustatymai → Įrenginiai ir paslaugos → [įrašas] → trijų taškų meniu → Pervadinti.",
+        "data": {
+          "service_action": "Paslaugos veiksmas",
+          "response_data_path": "Atsakymo duomenų kelias",
+          "attribute_name": "Atributo pavadinimas",
+          "update_mode": "Atnaujinimo režimas",
+          "scan_interval": "Apklausos intervalas",
+          "trigger_entity": "Paleidimo esybė",
+          "trigger_from_state": "Paleisti iš būsenos",
+          "trigger_to_state": "Paleisti į būseną"
+        },
+        "data_description": {
+          "service_action": "Pasirink kvietimą paslaugą/veiksmą ir sukonfigūruok jo parametrus. Naudok 'Rodyti YAML' norėdamas tiesiogiai įklijuoti ar redaguoti YAML.",
+          "response_data_path": "Neprivalomas kelias duomenims išgauti iš atsakymo (pvz., 'results.0.items'). Palikite tuščią pilnam atsakymui.",
+          "attribute_name": "Atributo, kuriame bus atsakymo duomenys, pavadinimas. Numatytasis yra 'data'.",
+          "update_mode": "Kaip paleidžiami atnaujinimai: Apklausa (ciklinė su intervalu), Rankinė (per update_entity paslaugą) arba Esybės būsenos paleidiklis (kai kita esybė pakeičia būseną).",
+          "scan_interval": "Kaip dažnai iškviečiama paslauga sekundėmis (tik Apklausos režimui). Mažiausiai 10 sekundžių.",
+          "trigger_entity": "Esybė stebėti būsenos pokyčiams (tik Būsenos paleidiklio režimui).",
+          "trigger_from_state": "Paleisti tik keičiantis iš šios būsenos (neprivaloma). Palikite tuščią bet kuriai ankstesnei būsenai.",
+          "trigger_to_state": "Paleisti tik keičiantis į šią būseną (neprivaloma). Palikite tuščią bet kuriai naujai būsenai."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Paslauga nerasta. Patikrinkite, ar pasirinktas veiksmas egzistuoja ir integracija įkelta.",
+      "yaml_parse_error": "Netinkama YAML sintaksė. Patikrinkite paslaugos duomenų formatą.",
+      "yaml_not_dict": "Paslaugos duomenys turi būti YAML žodynas (raktų: reikšmių poros).",
+      "data_not_dict": "'data' sekcija YAML turi būti žodynas (raktų: reikšmių poros).",
+      "no_service_selected": "Pasirinkite paslaugos veiksmą iš išskleidžiamojo meniu arba pateikite jį YAML.",
+      "service_call_failed": "Paslaugos iškvietimas nepavyko: {error_message}",
+      "trigger_entity_not_found": "Paleidimo esybė neegzistuoja. Pasirinkite tinkamą esybę.",
+      "invalid_trigger_state": "Nurodyta paleidimo būsena nėra tinkama pasirinktai esybei.",
+      "unknown": "Įvyko netikėta klaida. Patikrinkite žurnalus dėl detalių.",
+      "service_no_response": "Ši paslauga negrąžina atsakymo duomenų. Pasirinkite paslaugą, kuri palaiko duomenų grąžinimą."
+    },
+    "abort": {
+      "already_configured": "Šis įrašas jau sukonfigūruotas."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Konfigūruoti Parinktis",
+        "description": "Pakoreguokite apklausos intervalą. Norėdami pakeisti paslaugos konfigūraciją, naudokite Perkonfigūruoti.",
+        "data": {
+          "scan_interval": "Apklausos intervalas"
+        },
+        "data_description": {
+          "scan_interval": "Kaip dažnai iškviečiama paslauga (sekundėmis). Mažiausiai 10 sekundžių."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Apklausa (ciklinė)",
+        "manual": "Rankinė (update_entity)",
+        "state_trigger": "Esybės būsenos paleidiklis"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Nepavyko išanalizuoti paslaugos duomenų YAML: {error}"
+    },
+    "service_not_found": {
+      "message": "Sukonfigūruota paslauga \"{service}\" nerasta. Integracija galėjo būti pašalinta arba nėra įkelta."
+    },
+    "service_call_failed": {
+      "message": "Nepavyko iškviesti paslaugos \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Paslauga \"{service}\" laikinai nepasiekiama. Bus automatiškai bandoma iš naujo."
+    },
+    "response_path_invalid": {
+      "message": "Sukonfigūruotas atsakymo kelias \"{path}\" neegzistuoja paslaugos atsakyme."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Paleidimo esybė \"{entity}\" nepasiekiama."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Paslaugos Rezultatas",
+        "state": {
+          "ok": "Gerai",
+          "error": "Klaida",
+          "unavailable": "Nepasiekiamas",
+          "retrying": "Bandoma iš naujo"
+        }
+      }
+    }
+  }
+}

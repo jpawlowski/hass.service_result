@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar Resultado del Servicio",
+        "description": "Configura un sensor que expone la respuesta de una llamada a un servicio de Home Assistant.\n\nSelecciona y configura una acción de servicio usando el editor visual de abajo.",
+        "data": {
+          "name": "Nombre",
+          "service_action": "Acción del servicio",
+          "response_data_path": "Ruta de datos de respuesta",
+          "attribute_name": "Nombre del atributo",
+          "update_mode": "Modo de actualización",
+          "scan_interval": "Intervalo de sondeo",
+          "trigger_entity": "Entidad disparadora",
+          "trigger_from_state": "Disparar desde estado",
+          "trigger_to_state": "Disparar hacia estado"
+        },
+        "data_description": {
+          "name": "Un nombre amigable para este sensor (ej. 'Precios Tibber')",
+          "service_action": "Selecciona el servicio/acción a llamar y configura sus parámetros. Usa 'Mostrar YAML' para pegar o editar YAML directamente.",
+          "response_data_path": "Ruta opcional para extraer datos de la respuesta (ej. 'results.0.items'). Dejar vacío para la respuesta completa.",
+          "attribute_name": "Nombre del atributo que contendrá los datos de respuesta. Por defecto es 'data'.",
+          "update_mode": "Cómo disparar las actualizaciones: Sondeo (cíclico a intervalo), Manual (vía servicio update_entity), o Disparador de estado de entidad (cuando otra entidad cambia de estado).",
+          "scan_interval": "Con qué frecuencia llamar al servicio en segundos (solo para modo Sondeo). Mínimo 10 segundos.",
+          "trigger_entity": "Entidad a vigilar para cambios de estado (solo para modo Disparador de estado).",
+          "trigger_from_state": "Solo disparar al cambiar desde este estado (opcional). Dejar vacío para cualquier estado previo.",
+          "trigger_to_state": "Solo disparar al cambiar hacia este estado (opcional). Dejar vacío para cualquier estado nuevo."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigurar Resultado del Servicio",
+        "description": "Actualiza la configuración del servicio para este sensor.\n\nPara renombrar esta entrada, usa Configuración → Dispositivos y Servicios → [entrada] → menú de tres puntos → Renombrar.",
+        "data": {
+          "service_action": "Acción del servicio",
+          "response_data_path": "Ruta de datos de respuesta",
+          "attribute_name": "Nombre del atributo",
+          "update_mode": "Modo de actualización",
+          "scan_interval": "Intervalo de sondeo",
+          "trigger_entity": "Entidad disparadora",
+          "trigger_from_state": "Disparar desde estado",
+          "trigger_to_state": "Disparar hacia estado"
+        },
+        "data_description": {
+          "service_action": "Selecciona el servicio/acción a llamar y configura sus parámetros. Usa 'Mostrar YAML' para pegar o editar YAML directamente.",
+          "response_data_path": "Ruta opcional para extraer datos de la respuesta (ej. 'results.0.items'). Dejar vacío para la respuesta completa.",
+          "attribute_name": "Nombre del atributo que contendrá los datos de respuesta. Por defecto es 'data'.",
+          "update_mode": "Cómo disparar las actualizaciones: Sondeo (cíclico a intervalo), Manual (vía servicio update_entity), o Disparador de estado de entidad (cuando otra entidad cambia de estado).",
+          "scan_interval": "Con qué frecuencia llamar al servicio en segundos (solo para modo Sondeo). Mínimo 10 segundos.",
+          "trigger_entity": "Entidad a vigilar para cambios de estado (solo para modo Disparador de estado).",
+          "trigger_from_state": "Solo disparar al cambiar desde este estado (opcional). Dejar vacío para cualquier estado previo.",
+          "trigger_to_state": "Solo disparar al cambiar hacia este estado (opcional). Dejar vacío para cualquier estado nuevo."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Servicio no encontrado. Verifica que la acción seleccionada existe y la integración está cargada.",
+      "yaml_parse_error": "Sintaxis YAML inválida. Por favor verifica el formato de los datos del servicio.",
+      "yaml_not_dict": "Los datos del servicio deben ser un diccionario YAML (pares clave: valor).",
+      "data_not_dict": "La sección 'data' en el YAML debe ser un diccionario (pares clave: valor).",
+      "no_service_selected": "Por favor selecciona una acción de servicio del menú desplegable o proporciónala en el YAML.",
+      "service_call_failed": "La llamada al servicio falló: {error_message}",
+      "trigger_entity_not_found": "La entidad disparadora no existe. Por favor selecciona una entidad válida.",
+      "invalid_trigger_state": "El estado disparador especificado no es válido para la entidad seleccionada.",
+      "unknown": "Ocurrió un error inesperado. Por favor revisa los registros para más detalles.",
+      "service_no_response": "Este servicio no devuelve datos de respuesta. Por favor selecciona un servicio que soporte devolver datos."
+    },
+    "abort": {
+      "already_configured": "Esta entrada ya está configurada."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configurar Opciones",
+        "description": "Ajusta el intervalo de sondeo. Para cambiar la configuración del servicio, usa Reconfigurar en su lugar.",
+        "data": {
+          "scan_interval": "Intervalo de sondeo"
+        },
+        "data_description": {
+          "scan_interval": "Con qué frecuencia llamar al servicio (en segundos). Mínimo 10 segundos."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Sondeo (cíclico)",
+        "manual": "Manual (update_entity)",
+        "state_trigger": "Disparador de estado de entidad"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Error al analizar los datos YAML del servicio: {error}"
+    },
+    "service_not_found": {
+      "message": "El servicio configurado \"{service}\" no fue encontrado. La integración puede haber sido eliminada o no está cargada."
+    },
+    "service_call_failed": {
+      "message": "Error al llamar al servicio \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "El servicio \"{service}\" está temporalmente no disponible. Se reintentará automáticamente."
+    },
+    "response_path_invalid": {
+      "message": "La ruta de respuesta configurada \"{path}\" no existe en la respuesta del servicio."
+    },
+    "trigger_entity_unavailable": {
+      "message": "La entidad disparadora \"{entity}\" no está disponible."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Resultado del Servicio",
+        "state": {
+          "ok": "OK",
+          "error": "Error",
+          "unavailable": "No disponible",
+          "retrying": "Reintentando"
+        }
+      }
+    }
+  }
+}

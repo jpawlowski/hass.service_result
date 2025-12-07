@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguriraj Rezultat Usluge",
+        "description": "Konfiguriraj senzor koji prikazuje odgovor od poziva usluge Home Assistant.\n\nOdaberi i konfiguriraj akciju usluge pomoću vizualnog uređivača ispod.",
+        "data": {
+          "name": "Naziv",
+          "service_action": "Akcija usluge",
+          "response_data_path": "Put podataka odgovora",
+          "attribute_name": "Naziv atributa",
+          "update_mode": "Način ažuriranja",
+          "scan_interval": "Interval prozivanja",
+          "trigger_entity": "Okidač entitet",
+          "trigger_from_state": "Okidač iz stanja",
+          "trigger_to_state": "Okidač u stanje"
+        },
+        "data_description": {
+          "name": "Prijateljski naziv za ovaj senzor (npr. 'Tibber cijene')",
+          "service_action": "Odaberi uslugu/akciju za pozivanje i konfiguriraj njene parametre. Koristi 'Prikaži YAML' za izravno lijepljenje ili uređivanje YAML-a.",
+          "response_data_path": "Opcionalni put za izdvajanje podataka iz odgovora (npr. 'results.0.items'). Ostavite prazno za potpuni odgovor.",
+          "attribute_name": "Naziv atributa koji će sadržavati podatke odgovora. Zadano je 'data'.",
+          "update_mode": "Kako se pokreću ažuriranja: Prozivanje (ciklički s intervalom), Ručno (putem usluge update_entity), ili Okidač stanja entiteta (kada drugi entitet promijeni stanje).",
+          "scan_interval": "Koliko često se poziva usluga u sekundama (samo za način Prozivanja). Minimum 10 sekundi.",
+          "trigger_entity": "Entitet za praćenje promjena stanja (samo za način Okidača stanja).",
+          "trigger_from_state": "Pokreni samo pri promjeni iz ovog stanja (opcionalno). Ostavite prazno za bilo koje prethodno stanje.",
+          "trigger_to_state": "Pokreni samo pri promjeni u ovo stanje (opcionalno). Ostavite prazno za bilo koje novo stanje."
+        }
+      },
+      "reconfigure": {
+        "title": "Rekonfiguriraj Rezultat Usluge",
+        "description": "Ažurirajte konfiguraciju usluge za ovaj senzor.\n\nZa preimenovanje ovog unosa, koristite Postavke → Uređaji i usluge → [unos] → izbornik s tri točke → Preimenuj.",
+        "data": {
+          "service_action": "Akcija usluge",
+          "response_data_path": "Put podataka odgovora",
+          "attribute_name": "Naziv atributa",
+          "update_mode": "Način ažuriranja",
+          "scan_interval": "Interval prozivanja",
+          "trigger_entity": "Okidač entitet",
+          "trigger_from_state": "Okidač iz stanja",
+          "trigger_to_state": "Okidač u stanje"
+        },
+        "data_description": {
+          "service_action": "Odaberi uslugu/akciju za pozivanje i konfiguriraj njene parametre. Koristi 'Prikaži YAML' za izravno lijepljenje ili uređivanje YAML-a.",
+          "response_data_path": "Opcionalni put za izdvajanje podataka iz odgovora (npr. 'results.0.items'). Ostavite prazno za potpuni odgovor.",
+          "attribute_name": "Naziv atributa koji će sadržavati podatke odgovora. Zadano je 'data'.",
+          "update_mode": "Kako se pokreću ažuriranja: Prozivanje (ciklički s intervalom), Ručno (putem usluge update_entity), ili Okidač stanja entiteta (kada drugi entitet promijeni stanje).",
+          "scan_interval": "Koliko često se poziva usluga u sekundama (samo za način Prozivanja). Minimum 10 sekundi.",
+          "trigger_entity": "Entitet za praćenje promjena stanja (samo za način Okidača stanja).",
+          "trigger_from_state": "Pokreni samo pri promjeni iz ovog stanja (opcionalno). Ostavite prazno za bilo koje prethodno stanje.",
+          "trigger_to_state": "Pokreni samo pri promjeni u ovo stanje (opcionalno). Ostavite prazno za bilo koje novo stanje."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Usluga nije pronađena. Provjerite da odabrana akcija postoji i da je integracija učitana.",
+      "yaml_parse_error": "Nevažeća YAML sintaksa. Provjerite format podataka usluge.",
+      "yaml_not_dict": "Podaci usluge moraju biti YAML rječnik (parovi ključ: vrijednost).",
+      "data_not_dict": "Odjeljak 'data' u YAML mora biti rječnik (parovi ključ: vrijednost).",
+      "no_service_selected": "Odaberite akciju usluge iz padajućeg izbornika ili je navedite u YAML.",
+      "service_call_failed": "Poziv usluge nije uspio: {error_message}",
+      "trigger_entity_not_found": "Okidač entitet ne postoji. Odaberite važeći entitet.",
+      "invalid_trigger_state": "Navedeno okidač stanje nije važeće za odabrani entitet.",
+      "unknown": "Došlo je do neočekivane pogreške. Provjerite zapisnike za detalje.",
+      "service_no_response": "Ova usluga ne vraća podatke odgovora. Molimo odaberite uslugu koja podržava vraćanje podataka."
+    },
+    "abort": {
+      "already_configured": "Ovaj unos je već konfiguriran."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Konfiguriraj Opcije",
+        "description": "Prilagodite interval prozivanja. Za promjenu konfiguracije usluge koristite Rekonfiguriraj umjesto toga.",
+        "data": {
+          "scan_interval": "Interval prozivanja"
+        },
+        "data_description": {
+          "scan_interval": "Koliko često se poziva usluga (u sekundama). Minimum 10 sekundi."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Prozivanje (cikličko)",
+        "manual": "Ručno (update_entity)",
+        "state_trigger": "Okidač stanja entiteta"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Nije uspjelo parsiranje YAML podataka usluge: {error}"
+    },
+    "service_not_found": {
+      "message": "Konfigurirana usluga \"{service}\" nije pronađena. Integracija je možda uklonjena ili nije učitana."
+    },
+    "service_call_failed": {
+      "message": "Nije uspjelo pozvati uslugu \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Usluga \"{service}\" je privremeno nedostupna. Automatski će pokušati ponovno."
+    },
+    "response_path_invalid": {
+      "message": "Konfigurirani put odgovora \"{path}\" ne postoji u odgovoru usluge."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Okidač entitet \"{entity}\" nije dostupan."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Rezultat Usluge",
+        "state": {
+          "ok": "OK",
+          "error": "Greška",
+          "unavailable": "Nedostupan",
+          "retrying": "Ponovni pokušaj"
+        }
+      }
+    }
+  }
+}

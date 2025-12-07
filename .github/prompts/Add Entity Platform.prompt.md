@@ -19,7 +19,7 @@ If not provided, ask for:
 
 ### 1. Create Platform Directory Structure
 
-**Directory:** `custom_components/service_result/[platform]/`
+**Directory:** `custom_components/action_result/[platform]/`
 
 **Files to create:**
 
@@ -29,7 +29,7 @@ If not provided, ask for:
 ### 2. Platform `__init__.py` Template
 
 ```python
-"""[Platform] platform for Service Result Entities."""
+"""[Platform] platform for Action Result Entities."""
 
 from __future__ import annotations
 
@@ -38,10 +38,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entity import ServiceResultEntitiesEntity
-from .[entity_file] import ServiceResultEntities[EntityName]
+from .entity import ActionResultEntitiesEntity
+from .[entity_file] import ActionResultEntities[EntityName]
 from .const import DOMAIN
-from .coordinator import ServiceResultEntitiesDataUpdateCoordinator
+from .coordinator import ActionResultEntitiesDataUpdateCoordinator
 
 
 async def async_setup_entry(
@@ -50,13 +50,13 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up [platform] platform."""
-    coordinator: ServiceResultEntitiesDataUpdateCoordinator = hass.data[DOMAIN][
+    coordinator: ActionResultEntitiesDataUpdateCoordinator = hass.data[DOMAIN][
         entry.entry_id
     ]
 
     async_add_entities(
         [
-            ServiceResultEntities[EntityName](coordinator, entry),
+            ActionResultEntities[EntityName](coordinator, entry),
             # Add more entities here
         ]
     )
@@ -65,7 +65,7 @@ async def async_setup_entry(
 ### 3. Entity Implementation Template
 
 ```python
-"""[Entity description] for Service Result Entities."""
+"""[Entity description] for Action Result Entities."""
 
 from __future__ import annotations
 
@@ -78,12 +78,12 @@ from homeassistant.components.[platform] import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
 
-from .coordinator import ServiceResultEntitiesDataUpdateCoordinator
-from .entity import ServiceResultEntitiesEntity
+from .coordinator import ActionResultEntitiesDataUpdateCoordinator
+from .entity import ActionResultEntitiesEntity
 
 
-class ServiceResultEntities[EntityName](
-    ServiceResultEntitiesEntity,
+class ActionResultEntities[EntityName](
+    ActionResultEntitiesEntity,
     [PlatformEntityClass],
 ):
     """Representation of [entity description]."""
@@ -100,7 +100,7 @@ class ServiceResultEntities[EntityName](
 
     def __init__(
         self,
-        coordinator: ServiceResultEntitiesDataUpdateCoordinator,
+        coordinator: ActionResultEntitiesDataUpdateCoordinator,
         entry: ConfigEntry,
     ) -> None:
         """Initialize the [entity]."""
@@ -129,7 +129,7 @@ class ServiceResultEntities[EntityName](
 
 ### 4. Update Manifest
 
-Add platform to `custom_components/service_result/manifest.json`:
+Add platform to `custom_components/action_result/manifest.json`:
 
 ```json
 {
@@ -236,15 +236,15 @@ script/develop         # Start Home Assistant for testing
 ```python
 from homeassistant.helpers.device_registry import DeviceInfo
 
-class ServiceResultEntities[EntityName](
-    ServiceResultEntitiesEntity,
+class ActionResultEntities[EntityName](
+    ActionResultEntitiesEntity,
     [PlatformEntityClass],
 ):
     """Entity with device grouping."""
 
     def __init__(
         self,
-        coordinator: ServiceResultEntitiesDataUpdateCoordinator,
+        coordinator: ActionResultEntitiesDataUpdateCoordinator,
         entry: ConfigEntry,
     ) -> None:
         """Initialize entity."""
@@ -291,7 +291,7 @@ async def async_press(self) -> None:
 ## Validation Checklist
 
 - [ ] Platform directory created with `__init__.py`
-- [ ] Entity class inherits from both `ServiceResultEntitiesEntity` and platform class
+- [ ] Entity class inherits from both `ActionResultEntitiesEntity` and platform class
 - [ ] `_attr_has_entity_name = True` set (MANDATORY for new integrations)
 - [ ] Entity uses `translation_key` instead of hardcoded `name`
 - [ ] Unique ID set correctly
@@ -307,10 +307,10 @@ async def async_press(self) -> None:
 
 ## Integration Context
 
-- **Domain:** `service_result`
-- **Class prefix:** `ServiceResultEntities`
-- **Base entity:** `ServiceResultEntitiesEntity` in `entity/base.py`
-- **Coordinator:** `ServiceResultEntitiesDataUpdateCoordinator`
+- **Domain:** `action_result`
+- **Class prefix:** `ActionResultEntities`
+- **Base entity:** `ActionResultEntitiesEntity` in `entity/base.py`
+- **Coordinator:** `ActionResultEntitiesDataUpdateCoordinator`
 
 Follow patterns from existing platforms in the integration for consistency.
 

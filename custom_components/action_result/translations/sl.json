@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nastavi Rezultat Storitve",
+        "description": "Nastavi senzor, ki prikazuje odziv iz klica storitve Home Assistant.\n\nIzberi in nastavi akcijo storitve z uporabo vizualnega urejevalnika spodaj.",
+        "data": {
+          "name": "Ime",
+          "service_action": "Dejanje storitve",
+          "response_data_path": "Pot podatkov odgovora",
+          "attribute_name": "Ime atributa",
+          "update_mode": "Način posodobitve",
+          "scan_interval": "Interval poizvedovanja",
+          "trigger_entity": "Sprožilna entiteta",
+          "trigger_from_state": "Sproži iz stanja",
+          "trigger_to_state": "Sproži v stanje"
+        },
+        "data_description": {
+          "name": "Prijazno ime za ta senzor (npr. 'Tibber cene')",
+          "service_action": "Izberi storitev/dejanje za klic in nastavi njene parametre. Uporabi 'Prikaži YAML' za neposredno lepljenje ali urejanje YAML.",
+          "response_data_path": "Neobvezna pot za izvleček podatkov iz odgovora (npr. 'results.0.items'). Pustite prazno za celoten odgovor.",
+          "attribute_name": "Ime atributa, ki bo vseboval podatke odgovora. Privzeto je 'data'.",
+          "update_mode": "Kako se sprožijo posodobitve: Poizvedovanje (ciklično z intervalom), Ročno (prek storitve update_entity) ali Sprožilec stanja entitete (ko druga entiteta spremeni stanje).",
+          "scan_interval": "Kako pogosto se kliče storitev v sekundah (samo za način Poizvedovanja). Najmanj 10 sekund.",
+          "trigger_entity": "Entiteta za spremljanje sprememb stanja (samo za način Sprožilca stanja).",
+          "trigger_from_state": "Sproži samo ob spremembi iz tega stanja (neobvezno). Pustite prazno za kakršno koli prejšnje stanje.",
+          "trigger_to_state": "Sproži samo ob spremembi v to stanje (neobvezno). Pustite prazno za kakršno koli novo stanje."
+        }
+      },
+      "reconfigure": {
+        "title": "Ponovno Nastavi Rezultat Storitve",
+        "description": "Posodobite konfiguracijo storitve za ta senzor.\n\nČe želite preimenovati ta vnos, uporabite Nastavitve → Naprave in storitve → [vnos] → meni s tremi pikami → Preimenuj.",
+        "data": {
+          "service_action": "Dejanje storitve",
+          "response_data_path": "Pot podatkov odgovora",
+          "attribute_name": "Ime atributa",
+          "update_mode": "Način posodobitve",
+          "scan_interval": "Interval poizvedovanja",
+          "trigger_entity": "Sprožilna entiteta",
+          "trigger_from_state": "Sproži iz stanja",
+          "trigger_to_state": "Sproži v stanje"
+        },
+        "data_description": {
+          "service_action": "Izberi storitev/dejanje za klic in nastavi njene parametre. Uporabi 'Prikaži YAML' za neposredno lepljenje ali urejanje YAML.",
+          "response_data_path": "Neobvezna pot za izvleček podatkov iz odgovora (npr. 'results.0.items'). Pustite prazno za celoten odgovor.",
+          "attribute_name": "Ime atributa, ki bo vseboval podatke odgovora. Privzeto je 'data'.",
+          "update_mode": "Kako se sprožijo posodobitve: Poizvedovanje (ciklično z intervalom), Ročno (prek storitve update_entity) ali Sprožilec stanja entitete (ko druga entiteta spremeni stanje).",
+          "scan_interval": "Kako pogosto se kliče storitev v sekundah (samo za način Poizvedovanja). Najmanj 10 sekund.",
+          "trigger_entity": "Entiteta za spremljanje sprememb stanja (samo za način Sprožilca stanja).",
+          "trigger_from_state": "Sproži samo ob spremembi iz tega stanja (neobvezno). Pustite prazno za kakršno koli prejšnje stanje.",
+          "trigger_to_state": "Sproži samo ob spremembi v to stanje (neobvezno). Pustite prazno za kakršno koli novo stanje."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Storitev ni najdena. Preverite, da izbrano dejanje obstaja in je integracija naložena.",
+      "yaml_parse_error": "Neveljavna sintaksa YAML. Preverite format podatkov storitve.",
+      "yaml_not_dict": "Podatki storitve morajo biti YAML slovar (pari ključ: vrednost).",
+      "data_not_dict": "Razdelek 'data' v YAML mora biti slovar (pari ključ: vrednost).",
+      "no_service_selected": "Izberite dejanje storitve iz spustnega menija ali ga navedite v YAML.",
+      "service_call_failed": "Klic storitve ni uspel: {error_message}",
+      "trigger_entity_not_found": "Sprožilna entiteta ne obstaja. Izberite veljavno entiteto.",
+      "invalid_trigger_state": "Navedeno sprožilno stanje ni veljavno za izbrano entiteto.",
+      "unknown": "Prišlo je do nepričakovane napake. Preverite dnevnike za podrobnosti.",
+      "service_no_response": "Ta storitev ne vrača podatkov odziva. Prosimo, izberite storitev, ki podpira vračanje podatkov."
+    },
+    "abort": {
+      "already_configured": "Ta vnos je že nastavljen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavi Možnosti",
+        "description": "Prilagodite interval poizvedovanja. Za spremembo konfiguracije storitve uporabite Ponovno Nastavi.",
+        "data": {
+          "scan_interval": "Interval poizvedovanja"
+        },
+        "data_description": {
+          "scan_interval": "Kako pogosto se kliče storitev (v sekundah). Najmanj 10 sekund."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Poizvedovanje (ciklično)",
+        "manual": "Ročno (update_entity)",
+        "state_trigger": "Sprožilec stanja entitete"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Razčlenjevanje YAML podatkov storitve ni uspelo: {error}"
+    },
+    "service_not_found": {
+      "message": "Nastavljena storitev \"{service}\" ni najdena. Integracija je morda odstranjena ali ni naložena."
+    },
+    "service_call_failed": {
+      "message": "Klic storitve \"{service}\" ni uspel: {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Storitev \"{service}\" je začasno nedosegljiva. Samodejno bo poskusila znova."
+    },
+    "response_path_invalid": {
+      "message": "Nastavljena pot odgovora \"{path}\" ne obstaja v odgovoru storitve."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Sprožilna entiteta \"{entity}\" ni dosegljiva."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Rezultat Storitve",
+        "state": {
+          "ok": "OK",
+          "error": "Napaka",
+          "unavailable": "Nedosegljiv",
+          "retrying": "Ponovni poskus"
+        }
+      }
+    }
+  }
+}

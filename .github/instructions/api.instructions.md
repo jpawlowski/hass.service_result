@@ -59,9 +59,9 @@ applyTo: "custom_components/**/api/**/*.py, custom_components/**/coordinator/**/
 
 Define in `api/__init__.py`:
 
-- `ServiceResultEntitiesApiClientError` (Base)
-- `ServiceResultEntitiesApiClientCommunicationError` (Network, timeout, HTTP errors)
-- `ServiceResultEntitiesApiClientAuthenticationError` (401, 403, invalid credentials)
+- `ActionResultEntitiesApiClientError` (Base)
+- `ActionResultEntitiesApiClientCommunicationError` (Network, timeout, HTTP errors)
+- `ActionResultEntitiesApiClientAuthenticationError` (401, 403, invalid credentials)
 - Optional: `ApiClientRateLimitError(retry_after)` for rate limiting
 
 **Mapping:** HTTP 401/403 → Auth, HTTP 429 → RateLimit, Timeout/ClientError → Communication

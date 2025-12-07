@@ -1,0 +1,127 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Cumraigh Toradh Seirbhíse",
+        "description": "Cumraigh braiteoir a thaispeánann an freagra ó ghlao seirbhíse Home Assistant.\n\nRoghnaigh agus cumraigh gníomh seirbhíse leis an eagarthóir amhairc thíos.",
+        "data": {
+          "name": "Ainm",
+          "service_action": "Gníomh seirbhíse",
+          "response_data_path": "Cosán sonraí freagartha",
+          "attribute_name": "Ainm tréithe",
+          "update_mode": "Mód nuashonraithe",
+          "scan_interval": "Eatramh vótála",
+          "trigger_entity": "Eintiteas truicir",
+          "trigger_from_state": "Truicear ó staid",
+          "trigger_to_state": "Truicear go staid"
+        },
+        "data_description": {
+          "name": "Ainm cairdiúil don bhraiteoir seo (m.sh. 'Praghsanna Tibber')",
+          "service_action": "Roghnaigh an tseirbhís/gníomh le glaoch agus cumraigh a paraiméadair. Úsáid 'Taispeáin YAML' chun YAML a ghreamú nó a chur in eagar go díreach.",
+          "response_data_path": "Cosán roghnach chun sonraí a bhaint as an bhfreagra (m.sh. 'results.0.items'). Fág folamh le haghaidh freagartha iomláin.",
+          "attribute_name": "Ainm an tréithe a bheidh ag na sonraí freagartha. Is é 'data' an réamhshocrú.",
+          "update_mode": "Conas a truiceartar nuashonruithe: Vótáil (timthriallach le heatramh), Láimhe (trí sheirbhís update_entity), nó Truicear staide eintitis (nuair a athraíonn eintiteas eile staid).",
+          "scan_interval": "Cé chomh minic a ghlaítear ar an tseirbhís i soicindí (le haghaidh mód Vótála amháin). Íosmhéid 10 soicind.",
+          "trigger_entity": "Eintiteas le monatóireacht a dhéanamh ar athruithe staide (le haghaidh mód Truicear staide amháin).",
+          "trigger_from_state": "Truicear nuair a athraítear ón staid seo amháin (roghnach). Fág folamh d'aon staid roimhe seo.",
+          "trigger_to_state": "Truicear nuair a athraítear go dtí an staid seo amháin (roghnach). Fág folamh d'aon staid nua."
+        }
+      },
+      "reconfigure": {
+        "title": "Athchumraigh Toradh Seirbhíse",
+        "description": "Nuashonraigh cumraíocht na seirbhíse don bhraiteoir seo.\n\nChun an iontráil seo a athainmniú, úsáid Socruithe → Gléasanna & Seirbhísí → [iontráil] → roghchlár trí phonc → Athainmnigh.",
+        "data": {
+          "service_action": "Gníomh seirbhíse",
+          "response_data_path": "Cosán sonraí freagartha",
+          "attribute_name": "Ainm tréithe",
+          "update_mode": "Mód nuashonraithe",
+          "scan_interval": "Eatramh vótála",
+          "trigger_entity": "Eintiteas truicir",
+          "trigger_from_state": "Truicear ó staid",
+          "trigger_to_state": "Truicear go staid"
+        },
+        "data_description": {
+          "service_action": "Roghnaigh an tseirbhís/gníomh le glaoch agus cumraigh a paraiméadair. Úsáid 'Taispeáin YAML' chun YAML a ghreamú nó a chur in eagar go díreach.",
+          "response_data_path": "Cosán roghnach chun sonraí a bhaint as an bhfreagra (m.sh. 'results.0.items'). Fág folamh le haghaidh freagartha iomláin.",
+          "attribute_name": "Ainm an tréithe a bheidh ag na sonraí freagartha. Is é 'data' an réamhshocrú.",
+          "update_mode": "Conas a truiceartar nuashonruithe: Vótáil (timthriallach le heatramh), Láimhe (trí sheirbhís update_entity), nó Truicear staide eintitis (nuair a athraíonn eintiteas eile staid).",
+          "scan_interval": "Cé chomh minic a ghlaítear ar an tseirbhís i soicindí (le haghaidh mód Vótála amháin). Íosmhéid 10 soicind.",
+          "trigger_entity": "Eintiteas le monatóireacht a dhéanamh ar athruithe staide (le haghaidh mód Truicear staide amháin).",
+          "trigger_from_state": "Truicear nuair a athraítear ón staid seo amháin (roghnach). Fág folamh d'aon staid roimhe seo.",
+          "trigger_to_state": "Truicear nuair a athraítear go dtí an staid seo amháin (roghnach). Fág folamh d'aon staid nua."
+        }
+      }
+    },
+    "error": {
+      "service_not_found": "Níor aimsíodh seirbhís. Deimhnigh go bhfuil an gníomh roghnaithe ann agus go bhfuil an comhtháthú luchtaithe.",
+      "yaml_parse_error": "Comhréir YAML neamhbhailí. Seiceáil formáid sonraí na seirbhíse.",
+      "yaml_not_dict": "Caithfidh sonraí seirbhíse a bheith ina foclóir YAML (péirí eochair: luach).",
+      "data_not_dict": "Caithfidh an rannán 'data' in YAML a bheith ina foclóir (péirí eochair: luach).",
+      "no_service_selected": "Roghnaigh gníomh seirbhíse ón roghchlár anuas nó cuir ar fáil é in YAML.",
+      "service_call_failed": "Theip ar ghlao seirbhíse: {error_message}",
+      "trigger_entity_not_found": "Níl an eintiteas truicir ann. Roghnaigh eintiteas bailí.",
+      "invalid_trigger_state": "Níl an staid truicir sonraithe bailí don eintiteas roghnaithe.",
+      "unknown": "Tharla earráid gan choinne. Seiceáil na logaí le haghaidh sonraí.",
+      "service_no_response": "Ní fhilleann an tseirbhís seo sonraí freagartha. Roghnaigh seirbhís a thacaíonn le sonraí a fhilleadh."
+    },
+    "abort": {
+      "already_configured": "Tá an iontráil seo cumraithe cheana féin."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Cumraigh Roghanna",
+        "description": "Coigeartaigh an t-eatramh vótála. Chun cumraíocht na seirbhíse a athrú, úsáid Athchumraigh ina ionad.",
+        "data": {
+          "scan_interval": "Eatramh vótála"
+        },
+        "data_description": {
+          "scan_interval": "Cé chomh minic a ghlaítear ar an tseirbhís (i soicindí). Íosmhéid 10 soicind."
+        }
+      }
+    }
+  },
+  "selector": {
+    "update_mode": {
+      "options": {
+        "polling": "Vótáil (timthriallach)",
+        "manual": "Láimhe (update_entity)",
+        "state_trigger": "Truicear staide eintitis"
+      }
+    }
+  },
+  "exceptions": {
+    "yaml_parse_error": {
+      "message": "Theip ar pharsáil YAML sonraí seirbhíse: {error}"
+    },
+    "service_not_found": {
+      "message": "Níor aimsíodh an tseirbhís chumraithe \"{service}\". B'fhéidir gur baineadh an comhtháthú nó nach bhfuil sé luchtaithe."
+    },
+    "service_call_failed": {
+      "message": "Theip ar ghlao ar sheirbhís \"{service}\": {error}"
+    },
+    "service_temporarily_unavailable": {
+      "message": "Tá seirbhís \"{service}\" neamh-infhaighte go sealadach. Déanfar iarracht arís go huathoibríoch."
+    },
+    "response_path_invalid": {
+      "message": "Níl an cosán freagartha cumraithe \"{path}\" ann i bhfreagra na seirbhíse."
+    },
+    "trigger_entity_unavailable": {
+      "message": "Níl an eintiteas truicir \"{entity}\" ar fáil."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "action_result": {
+        "name": "Toradh Seirbhíse",
+        "state": {
+          "ok": "Ceart go leor",
+          "error": "Earráid",
+          "unavailable": "Neamh-infhaighte",
+          "retrying": "Ag triail arís"
+        }
+      }
+    }
+  }
+}

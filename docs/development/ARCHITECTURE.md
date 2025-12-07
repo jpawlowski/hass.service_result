@@ -1,16 +1,16 @@
 # Architecture Overview
 
-This document describes the technical architecture of the Service Result Entities custom component for Home Assistant.
+This document describes the technical architecture of the Action Result Entities custom component for Home Assistant.
 
 ## Directory Structure
 
 ```text
-custom_components/service_result/
+custom_components/action_result/
 ├── __init__.py              # Integration setup and unload
 ├── config_flow.py           # Config flow entry point
 ├── const.py                 # Constants and configuration keys
 ├── coordinator/             # Data update coordinator package
-│   ├── __init__.py          # Exports ServiceResultEntitiesDataUpdateCoordinator
+│   ├── __init__.py          # Exports ActionResultEntitiesDataUpdateCoordinator
 │   ├── base.py              # Main coordinator class
 │   ├── data_processing.py   # Data validation and transformation
 │   ├── error_handling.py    # Error recovery and retry logic
@@ -18,7 +18,7 @@ custom_components/service_result/
 ├── data.py                  # Data classes and type definitions
 ├── diagnostics.py           # Diagnostic data for troubleshooting
 ├── entity/                  # Base entity package
-│   ├── __init__.py          # Exports ServiceResultEntitiesEntity
+│   ├── __init__.py          # Exports ActionResultEntitiesEntity
 │   └── base.py              # Base entity class implementation
 ├── manifest.json            # Integration metadata
 ├── repairs.py               # Repair flows for fixing issues
@@ -65,7 +65,7 @@ updates to all entities. It is organized as a package with separate modules for 
 
 **Package structure:**
 
-- `base.py` - Main coordinator class (`ServiceResultEntitiesDataUpdateCoordinator`)
+- `base.py` - Main coordinator class (`ActionResultEntitiesDataUpdateCoordinator`)
 - `data_processing.py` - Data validation, transformation, and caching utilities
 - `error_handling.py` - Error recovery strategies, retry logic, and circuit breaker patterns
 - `listeners.py` - Entity callbacks, event listeners, and performance monitoring
@@ -79,7 +79,7 @@ updates to all entities. It is organized as a package with separate modules for 
 - Data validation and transformation before distribution
 - Performance monitoring and metrics
 
-**Key class:** `ServiceResultEntitiesDataUpdateCoordinator` (exported from `coordinator/__init__.py`)
+**Key class:** `ActionResultEntitiesDataUpdateCoordinator` (exported from `coordinator/__init__.py`)
 
 **Design rationale:**
 
@@ -101,7 +101,7 @@ Handles all communication with external APIs or devices. Implements:
 - Authentication handling
 - Error translation to custom exceptions
 
-**Key class:** `ServiceResultEntitiesApiClient`
+**Key class:** `ActionResultEntitiesApiClient`
 
 ### Config Flow
 
@@ -127,8 +127,8 @@ is organized modularly to support complex flows without becoming monolithic.
 
 **Key classes:**
 
-- `ServiceResultEntitiesConfigFlowHandler` (main flow)
-- `ServiceResultEntitiesOptionsFlow` (options)
+- `ActionResultEntitiesConfigFlowHandler` (main flow)
+- `ActionResultEntitiesOptionsFlow` (options)
 
 ### Base Entity
 
@@ -141,7 +141,7 @@ Provides common functionality for all entities in the integration:
 - Coordinator integration
 - Availability tracking
 
-**Key class:** `ServiceResultEntitiesEntity` (in `entity/base.py`)
+**Key class:** `ActionResultEntitiesEntity` (in `entity/base.py`)
 
 ## Platform Organization
 
@@ -156,7 +156,7 @@ Each platform (sensor, binary_sensor, switch, etc.) follows this pattern:
 Platform entities inherit from both:
 
 1. Home Assistant platform base (e.g., `SensorEntity`)
-2. `ServiceResultEntitiesEntity` for common functionality
+2. `ActionResultEntitiesEntity` for common functionality
 
 ## Data Flow
 
@@ -295,9 +295,9 @@ To add new functionality:
 
 ### Adding a New Platform
 
-1. Create directory: `custom_components/service_result/<platform>/`
+1. Create directory: `custom_components/action_result/<platform>/`
 2. Implement `__init__.py` with `async_setup_entry()`
-3. Create entity classes inheriting from platform base + `ServiceResultEntitiesEntity`
+3. Create entity classes inheriting from platform base + `ActionResultEntitiesEntity`
 4. Add platform to `PLATFORMS` in `const.py`
 
 ### Adding a New Service
