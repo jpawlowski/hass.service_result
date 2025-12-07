@@ -12,6 +12,7 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, Any
 
+from custom_components.action_result.config_flow_handler.validators import convert_value_to_type
 from custom_components.action_result.const import (
     CONF_ATTRIBUTE_NAME,
     CONF_DEFINE_ENUM,
@@ -45,6 +46,7 @@ from custom_components.action_result.entity import ActionResultEntitiesEntity
 from custom_components.action_result.utils import extract_data_at_path
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.helpers.restore_state import RestoreEntity
+from homeassistant.util import dt as dt_util
 
 if TYPE_CHECKING:
     from custom_components.action_result.coordinator import ActionResultEntitiesDataUpdateCoordinator
@@ -327,7 +329,17 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
         if (last_state := await self.async_get_last_state()) is not None:
             # Restore native_value (state) - handle None for unavailable state
             if last_state.state not in ("unknown", "unavailable"):
-                self._attr_native_value = last_state.state
+                # For timestamp sensors, parse the string back to datetime
+                value_type = self._entry.data.get(CONF_VALUE_TYPE, "")
+                if value_type == VALUE_TYPE_TIMESTAMP:
+                    parsed_dt = dt_util.parse_datetime(last_state.state)
+                    if parsed_dt:
+                        self._attr_native_value = parsed_dt
+                    else:
+                        # If parsing fails, skip restoration
+                        pass
+                else:
+                    self._attr_native_value = last_state.state
 
     def _get_service_action(self) -> str:
         """Get the service action name from config (e.g., 'domain.service')."""
@@ -360,7 +372,25 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
 
         # Extract value at the specified path
         response_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH, "")
-        return extract_data_at_path(response, response_path)
+        value = extract_data_at_path(response, response_path)
+
+        if value is None:
+            return None
+
+        # Convert value to the configured value type
+        value_type = self._entry.data.get(CONF_VALUE_TYPE, "")
+        if value_type:
+            converted_value = convert_value_to_type(value, value_type)
+            if converted_value is None:
+                self.coordinator.logger.warning(
+                    "Failed to convert value '%s' to type '%s' for sensor %s",
+                    value,
+                    value_type,
+                    self.entity_id,
+                )
+            return converted_value
+
+        return value
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

@@ -333,6 +333,12 @@
       "value_path_test_failed": "Failed to test the value path. Please check the action configuration and path syntax.",
       "enum_values_required": "Please enter at least one enum value when 'Define Enum Values' is enabled.",
       "multiple_actions_not_supported": "Multiple actions are not supported. Please select only one action.",
+      "value_is_none": "The extracted value is null/empty. Please check the response path.",
+      "value_not_boolean": "The extracted value cannot be converted to a boolean. Please select a different value type or adjust the response path.",
+      "value_not_number": "The extracted value cannot be converted to a number. Please select a different value type or adjust the response path.",
+      "value_not_timestamp": "The extracted value cannot be converted to a timestamp. Please select a different value type or adjust the response path.",
+      "value_type_mismatch": "The extracted value cannot be converted to the selected value type. Please select a compatible value type.",
+      "unknown_value_type": "Unknown value type specified.",
       "unknown": "An unexpected error occurred. Please check the logs for details."
     },
     "progress": {

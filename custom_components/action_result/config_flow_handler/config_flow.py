@@ -36,6 +36,7 @@ from custom_components.action_result.config_flow_handler.schemas import (
     get_value_configuration_schema,
     get_value_path_schema,
 )
+from custom_components.action_result.config_flow_handler.validators import validate_value_type
 from custom_components.action_result.const import (
     CONF_ATTRIBUTE_NAME,
     CONF_DEFINE_ENUM,
@@ -597,28 +598,40 @@ class ActionResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=DO
         Returns:
             The config flow result, either showing a form or proceeding to update mode or composite unit.
         """
+        errors: dict[str, str] = {}
+
         if user_input is not None:
-            # Check if user selected custom composite unit
-            selected_unit = user_input.get(CONF_UNIT_OF_MEASUREMENT, "")
-            if selected_unit == UNIT_CUSTOM_COMPOSITE:
-                # Store value type and device class, but not the unit marker
+            # Validate that the detected value can be converted to the selected value type
+            detected_value = self._step_data.get("_detected_value")
+            selected_value_type = user_input.get(CONF_VALUE_TYPE, "")
+
+            if detected_value is not None and selected_value_type:
+                is_valid, error_key, _ = validate_value_type(detected_value, selected_value_type)
+                if not is_valid:
+                    errors["base"] = error_key or "value_type_mismatch"
+
+            if not errors:
+                # Check if user selected custom composite unit
+                selected_unit = user_input.get(CONF_UNIT_OF_MEASUREMENT, "")
+                if selected_unit == UNIT_CUSTOM_COMPOSITE:
+                    # Store value type and device class, but not the unit marker
+                    self._step_data[CONF_VALUE_TYPE] = user_input.get(CONF_VALUE_TYPE, "")
+                    self._step_data[CONF_DEVICE_CLASS] = user_input.get(CONF_DEVICE_CLASS, "")
+                    # Route to composite unit builder
+                    return await self.async_step_composite_unit()
+
+                # Store value sensor configuration
                 self._step_data[CONF_VALUE_TYPE] = user_input.get(CONF_VALUE_TYPE, "")
+                self._step_data[CONF_UNIT_OF_MEASUREMENT] = selected_unit
                 self._step_data[CONF_DEVICE_CLASS] = user_input.get(CONF_DEVICE_CLASS, "")
-                # Route to composite unit builder
-                return await self.async_step_composite_unit()
+                self._step_data[CONF_ICON] = user_input.get(CONF_ICON, "")
 
-            # Store value sensor configuration
-            self._step_data[CONF_VALUE_TYPE] = user_input.get(CONF_VALUE_TYPE, "")
-            self._step_data[CONF_UNIT_OF_MEASUREMENT] = selected_unit
-            self._step_data[CONF_DEVICE_CLASS] = user_input.get(CONF_DEVICE_CLASS, "")
-            self._step_data[CONF_ICON] = user_input.get(CONF_ICON, "")
+                # Check if value_type is string - offer enum definition
+                if user_input.get(CONF_VALUE_TYPE, "") == VALUE_TYPE_STRING:
+                    return await self.async_step_enum_definition()
 
-            # Check if value_type is string - offer enum definition
-            if user_input.get(CONF_VALUE_TYPE, "") == VALUE_TYPE_STRING:
-                return await self.async_step_enum_definition()
-
-            # Otherwise proceed to update mode selection
-            return await self.async_step_update_mode()
+                # Otherwise proceed to update mode selection
+                return await self.async_step_update_mode()
 
         # Auto-detect value type and suggestions from extracted value
         detected_value = self._step_data.get("_detected_value")
@@ -635,6 +648,7 @@ class ActionResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=DO
         return self.async_show_form(
             step_id="value_configuration",
             data_schema=get_value_configuration_schema(self._step_data),
+            errors=errors,
         )
 
     async def async_step_composite_unit(

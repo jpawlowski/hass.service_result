@@ -6,6 +6,13 @@ This package contains validation logic for user inputs in config flows.
 
 from __future__ import annotations
 
+from .value_validator import convert_value_to_type, validate_value_type
 from .yaml_validator import dict_to_yaml, parse_service_yaml, validate_service_yaml
 
-__all__ = ["dict_to_yaml", "parse_service_yaml", "validate_service_yaml"]
+__all__ = [
+    "convert_value_to_type",
+    "dict_to_yaml",
+    "parse_service_yaml",
+    "validate_service_yaml",
+    "validate_value_type",
+]
