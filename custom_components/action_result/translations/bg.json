@@ -7,7 +7,7 @@
         "data": {
           "name": "Име",
           "service_action": "Действие на услуга",
-          "entity_category": "Entity Category"
+          "entity_category": "Категория на ентитет"
         },
         "data_description": {
           "name": "Приятелско име за този сензор (напр. 'Цени Tibber')",
@@ -16,10 +16,10 @@
         }
       },
       "device_selection": {
-        "title": "Parent Device (Optional)",
+        "title": "Родителско устройство (по избор)",
         "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here but you can change or clear it.",
         "data": {
-          "parent_device": "Parent Device"
+          "parent_device": "Родителско устройство"
         },
         "data_description": {
           "parent_device": "Select a device or leave empty. Empty = standalone sensor with auto-generated virtual device."

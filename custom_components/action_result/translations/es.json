@@ -7,7 +7,7 @@
         "data": {
           "name": "Nombre",
           "service_action": "Acción del servicio",
-          "entity_category": "Entity Category"
+          "entity_category": "Categoría de entidad"
         },
         "data_description": {
           "name": "Un nombre amigable para este sensor (ej. 'Precios Tibber')",
@@ -16,10 +16,10 @@
         }
       },
       "device_selection": {
-        "title": "Parent Device (Optional)",
+        "title": "Dispositivo principal (opcional)",
         "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here but you can change or clear it.",
         "data": {
-          "parent_device": "Parent Device"
+          "parent_device": "Dispositivo principal"
         },
         "data_description": {
           "parent_device": "Select a device or leave empty. Empty = standalone sensor with auto-generated virtual device."
