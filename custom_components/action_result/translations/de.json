@@ -6,22 +6,165 @@
         "description": "Konfiguriere einen Sensor, der die Antwort eines Home Assistant Service-Aufrufs bereitstellt.\n\nWähle und konfiguriere eine Service-Aktion mit dem visuellen Editor unten.",
         "data": {
           "name": "Name",
-          "service_action": "Service-Aktion"
+          "service_action": "Service-Aktion",
+          "entity_category": "Entitätskategorie"
         },
         "data_description": {
           "name": "Ein benutzerfreundlicher Name für diesen Sensor (z.B. 'Tibber Preise')",
-          "service_action": "Wähle die aufzurufende Service-Aktion und konfiguriere ihre Parameter. Nutze 'YAML anzeigen' um YAML direkt einzufügen oder zu bearbeiten."
+          "service_action": "Wähle die aufzurufende Service-Aktion und konfiguriere ihre Parameter. Nutze 'YAML anzeigen' um YAML direkt einzufügen oder zu bearbeiten.",
+          "entity_category": "Optional: Markiere diese Entität als Konfiguration oder Diagnose. Leer lassen für regulären Sensor. Datensensoren sind standardmäßig Diagnose (versteckt vor Cloud/Sprachassistenten)."
         }
       },
-      "update_mode": {
-        "title": "Aktualisierungsmodus",
-        "description": "Wähle, wie der Action aufgerufen werden soll, um den Sensor zu aktualisieren.",
+      "device_selection": {
+        "title": "Übergeordnetes Gerät (Optional)",
+        "description": "Ordne diesen Sensor optional einem Gerät aus der Integration der gewählten Aktion zu.\n\n**Dies ist vollständig optional.** Du kannst dies leer lassen, um einen eigenständigen Sensor zu erstellen. Falls leer gelassen, wird automatisch ein virtuelles Gerät erstellt.\n\nWenn ein Gerät in der Aktionskonfiguration gewählt wurde, wird es hier vorausgewählt, kann aber geändert oder gelöscht werden.",
         "data": {
-          "update_mode": "Aktualisierungsmodus"
+          "parent_device": "Übergeordnetes Gerät"
         },
         "data_description": {
-          "update_mode": "Wie Aktualisierungen ausgelöst werden: Polling (zyklisch im Intervall), Manuell (via update_entity Service), oder Entitäts-Status-Trigger (wenn eine andere Entität ihren Status ändert)."
+          "parent_device": "Wähle ein Gerät oder lasse es leer. Leer = eigenständiger Sensor mit automatisch generiertem virtuellen Gerät."
         }
+      },
+      "sensor_type": {
+        "title": "Sensortyp wählen",
+        "description": "Wähle den Typ des zu erstellenden Sensors.",
+        "menu_options": {
+          "data_sensor": "Datensensor - Vollständige Antwort in Attributen",
+          "value_sensor": "Wertsensor - Spezifischen Wert als Status extrahieren"
+        }
+      },
+      "data_sensor": {
+        "title": "Datensensor gewählt",
+        "description": "Erstelle einen Datensensor, der die vollständigen Antwortdaten in Attributen bereitstellt. Der Sensorstatus zeigt den Aufrufstatus (ok/error)."
+      },
+      "value_sensor": {
+        "title": "Wertsensor gewählt",
+        "description": "Erstelle einen Wertsensor, der einen spezifischen Wert aus der Antwort extrahiert und als Sensorstatus verwendet."
+      },
+      "data_settings": {
+        "title": "Datensensor-Einstellungen",
+        "description": "Konfiguriere, wie Antwortdaten in Sensorattributen bereitgestellt werden.",
+        "data": {
+          "response_data_path": "Antwort-Datenpfad",
+          "attribute_name": "Attributname"
+        },
+        "data_description": {
+          "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
+          "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+        }
+      },
+      "value_settings": {
+        "title": "Wertsensor-Einstellungen",
+        "description": "Konfiguriere, welcher Wert aus der Antwort extrahiert werden soll und wie er interpretiert wird.\n\nFür boolesche Werte wird automatisch ein Binärsensor erstellt.",
+        "data": {
+          "response_data_path": "Antwort-Datenpfad",
+          "value_type": "Werttyp",
+          "unit_of_measurement": "Maßeinheit",
+          "device_class": "Geräteklasse",
+          "include_response_data": "Vollständige Antwortdaten einschließen"
+        },
+        "data_description": {
+          "response_data_path": "Pfad zum Wert in der Antwort (z.B. 'temperature' oder 'data.items[0].value'). Erforderlich.",
+          "value_type": "Wie der extrahierte Wert zu interpretieren ist: Text, Zahl, Boolean oder Zeitstempel.",
+          "unit_of_measurement": "Optionale Einheit (z.B. '°C', 'kWh', '€/kWh'). Nur für numerische Werte. Leer lassen für automatische Erkennung oder keine Einheit.",
+          "device_class": "Optionale Geräteklasse (z.B. 'temperature', 'energy', 'monetary'). Leer lassen für automatische Erkennung.",
+          "include_response_data": "Extrahierte Antwortdaten auch in Sensorattributen für Kontext einschließen."
+        }
+      },
+      "value_path": {
+        "title": "Wertsensor Pfad-Konfiguration",
+        "description": "Gib den Pfad an, um den Sensorwert aus der Service-Antwort zu extrahieren.",
+        "data": {
+          "response_data_path": "Wertpfad",
+          "response_data_path_attributes": "Attributpfad",
+          "include_response_data": "Vollständige Antwort einschließen",
+          "attribute_name": "Attributname"
+        },
+        "data_description": {
+          "response_data_path": "Pfad zum Extrahieren des Sensorwerts (z.B. 'results.0.temperature'). Erforderlich.",
+          "response_data_path_attributes": "Optional: Anderer Pfad für Attribute (z.B. 'results.0'). Leer lassen, um Wertpfad zu verwenden.",
+          "include_response_data": "Vollständige Service-Antwort in Sensorattributen einschließen.",
+          "attribute_name": "Name des Attributs, das die Antwortdaten enthält (nur verwendet, wenn 'Vollständige Antwort einschließen' aktiviert ist). Standard ist 'data'."
+        }
+      },
+      "value_configuration": {
+        "title": "Wertsensor Konfiguration",
+        "description": "Konfiguriere Werttyp, Einheit und Geräteklasse. Automatisch erkannt aus der Service-Antwort.",
+        "data": {
+          "value_type": "Werttyp",
+          "unit_of_measurement": "Maßeinheit",
+          "device_class": "Geräteklasse",
+          "icon": "Benutzerdefiniertes Icon"
+        },
+        "data_description": {
+          "value_type": "Typ des Sensorwerts: String, Zahl, Boolean oder Zeitstempel.",
+          "unit_of_measurement": "Maßeinheit für den Wert (z.B. '°C', 'kWh'). Leer lassen für keine.",
+          "device_class": "Geräteklasse für korrekte Anzeige und Historienverarbeitung (z.B. 'temperature', 'energy'). Leer lassen für keine.",
+          "icon": "Benutzerdefiniertes Icon für diesen Sensor (z.B. 'mdi:thermometer'). Leer lassen, um das Standard-Icon 'mdi:api' zu verwenden."
+        }
+      },
+      "composite_unit": {
+        "title": "Benutzerdefinierte zusammengesetzte Einheit erstellen",
+        "description": "Erstelle eine benutzerdefinierte zusammengesetzte Einheit durch Auswahl von Zähler und Nenner (z.B. '€/kWh', 'km/h').\n\nBeide Dropdowns unterstützen Freiteingabe für maximale Flexibilität.",
+        "data": {
+          "unit_numerator": "Einheit Zähler",
+          "unit_denominator": "Einheit Nenner"
+        },
+        "data_description": {
+          "unit_numerator": "Die Einheit in der Zählerposition (z.B. '€', 'km', 'ct'). Aus Dropdown wählen oder benutzerdefinierten Text eingeben.",
+          "unit_denominator": "Die Einheit in der Nennerposition (z.B. 'kWh', 'h', 'Wh'). Aus Dropdown wählen oder benutzerdefinierten Text eingeben."
+        }
+      },
+      "enum_definition": {
+        "title": "Enum-Werte definieren (Optional)",
+        "description": "Für Textsensoren kannst du optional eine Liste möglicher Werte (Enum) definieren. Dies ermöglicht es, Icons und Übersetzungen jedem Wert zuzuweisen.",
+        "data": {
+          "define_enum": "Enum-Werte definieren",
+          "enum_values": "Enum-Werte"
+        },
+        "data_description": {
+          "define_enum": "Aktiviere dies, um mögliche Werte für diesen Textsensor zu definieren.",
+          "enum_values": "Gib mögliche Werte getrennt durch Kommas ein (z.B. 'offen,geschlossen,verriegelt'). Dieses Feld wird nur verwendet, wenn 'Enum-Werte definieren' aktiviert ist."
+        }
+      },
+      "enum_icons": {
+        "title": "Enum-Icons",
+        "description": "Weise jedem Enum-Wert ein Icon zu. Icons wechseln automatisch basierend auf dem Status des Sensors."
+      },
+      "enum_translation_languages": {
+        "title": "Übersetzungssprachen",
+        "description": "Wähle, in welche Sprachen du die Enum-Werte übersetzen möchtest. Englisch ist immer enthalten und wird im nächsten Schritt konfiguriert.",
+        "data": {
+          "enum_translation_languages": "Zusätzliche Sprachen"
+        },
+        "data_description": {
+          "enum_translation_languages": "Wähle zusätzliche Sprachen für Übersetzungen. Englisch wird zuerst konfiguriert."
+        }
+      },
+      "enum_translation": {
+        "title": "Enum-Übersetzungen: {language}",
+        "description": "Gib Übersetzungen für jeden Enum-Wert in {language} an. Diese Übersetzungen werden in Sensorattributen verfügbar sein."
+      },
+      "update_mode": {
+        "title": "Aktualisierungsmodus wählen",
+        "description": "Wähle, wie der Service aufgerufen werden soll, um den Sensor zu aktualisieren.",
+        "menu_options": {
+          "polling_mode": "Polling - Aktualisierung in regelmäßigen Intervallen",
+          "state_trigger_mode": "Status-Trigger - Aktualisierung bei Entitätsänderung",
+          "manual_mode": "Manuell - Nur bei Auslösung aktualisieren"
+        }
+      },
+      "polling_mode": {
+        "title": "Polling-Modus gewählt",
+        "description": "Der Sensor wird automatisch in regelmäßigen Intervallen aktualisiert."
+      },
+      "state_trigger_mode": {
+        "title": "Status-Trigger-Modus gewählt",
+        "description": "Der Sensor wird aktualisiert, wenn eine beobachtete Entität ihren Status ändert."
+      },
+      "manual_mode": {
+        "title": "Manueller Modus gewählt",
+        "description": "Der Sensor wird nur aktualisiert, wenn er manuell über den homeassistant.update_entity Service ausgelöst wird."
       },
       "polling_settings": {
         "title": "Polling-Einstellungen",
@@ -36,12 +179,10 @@
           "advanced_options": {
             "name": "Erweiterte Optionen",
             "data": {
-              "response_data_path": "Antwort-Datenpfad",
-              "attribute_name": "Attributname"
+              "response_data_path": "Antwort-Datenpfad"
             },
             "data_description": {
-              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
-              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort."
             }
           }
         }
@@ -63,12 +204,10 @@
           "advanced_options": {
             "name": "Erweiterte Optionen",
             "data": {
-              "response_data_path": "Antwort-Datenpfad",
-              "attribute_name": "Attributname"
+              "response_data_path": "Antwort-Datenpfad"
             },
             "data_description": {
-              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
-              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort."
             }
           }
         }
@@ -80,12 +219,10 @@
           "advanced_options": {
             "name": "Erweiterte Optionen",
             "data": {
-              "response_data_path": "Antwort-Datenpfad",
-              "attribute_name": "Attributname"
+              "response_data_path": "Antwort-Datenpfad"
             },
             "data_description": {
-              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort.",
-              "attribute_name": "Name des Attributs, das die Antwortdaten enthält. Standard ist 'data'."
+              "response_data_path": "Optionaler Pfad zum Extrahieren von Daten aus der Antwort (z.B. 'results.0.items'). Leer lassen für vollständige Antwort."
             }
           }
         }
@@ -94,10 +231,14 @@
         "title": "Service-Ergebnis neu konfigurieren",
         "description": "Aktualisiere die Service-Konfiguration für diesen Sensor.\n\nUm diesen Eintrag umzubenennen, nutze Einstellungen → Geräte & Dienste → [Eintrag] → Dreipunkt-Menü → Umbenennen.",
         "data": {
-          "service_action": "Service-Aktion"
+          "service_action": "Service-Aktion",
+          "parent_device": "Übergeordnetes Gerät",
+          "entity_category": "Entitätskategorie"
         },
         "data_description": {
-          "service_action": "Wähle die aufzurufende Service-Aktion und konfiguriere ihre Parameter. Nutze 'YAML anzeigen' um YAML direkt einzufügen oder zu bearbeiten."
+          "service_action": "Wähle die aufzurufende Service-Aktion und konfiguriere ihre Parameter. Nutze 'YAML anzeigen' um YAML direkt einzufügen oder zu bearbeiten.",
+          "parent_device": "Optional: Ordne diesen Sensor einem Gerät aus derselben Integration zu. Leer lassen für eigenständigen Sensor oder automatisch generiertes Gerät.",
+          "entity_category": "Optional: Markiere diese Entität als Konfiguration oder Diagnose. Leer lassen für regulären Sensor. Datensensoren sind standardmäßig Diagnose (versteckt vor Cloud/Sprachassistenten)."
         }
       },
       "reconfigure_update_mode": {
@@ -188,10 +329,18 @@
       "service_no_response": "Dieser Action liefert keine Antwortdaten. Bitte wähle einen Service, der Daten zurückgibt.",
       "trigger_entity_not_found": "Die Trigger-Entität existiert nicht. Bitte wähle eine gültige Entität.",
       "invalid_trigger_state": "Der angegebene Trigger-Status ist für die gewählte Entität nicht gültig.",
+      "invalid_response_path": "Der angegebene Pfad existiert nicht in der Service-Antwort. Bitte überprüfe den Pfad und versuche es erneut.",
+      "value_path_test_failed": "Fehler beim Testen des Wertpfads. Bitte überprüfe die Service-Konfiguration und Pfadsyntax.",
+      "enum_values_required": "Bitte gib mindestens einen Enum-Wert ein, wenn 'Enum-Werte definieren' aktiviert ist.",
+      "multiple_actions_not_supported": "Mehrere Aktionen werden nicht unterstützt. Bitte wähle nur eine Aktion.",
       "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte überprüfe die Logs für Details."
     },
+    "progress": {
+      "reconfigure_successful": "Konfiguration erfolgreich aktualisiert. Der Sensor wird mit den neuen Einstellungen neu gestartet."
+    },
     "abort": {
-      "already_configured": "Dieser Eintrag ist bereits konfiguriert."
+      "already_configured": "Dieser Eintrag ist bereits konfiguriert.",
+      "reconfigure_successful": "Konfiguration erfolgreich aktualisiert."
     }
   },
   "options": {
@@ -214,6 +363,26 @@
         "polling": "Polling (zyklisch)",
         "manual": "Manuell (update_entity)",
         "state_trigger": "Entitäts-Status-Trigger"
+      }
+    },
+    "sensor_type": {
+      "options": {
+        "data": "Datensensor",
+        "value": "Wertsensor"
+      }
+    },
+    "value_type": {
+      "options": {
+        "string": "Text",
+        "number": "Zahl",
+        "boolean": "Boolean (Ein/Aus)",
+        "timestamp": "Zeitstempel"
+      }
+    },
+    "entity_category": {
+      "options": {
+        "config": "Konfiguration",
+        "diagnostic": "Diagnose"
       }
     }
   },
@@ -249,10 +418,24 @@
         },
         "state_attributes": {
           "attribution": {
-            "description": "Daten von der {integration} Integration"
+            "name": "Daten von der {integration} Integration"
           }
         }
       }
+    }
+  },
+  "issues": {
+    "service_not_found": {
+      "title": "Service {service} nicht gefunden für {name}",
+      "description": "Der Service `{service}` konnte nicht gefunden werden. Dies bedeutet normalerweise:\n\n- Die Integration, die den Service bereitstellt, ist nicht installiert oder nicht geladen\n- Der Service-Name hat sich geändert\n- Der Service wurde entfernt\n\n**So beheben:**\n1. Prüfe, ob die Integration, die `{service}` bereitstellt, installiert und aktiviert ist\n2. Konfiguriere diesen Eintrag mit einem anderen Service neu\n3. Lösche diesen Eintrag, wenn der Service nicht mehr verfügbar ist"
+    },
+    "auth_failed": {
+      "title": "Authentifizierung fehlgeschlagen für {name}",
+      "description": "Authentifizierung fehlgeschlagen beim Aufrufen des Service `{service}`: {error}\n\n**So beheben:**\n1. Prüfe, ob der Service Authentifizierung oder API-Schlüssel benötigt\n2. Konfiguriere diesen Eintrag mit aktualisierten Anmeldedaten neu\n3. Überprüfe die Logs für weitere Details"
+    },
+    "service_call_failed": {
+      "title": "Service-Aufruf fehlgeschlagen für {name}",
+      "description": "Aufruf des Service `{service}` schlug dauerhaft fehl: {error}\n\n**So beheben:**\n1. Überprüfe die Service-Konfiguration und Parameter\n2. Stelle sicher, dass der Service korrekt funktioniert (teste ihn manuell)\n3. Konfiguriere diesen Eintrag mit korrigierten Parametern neu\n4. Überprüfe die Integrationslogs für weitere Details"
     }
   }
 }

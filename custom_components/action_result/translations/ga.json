@@ -7,24 +7,224 @@
         "data": {
           "name": "Ainm",
           "service_action": "Gníomh seirbhíse",
-          "response_data_path": "Cosán sonraí freagartha",
-          "attribute_name": "Ainm tréithe",
-          "update_mode": "Mód nuashonraithe",
-          "scan_interval": "Eatramh vótála",
-          "trigger_entity": "Eintiteas truicir",
-          "trigger_from_state": "Truicear ó staid",
-          "trigger_to_state": "Truicear go staid"
+          "entity_category": "Catagóir aonáin"
         },
         "data_description": {
           "name": "Ainm cairdiúil don bhraiteoir seo (m.sh. 'Praghsanna Tibber')",
           "service_action": "Roghnaigh an tseirbhís/gníomh le glaoch agus cumraigh a paraiméadair. Úsáid 'Taispeáin YAML' chun YAML a ghreamú nó a chur in eagar go díreach.",
-          "response_data_path": "Cosán roghnach chun sonraí a bhaint as an bhfreagra (m.sh. 'results.0.items'). Fág folamh le haghaidh freagartha iomláin.",
-          "attribute_name": "Ainm an tréithe a bheidh ag na sonraí freagartha. Is é 'data' an réamhshocrú.",
-          "update_mode": "Conas a truiceartar nuashonruithe: Vótáil (timthriallach le heatramh), Láimhe (trí sheirbhís update_entity), nó Truicear staide eintitis (nuair a athraíonn eintiteas eile staid).",
-          "scan_interval": "Cé chomh minic a ghlaítear ar an tseirbhís i soicindí (le haghaidh mód Vótála amháin). Íosmhéid 10 soicind.",
-          "trigger_entity": "Eintiteas le monatóireacht a dhéanamh ar athruithe staide (le haghaidh mód Truicear staide amháin).",
-          "trigger_from_state": "Truicear nuair a athraítear ón staid seo amháin (roghnach). Fág folamh d'aon staid roimhe seo.",
-          "trigger_to_state": "Truicear nuair a athraítear go dtí an staid seo amháin (roghnach). Fág folamh d'aon staid nua."
+          "entity_category": "Optional: Mark this entity as Configuration or Diagnostic. Leave empty for regular sensor. Data sensors default to Diagnostic (hidden from cloud/voice assistants)."
+        }
+      },
+      "device_selection": {
+        "title": "Gléas tuismitheora (roghnach)",
+        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here but you can change or clear it.",
+        "data": {
+          "parent_device": "Gléas tuismitheora"
+        },
+        "data_description": {
+          "parent_device": "Select a device or leave empty. Empty = standalone sensor with auto-generated virtual device."
+        }
+      },
+      "sensor_type": {
+        "title": "Choose Sensor Type",
+        "description": "Select the type of sensor to create.",
+        "menu_options": {
+          "data_sensor": "Data Sensor - Full response in attributes",
+          "value_sensor": "Value Sensor - Extract specific value as state"
+        }
+      },
+      "data_sensor": {
+        "title": "Data Sensor Selected",
+        "description": "Creating a Data Sensor that exposes the full response data in attributes. The sensor state will show the call status (ok/error)."
+      },
+      "value_sensor": {
+        "title": "Value Sensor Selected",
+        "description": "Creating a Value Sensor that extracts a specific value from the response and uses it as the sensor state."
+      },
+      "data_settings": {
+        "title": "Data Sensor Settings",
+        "description": "Configure how response data is exposed in sensor attributes.",
+        "data": {
+          "response_data_path": "Response Data Path",
+          "attribute_name": "Attribute Name"
+        },
+        "data_description": {
+          "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
+          "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
+        }
+      },
+      "value_settings": {
+        "title": "Value Sensor Settings",
+        "description": "Configure which value to extract from the response and how to interpret it.\n\nFor boolean values, a binary sensor will be created automatically.",
+        "data": {
+          "response_data_path": "Response Data Path",
+          "value_type": "Value Type",
+          "unit_of_measurement": "Unit of Measurement",
+          "device_class": "Device Class",
+          "include_response_data": "Include Full Response Data"
+        },
+        "data_description": {
+          "response_data_path": "Path to the value in the response (e.g., 'temperature' or 'data.items[0].value'). Required.",
+          "value_type": "How to interpret the extracted value: Text, Number, Boolean, or Timestamp.",
+          "unit_of_measurement": "Optional unit (e.g., '°C', 'kWh', '€/kWh'). Only for numeric values. Leave empty for auto-detection or no unit.",
+          "device_class": "Optional device class (e.g., 'temperature', 'energy', 'monetary'). Leave empty for auto-detection.",
+          "include_response_data": "Also include the extracted response data in sensor attributes for context."
+        }
+      },
+      "value_path": {
+        "title": "Value Sensor Path Configuration",
+        "description": "Specify the path to extract the sensor value from the service response.",
+        "data": {
+          "response_data_path": "Value Path",
+          "response_data_path_attributes": "Attributes Path",
+          "include_response_data": "Include Full Response",
+          "attribute_name": "Attribute Name"
+        },
+        "data_description": {
+          "response_data_path": "Path to extract the sensor value (e.g., 'results.0.temperature'). Required.",
+          "response_data_path_attributes": "Optional: Different path for attributes (e.g., 'results.0'). Leave empty to use value path.",
+          "include_response_data": "Include the full service response in sensor attributes.",
+          "attribute_name": "Name of the attribute that will contain the response data (only used if 'Include Full Response' is enabled). Default is 'data'."
+        }
+      },
+      "value_configuration": {
+        "title": "Value Sensor Configuration",
+        "description": "Configure the value type, unit, and device class. Auto-detected from the service response.",
+        "data": {
+          "value_type": "Value Type",
+          "unit_of_measurement": "Unit of Measurement",
+          "device_class": "Device Class",
+          "icon": "Custom Icon"
+        },
+        "data_description": {
+          "value_type": "Type of the sensor value: String, Number, Boolean, or Timestamp.",
+          "unit_of_measurement": "Unit of measurement for the value (e.g., '°C', 'kWh'). Leave empty for none.",
+          "device_class": "Device class for proper display and history handling (e.g., 'temperature', 'energy'). Leave empty for none.",
+          "icon": "Custom icon for this sensor (e.g., 'mdi:thermometer'). Leave empty to use the default 'mdi:api'."
+        }
+      },
+      "composite_unit": {
+        "title": "Build Custom Composite Unit",
+        "description": "Build a custom composite unit by selecting a numerator and denominator (e.g., '€/kWh', 'km/h').\n\nBoth dropdowns support freetext input for maximum flexibility.",
+        "data": {
+          "unit_numerator": "Unit Numerator",
+          "unit_denominator": "Unit Denominator"
+        },
+        "data_description": {
+          "unit_numerator": "The unit in the numerator position (e.g., '€', 'km', 'ct'). Select from dropdown or enter custom text.",
+          "unit_denominator": "The unit in the denominator position (e.g., 'kWh', 'h', 'Wh'). Select from dropdown or enter custom text."
+        }
+      },
+      "enum_definition": {
+        "title": "Define Enum Values (Optional)",
+        "description": "For text sensors, you can optionally define a list of possible values (enum). This allows you to assign icons and translations to each value.",
+        "data": {
+          "define_enum": "Define Enum Values",
+          "enum_values": "Enum Values"
+        },
+        "data_description": {
+          "define_enum": "Enable this to define possible values for this text sensor.",
+          "enum_values": "Enter possible values separated by commas (e.g., 'open,closed,locked'). This field is only used if 'Define Enum Values' is enabled."
+        }
+      },
+      "enum_icons": {
+        "title": "Enum Icons",
+        "description": "Assign an icon to each enum value. Icons will change automatically based on the sensor's state."
+      },
+      "enum_translation_languages": {
+        "title": "Translation Languages",
+        "description": "Select which languages you want to translate the enum values into. English is always included and will be configured in the next step.",
+        "data": {
+          "enum_translation_languages": "Additional Languages"
+        },
+        "data_description": {
+          "enum_translation_languages": "Select additional languages for translations. English will be configured first."
+        }
+      },
+      "enum_translation": {
+        "title": "Enum Translations: {language}",
+        "description": "Provide translations for each enum value in {language}. These translations will be available in sensor attributes."
+      },
+      "update_mode": {
+        "title": "Choose Update Mode",
+        "description": "Select how the service should be called to update the sensor.",
+        "menu_options": {
+          "polling_mode": "Polling - Update at regular intervals",
+          "state_trigger_mode": "State Trigger - Update when entity changes",
+          "manual_mode": "Manual - Update only when triggered"
+        }
+      },
+      "polling_mode": {
+        "title": "Polling Mode Selected",
+        "description": "The sensor will automatically update at regular intervals."
+      },
+      "state_trigger_mode": {
+        "title": "State Trigger Mode Selected",
+        "description": "The sensor will update when a watched entity changes state."
+      },
+      "manual_mode": {
+        "title": "Manual Mode Selected",
+        "description": "The sensor will only update when manually triggered via the homeassistant.update_entity service."
+      },
+      "polling_settings": {
+        "title": "Polling Settings",
+        "description": "Configure the polling interval for automatic updates.",
+        "data": {
+          "scan_interval": "Polling Interval"
+        },
+        "data_description": {
+          "scan_interval": "How often to call the service in seconds. Minimum 10 seconds."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response."
+            }
+          }
+        }
+      },
+      "state_trigger_settings": {
+        "title": "State Trigger Settings",
+        "description": "Configure which entity state changes should trigger a service call.",
+        "data": {
+          "trigger_entity": "Trigger Entity",
+          "trigger_from_state": "Trigger From State",
+          "trigger_to_state": "Trigger To State"
+        },
+        "data_description": {
+          "trigger_entity": "Entity to watch for state changes.",
+          "trigger_from_state": "Only trigger when changing from this state (optional). Leave empty for any previous state.",
+          "trigger_to_state": "Only trigger when changing to this state (optional). Leave empty for any new state."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response."
+            }
+          }
+        }
+      },
+      "manual_settings": {
+        "title": "Manual Update Settings",
+        "description": "The sensor will only update when you call the homeassistant.update_entity service.",
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response."
+            }
+          }
         }
       },
       "reconfigure": {
@@ -32,23 +232,90 @@
         "description": "Nuashonraigh cumraíocht na seirbhíse don bhraiteoir seo.\n\nChun an iontráil seo a athainmniú, úsáid Socruithe → Gléasanna & Seirbhísí → [iontráil] → roghchlár trí phonc → Athainmnigh.",
         "data": {
           "service_action": "Gníomh seirbhíse",
-          "response_data_path": "Cosán sonraí freagartha",
-          "attribute_name": "Ainm tréithe",
-          "update_mode": "Mód nuashonraithe",
-          "scan_interval": "Eatramh vótála",
-          "trigger_entity": "Eintiteas truicir",
-          "trigger_from_state": "Truicear ó staid",
-          "trigger_to_state": "Truicear go staid"
+          "parent_device": "Parent Device",
+          "entity_category": "Entity Category"
         },
         "data_description": {
           "service_action": "Roghnaigh an tseirbhís/gníomh le glaoch agus cumraigh a paraiméadair. Úsáid 'Taispeáin YAML' chun YAML a ghreamú nó a chur in eagar go díreach.",
-          "response_data_path": "Cosán roghnach chun sonraí a bhaint as an bhfreagra (m.sh. 'results.0.items'). Fág folamh le haghaidh freagartha iomláin.",
-          "attribute_name": "Ainm an tréithe a bheidh ag na sonraí freagartha. Is é 'data' an réamhshocrú.",
-          "update_mode": "Conas a truiceartar nuashonruithe: Vótáil (timthriallach le heatramh), Láimhe (trí sheirbhís update_entity), nó Truicear staide eintitis (nuair a athraíonn eintiteas eile staid).",
-          "scan_interval": "Cé chomh minic a ghlaítear ar an tseirbhís i soicindí (le haghaidh mód Vótála amháin). Íosmhéid 10 soicind.",
-          "trigger_entity": "Eintiteas le monatóireacht a dhéanamh ar athruithe staide (le haghaidh mód Truicear staide amháin).",
-          "trigger_from_state": "Truicear nuair a athraítear ón staid seo amháin (roghnach). Fág folamh d'aon staid roimhe seo.",
-          "trigger_to_state": "Truicear nuair a athraítear go dtí an staid seo amháin (roghnach). Fág folamh d'aon staid nua."
+          "parent_device": "Optional: Associate this sensor with a device from the same integration. Leave empty for standalone sensor or auto-generated device.",
+          "entity_category": "Optional: Mark this entity as Configuration or Diagnostic. Leave empty for regular sensor. Data sensors default to Diagnostic (hidden from cloud/voice assistants)."
+        }
+      },
+      "reconfigure_update_mode": {
+        "title": "Update Mode",
+        "description": "Choose how the service should be called to update the sensor.",
+        "data": {
+          "update_mode": "Update Mode"
+        },
+        "data_description": {
+          "update_mode": "How to trigger updates: Polling (cyclic at interval), Manual (via update_entity service), or Entity State Trigger (when another entity changes state)."
+        }
+      },
+      "reconfigure_polling_settings": {
+        "title": "Polling Settings",
+        "description": "Configure the polling interval for automatic updates.",
+        "data": {
+          "scan_interval": "Polling Interval"
+        },
+        "data_description": {
+          "scan_interval": "How often to call the service in seconds. Minimum 10 seconds."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path",
+              "attribute_name": "Attribute Name"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
+              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
+            }
+          }
+        }
+      },
+      "reconfigure_state_trigger_settings": {
+        "title": "State Trigger Settings",
+        "description": "Configure which entity state changes should trigger a service call.",
+        "data": {
+          "trigger_entity": "Trigger Entity",
+          "trigger_from_state": "Trigger From State",
+          "trigger_to_state": "Trigger To State"
+        },
+        "data_description": {
+          "trigger_entity": "Entity to watch for state changes.",
+          "trigger_from_state": "Only trigger when changing from this state (optional). Leave empty for any previous state.",
+          "trigger_to_state": "Only trigger when changing to this state (optional). Leave empty for any new state."
+        },
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path",
+              "attribute_name": "Attribute Name"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
+              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
+            }
+          }
+        }
+      },
+      "reconfigure_manual_settings": {
+        "title": "Manual Update Settings",
+        "description": "The sensor will only update when you call the homeassistant.update_entity service.",
+        "sections": {
+          "advanced_options": {
+            "name": "Advanced Options",
+            "data": {
+              "response_data_path": "Response Data Path",
+              "attribute_name": "Attribute Name"
+            },
+            "data_description": {
+              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
+              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
+            }
+          }
         }
       }
     },
@@ -59,13 +326,21 @@
       "data_not_dict": "Caithfidh an rannán 'data' in YAML a bheith ina foclóir (péirí eochair: luach).",
       "no_service_selected": "Roghnaigh gníomh seirbhíse ón roghchlár anuas nó cuir ar fáil é in YAML.",
       "service_call_failed": "Theip ar ghlao seirbhíse: {error_message}",
+      "service_no_response": "Ní fhilleann an tseirbhís seo sonraí freagartha. Roghnaigh seirbhís a thacaíonn le sonraí a fhilleadh.",
       "trigger_entity_not_found": "Níl an eintiteas truicir ann. Roghnaigh eintiteas bailí.",
       "invalid_trigger_state": "Níl an staid truicir sonraithe bailí don eintiteas roghnaithe.",
-      "unknown": "Tharla earráid gan choinne. Seiceáil na logaí le haghaidh sonraí.",
-      "service_no_response": "Ní fhilleann an tseirbhís seo sonraí freagartha. Roghnaigh seirbhís a thacaíonn le sonraí a fhilleadh."
+      "invalid_response_path": "The specified path does not exist in the service response. Please verify the path and try again.",
+      "value_path_test_failed": "Failed to test the value path. Please check the service configuration and path syntax.",
+      "enum_values_required": "Please enter at least one enum value when 'Define Enum Values' is enabled.",
+      "multiple_actions_not_supported": "Multiple actions are not supported. Please select only one action.",
+      "unknown": "Tharla earráid gan choinne. Seiceáil na logaí le haghaidh sonraí."
+    },
+    "progress": {
+      "reconfigure_successful": "Configuration updated successfully. The sensor will restart with the new settings."
     },
     "abort": {
-      "already_configured": "Tá an iontráil seo cumraithe cheana féin."
+      "already_configured": "Tá an iontráil seo cumraithe cheana féin.",
+      "reconfigure_successful": "Configuration updated successfully."
     }
   },
   "options": {
@@ -88,6 +363,26 @@
         "polling": "Vótáil (timthriallach)",
         "manual": "Láimhe (update_entity)",
         "state_trigger": "Truicear staide eintitis"
+      }
+    },
+    "sensor_type": {
+      "options": {
+        "data": "Data Sensor",
+        "value": "Value Sensor"
+      }
+    },
+    "value_type": {
+      "options": {
+        "string": "Text",
+        "number": "Number",
+        "boolean": "Boolean (On/Off)",
+        "timestamp": "Timestamp"
+      }
+    },
+    "entity_category": {
+      "options": {
+        "config": "Configuration",
+        "diagnostic": "Diagnostic"
       }
     }
   },
@@ -123,10 +418,24 @@
         },
         "state_attributes": {
           "attribution": {
-            "description": "Sonraí ón chomhtháthú {integration}"
+            "name": "Data from the {integration} integration"
           }
         }
       }
+    }
+  },
+  "issues": {
+    "service_not_found": {
+      "title": "Service {service} not found for {name}",
+      "description": "The service `{service}` could not be found. This usually means:\n\n- The integration providing the service is not installed or not loaded\n- The service name has changed\n- The service was removed\n\n**To fix this:**\n1. Check if the integration providing `{service}` is installed and enabled\n2. Reconfigure this entry with a different service\n3. Delete this entry if the service is no longer available"
+    },
+    "auth_failed": {
+      "title": "Authentication failed for {name}",
+      "description": "Authentication failed when calling service `{service}`: {error}\n\n**To fix this:**\n1. Check if the service requires authentication or API keys\n2. Reconfigure this entry with updated credentials\n3. Check the logs for more details"
+    },
+    "service_call_failed": {
+      "title": "Service call failed for {name}",
+      "description": "Calling service `{service}` failed persistently: {error}\n\n**To fix this:**\n1. Check the service configuration and parameters\n2. Verify the service is working correctly (test it manually)\n3. Reconfigure this entry with corrected parameters\n4. Check the integration logs for more details"
     }
   }
 }
