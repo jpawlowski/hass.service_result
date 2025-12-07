@@ -34,7 +34,7 @@ from custom_components.action_result.const import (
     MAX_RETRY_DELAY_SECONDS,
     SERVICE_CALL_TIMEOUT_SECONDS,
 )
-from homeassistant.exceptions import ConfigEntryAuthFailed, HomeAssistantError, ServiceNotFound
+from homeassistant.exceptions import HomeAssistantError, ServiceNotFound
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -230,43 +230,12 @@ class ActionResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
         # Default to unknown (treat as potentially temporary)
         return ERROR_TYPE_UNKNOWN
 
-    def _is_auth_error(self, exc: Exception) -> bool:
-        """
-        Check if an exception represents an authentication/authorization error.
-
-        Auth errors should trigger a reauth flow instead of just marking
-        the entity as unavailable.
-
-        Args:
-            exc: The exception to check.
-
-        Returns:
-            True if this is an authentication error, False otherwise.
-        """
-        error_str = str(exc).lower()
-
-        # Authentication/authorization error indicators
-        auth_indicators = [
-            "unauthorized",
-            "forbidden",
-            "authentication failed",
-            "invalid api key",
-            "invalid token",
-            "invalid credentials",
-            "permission denied",
-            "access denied",
-            "401",
-            "403",
-        ]
-
-        return any(indicator in error_str for indicator in auth_indicators)
-
     def _create_repair_issue(self, issue_type: str, error_msg: str) -> None:
         """
         Create a repair issue for persistent problems.
 
         Args:
-            issue_type: Type of issue (service_not_found, auth_failed, etc.)
+            issue_type: Type of issue (service_not_found, service_call_failed, etc.)
             error_msg: Error message to display to user.
         """
         service_domain, service_name = self.get_service_info()
@@ -429,22 +398,6 @@ class ActionResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
             self.last_error_type = error_type
             self.consecutive_errors += 1
 
-            # Check if this is an authentication error
-            if self._is_auth_error(exc):
-                LOGGER.error(
-                    "Authentication error calling service %s for '%s': %s",
-                    service_full_name,
-                    entry_name,
-                    exc,
-                )
-                # Create repair issue for auth error
-                self._create_repair_issue(
-                    "auth_failed",
-                    str(exc),
-                )
-                # Raise ConfigEntryAuthFailed to trigger reauth flow
-                raise ConfigEntryAuthFailed(f"Authentication failed for {service_full_name}: {error_msg}") from exc
-
             if error_type == ERROR_TYPE_TEMPORARY:
                 self.is_retrying = True
                 LOGGER.warning(
@@ -511,7 +464,6 @@ class ActionResultEntitiesDataUpdateCoordinator(DataUpdateCoordinator):
 
             # Delete repair issues if they exist
             self._delete_repair_issue("service_not_found")
-            self._delete_repair_issue("auth_failed")
             self._delete_repair_issue("service_call_failed")
 
             LOGGER.debug(

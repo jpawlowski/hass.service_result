@@ -26,6 +26,7 @@ from typing import TYPE_CHECKING
 from homeassistant.const import Platform
 from homeassistant.core import Event, EventStateChangedData, callback
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import issue_registry as ir
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.loader import async_get_loaded_integration
@@ -45,6 +46,7 @@ from .const import (
     DEFAULT_UPDATE_MODE,
     DOMAIN,
     LOGGER,
+    REPAIR_ISSUE_TRIGGER_ENTITY_MISSING,
     SENSOR_TYPE_DATA,
     SENSOR_TYPE_VALUE,
     UPDATE_MODE_POLLING,
@@ -249,6 +251,30 @@ async def async_setup_entry(
     if update_mode == UPDATE_MODE_STATE_TRIGGER:
         trigger_entity = entry.data.get(CONF_TRIGGER_ENTITY, "")
         if trigger_entity:
+            # Check if trigger entity exists
+            if not hass.states.get(trigger_entity):
+                # Create repair issue for missing trigger entity
+                entry_name = entry.data.get("name", "Unknown")
+                ir.async_create_issue(
+                    hass,
+                    DOMAIN,
+                    f"{REPAIR_ISSUE_TRIGGER_ENTITY_MISSING}_{entry.entry_id}",
+                    is_fixable=False,
+                    severity=ir.IssueSeverity.WARNING,
+                    translation_key="trigger_entity_missing",
+                    translation_placeholders={
+                        "entry_name": entry_name,
+                        "trigger_entity": trigger_entity,
+                    },
+                )
+                LOGGER.warning(
+                    "Trigger entity %s not found for config entry %s (%s). "
+                    "The integration will not update automatically until the entity becomes available.",
+                    trigger_entity,
+                    entry_name,
+                    entry.entry_id,
+                )
+
             trigger_from_state = entry.data.get(CONF_TRIGGER_FROM_STATE, "")
             trigger_to_state = entry.data.get(CONF_TRIGGER_TO_STATE, "")
 
@@ -259,7 +285,42 @@ async def async_setup_entry(
                 new_state = event.data.get("new_state")
 
                 if new_state is None:
+                    # Entity was removed - create repair issue if it doesn't exist
+                    entry_name = entry.data.get("name", "Unknown")
+                    issue_id = f"{REPAIR_ISSUE_TRIGGER_ENTITY_MISSING}_{entry.entry_id}"
+
+                    # Check if issue already exists
+                    existing_issue = ir.async_get(hass).async_get_issue(DOMAIN, issue_id)
+                    if not existing_issue:
+                        ir.async_create_issue(
+                            hass,
+                            DOMAIN,
+                            issue_id,
+                            is_fixable=False,
+                            severity=ir.IssueSeverity.WARNING,
+                            translation_key="trigger_entity_missing",
+                            translation_placeholders={
+                                "entry_name": entry_name,
+                                "trigger_entity": trigger_entity,
+                            },
+                        )
+                        LOGGER.warning(
+                            "Trigger entity %s was removed for config entry %s (%s)",
+                            trigger_entity,
+                            entry_name,
+                            entry.entry_id,
+                        )
                     return
+
+                # Entity exists - delete repair issue if it exists
+                issue_id = f"{REPAIR_ISSUE_TRIGGER_ENTITY_MISSING}_{entry.entry_id}"
+                existing_issue = ir.async_get(hass).async_get_issue(DOMAIN, issue_id)
+                if existing_issue:
+                    ir.async_delete_issue(hass, DOMAIN, issue_id)
+                    LOGGER.info(
+                        "Trigger entity %s is now available again, repair issue removed",
+                        trigger_entity,
+                    )
 
                 old_state_value = old_state.state if old_state else None
                 new_state_value = new_state.state
@@ -318,7 +379,7 @@ async def async_unload_entry(
     Unload a config entry.
 
     This is called when the integration is being removed or reloaded.
-    It ensures proper cleanup of all platform entities.
+    It ensures proper cleanup of all platform entities and repair issues.
 
     Args:
         hass: The Home Assistant instance.
@@ -327,6 +388,13 @@ async def async_unload_entry(
     Returns:
         True if unload was successful.
     """
+    # Clean up any repair issues for this entry
+    issue_id = f"{REPAIR_ISSUE_TRIGGER_ENTITY_MISSING}_{entry.entry_id}"
+    existing_issue = ir.async_get(hass).async_get_issue(DOMAIN, issue_id)
+    if existing_issue:
+        ir.async_delete_issue(hass, DOMAIN, issue_id)
+        LOGGER.debug("Removed repair issue %s during unload", issue_id)
+
     platforms = _get_platforms_for_entry(entry)
     return await hass.config_entries.async_unload_platforms(entry, platforms)
 

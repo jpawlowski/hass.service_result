@@ -90,3 +90,6 @@ MAX_CONSECUTIVE_ERRORS = 10  # Cap for exponential backoff calculation
 INITIAL_RETRY_DELAY_SECONDS = 30
 SERVICE_CALL_TIMEOUT_SECONDS = 30  # Timeout for service calls
 MAX_RETRY_DELAY_SECONDS = 300  # 5 minutes max backoff
+
+# Repair issue IDs
+REPAIR_ISSUE_TRIGGER_ENTITY_MISSING = "trigger_entity_missing"

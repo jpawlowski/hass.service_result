@@ -73,7 +73,7 @@
       },
       "value_path": {
         "title": "Value Sensor Path Configuration",
-        "description": "Specify the path to extract the sensor value from the service response.",
+        "description": "Specify the path to extract the sensor value from the action response.",
         "data": {
           "response_data_path": "Value Path",
           "response_data_path_attributes": "Attributes Path",
@@ -83,13 +83,13 @@
         "data_description": {
           "response_data_path": "Path to extract the sensor value (e.g., 'results.0.temperature'). Required.",
           "response_data_path_attributes": "Optional: Different path for attributes (e.g., 'results.0'). Leave empty to use value path.",
-          "include_response_data": "Include the full service response in sensor attributes.",
+          "include_response_data": "Include the full action response in sensor attributes.",
           "attribute_name": "Name of the attribute that will contain the response data (only used if 'Include Full Response' is enabled). Default is 'data'."
         }
       },
       "value_configuration": {
         "title": "Value Sensor Configuration",
-        "description": "Configure the value type, unit, and device class. Auto-detected from the service response.",
+        "description": "Configure the value type, unit, and device class. Auto-detected from the action response.",
         "data": {
           "value_type": "Value Type",
           "unit_of_measurement": "Unit of Measurement",
@@ -164,7 +164,7 @@
       },
       "manual_mode": {
         "title": "Manual Mode Selected",
-        "description": "The sensor will only update when manually triggered via the homeassistant.update_entity service."
+        "description": "The sensor will only update when manually triggered via the homeassistant.update_entity action."
       },
       "polling_settings": {
         "title": "Polling Settings",
@@ -173,7 +173,7 @@
           "scan_interval": "Polling Interval"
         },
         "data_description": {
-          "scan_interval": "How often to call the service in seconds. Minimum 10 seconds."
+          "scan_interval": "How often to call the action in seconds. Minimum 10 seconds."
         },
         "sections": {
           "advanced_options": {
@@ -189,7 +189,7 @@
       },
       "state_trigger_settings": {
         "title": "State Trigger Settings",
-        "description": "Configure which entity state changes should trigger a service call.",
+        "description": "Configure which entity state changes should trigger an update.",
         "data": {
           "trigger_entity": "Trigger Entity",
           "trigger_from_state": "Trigger From State",
@@ -214,7 +214,7 @@
       },
       "manual_settings": {
         "title": "Manual Update Settings",
-        "description": "The sensor will only update when you call the homeassistant.update_entity service.",
+        "description": "Note: The sensor will only update when you call the `homeassistant.update_entity` action.",
         "sections": {
           "advanced_options": {
             "name": "Advanced Options",
@@ -229,7 +229,7 @@
       },
       "reconfigure": {
         "title": "Reconfigure Action Result",
-        "description": "Update the service configuration for this sensor.\n\nTo rename this entry, use Settings → Devices & Actions → [entry] → three-dot menu → Rename.",
+        "description": "Update the service action configuration for this sensor.\n\nTo rename this entry, use Settings → Devices & Actions → [entry] → three-dot menu → Rename.",
         "data": {
           "service_action": "Service Action",
           "parent_device": "Parent Device",
@@ -243,12 +243,12 @@
       },
       "reconfigure_update_mode": {
         "title": "Update Mode",
-        "description": "Choose how the service should be called to update the sensor.",
+        "description": "Choose how the action should be called to update the sensor.",
         "data": {
           "update_mode": "Update Mode"
         },
         "data_description": {
-          "update_mode": "How to trigger updates: Polling (cyclic at interval), Manual (via update_entity service), or Entity State Trigger (when another entity changes state)."
+          "update_mode": "How to trigger updates: Polling (cyclic at interval), Manual (via update_entity action), or Entity State Trigger (when another entity changes state)."
         }
       },
       "reconfigure_polling_settings": {
@@ -258,7 +258,7 @@
           "scan_interval": "Polling Interval"
         },
         "data_description": {
-          "scan_interval": "How often to call the service in seconds. Minimum 10 seconds."
+          "scan_interval": "How often to call the action in seconds. Minimum 10 seconds."
         },
         "sections": {
           "advanced_options": {
@@ -276,7 +276,7 @@
       },
       "reconfigure_state_trigger_settings": {
         "title": "State Trigger Settings",
-        "description": "Configure which entity state changes should trigger a service call.",
+        "description": "Configure which entity state changes should trigger an update.",
         "data": {
           "trigger_entity": "Trigger Entity",
           "trigger_from_state": "Trigger From State",
@@ -303,7 +303,7 @@
       },
       "reconfigure_manual_settings": {
         "title": "Manual Update Settings",
-        "description": "The sensor will only update when you call the homeassistant.update_entity service.",
+        "description": "The sensor will only update when you call the homeassistant.update_entity action.",
         "sections": {
           "advanced_options": {
             "name": "Advanced Options",
@@ -321,16 +321,16 @@
     },
     "error": {
       "service_not_found": "Action not found. Verify the selected action exists and the integration is loaded.",
-      "yaml_parse_error": "Invalid YAML syntax. Please check the service data format.",
+      "yaml_parse_error": "Invalid YAML syntax. Please check the service action data format.",
       "yaml_not_dict": "Action data must be a YAML dictionary (key: value pairs).",
       "data_not_dict": "The 'data' section in the YAML must be a dictionary (key: value pairs).",
       "no_service_selected": "Please select a service action from the dropdown or provide it in the YAML.",
       "service_call_failed": "Action call failed: {error_message}",
-      "service_no_response": "This service does not return response data. Please select a service that supports returning data.",
+      "service_no_response": "This action does not return response data. Please select an action that supports returning data.",
       "trigger_entity_not_found": "The trigger entity does not exist. Please select a valid entity.",
       "invalid_trigger_state": "The specified trigger state is not valid for the selected entity.",
-      "invalid_response_path": "The specified path does not exist in the service response. Please verify the path and try again.",
-      "value_path_test_failed": "Failed to test the value path. Please check the service configuration and path syntax.",
+      "invalid_response_path": "The specified path does not exist in the action response. Please verify the path and try again.",
+      "value_path_test_failed": "Failed to test the value path. Please check the action configuration and path syntax.",
       "enum_values_required": "Please enter at least one enum value when 'Define Enum Values' is enabled.",
       "multiple_actions_not_supported": "Multiple actions are not supported. Please select only one action.",
       "unknown": "An unexpected error occurred. Please check the logs for details."
@@ -347,12 +347,12 @@
     "step": {
       "init": {
         "title": "Configure Options",
-        "description": "Adjust the polling interval. To change the service configuration, use Reconfigure instead.",
+        "description": "Adjust the polling interval. To change the action configuration, use Reconfigure instead.",
         "data": {
           "scan_interval": "Polling Interval"
         },
         "data_description": {
-          "scan_interval": "How often to call the service in seconds. Minimum 10 seconds."
+          "scan_interval": "How often to call the action in seconds. Minimum 10 seconds."
         }
       }
     }
@@ -388,19 +388,19 @@
   },
   "exceptions": {
     "yaml_parse_error": {
-      "message": "Failed to parse service data YAML: {error}"
+      "message": "Failed to parse service action data YAML: {error}"
     },
     "service_not_found": {
-      "message": "The configured service \"{service}\" was not found. The integration may have been removed or is not loaded."
+      "message": "The configured action \"{service}\" was not found. The integration may have been removed or is not loaded."
     },
     "service_call_failed": {
-      "message": "Failed to call service \"{service}\": {error}"
+      "message": "Failed to call action \"{service}\": {error}"
     },
     "service_temporarily_unavailable": {
       "message": "Action \"{service}\" is temporarily unavailable. Will retry automatically."
     },
     "response_path_invalid": {
-      "message": "The configured response path \"{path}\" does not exist in the service response."
+      "message": "The configured response path \"{path}\" does not exist in the action response."
     },
     "trigger_entity_unavailable": {
       "message": "The trigger entity \"{entity}\" is unavailable."
@@ -429,13 +429,13 @@
       "title": "Service {service} not found for {name}",
       "description": "The service `{service}` could not be found. This usually means:\n\n- The integration providing the service is not installed or not loaded\n- The service name has changed\n- The service was removed\n\n**To fix this:**\n1. Check if the integration providing `{service}` is installed and enabled\n2. Reconfigure this entry with a different service\n3. Delete this entry if the service is no longer available"
     },
-    "auth_failed": {
-      "title": "Authentication failed for {name}",
-      "description": "Authentication failed when calling service `{service}`: {error}\n\n**To fix this:**\n1. Check if the service requires authentication or API keys\n2. Reconfigure this entry with updated credentials\n3. Check the logs for more details"
-    },
     "service_call_failed": {
       "title": "Service call failed for {name}",
       "description": "Calling service `{service}` failed persistently: {error}\n\n**To fix this:**\n1. Check the service configuration and parameters\n2. Verify the service is working correctly (test it manually)\n3. Reconfigure this entry with corrected parameters\n4. Check the integration logs for more details"
+    },
+    "trigger_entity_missing": {
+      "title": "Trigger entity missing for {entry_name}",
+      "description": "The trigger entity `{trigger_entity}` is no longer available. The integration is configured to update when this entity changes state, but it cannot be found.\n\nThis may be because:\n- The entity was deleted\n- The integration providing the entity was removed or disabled\n- The entity ID was changed\n\n**To fix this:**\n1. Check if the entity `{trigger_entity}` exists in your system\n2. Reconfigure this entry with a different trigger entity via the options flow\n3. Or change the update mode to polling or manual"
     }
   }
 }
