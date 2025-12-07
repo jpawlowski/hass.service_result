@@ -418,7 +418,7 @@
         },
         "state_attributes": {
           "attribution": {
-            "description": "Data from the {integration} integration"
+            "name": "Data from the {integration} integration"
           }
         }
       }
