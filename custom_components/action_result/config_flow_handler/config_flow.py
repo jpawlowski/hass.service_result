@@ -556,6 +556,9 @@ class ActionResultEntitiesConfigFlowHandler(config_entries.ConfigFlow, domain=DO
 
                         if extracted_value is None:
                             errors["base"] = "invalid_response_path"
+                        elif isinstance(extracted_value, (dict, list)):
+                            # Value sensor requires a leaf node (primitive value), not a structure
+                            errors["base"] = "value_path_not_leaf"
                         else:
                             # Store the extracted value for auto-detection in next step
                             self._step_data["_detected_value"] = extracted_value

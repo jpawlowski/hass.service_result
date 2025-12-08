@@ -330,6 +330,7 @@
       "trigger_entity_not_found": "The trigger entity does not exist. Please select a valid entity.",
       "invalid_trigger_state": "The specified trigger state is not valid for the selected entity.",
       "invalid_response_path": "The specified path does not exist in the action response. Please verify the path and try again.",
+      "value_path_not_leaf": "The specified path points to an object or array, not a single value. Value sensors require a path to a primitive value (string, number, boolean, timestamp).",
       "value_path_test_failed": "Failed to test the value path. Please check the action configuration and path syntax.",
       "enum_values_required": "Please enter at least one enum value when 'Define Enum Values' is enabled.",
       "multiple_actions_not_supported": "Multiple actions are not supported. Please select only one action.",

@@ -10,12 +10,14 @@ import contextlib
 from typing import TYPE_CHECKING, Any
 
 from custom_components.action_result.const import (
+    CONF_ATTRIBUTE_NAME,
     CONF_DEVICE_CLASS,
     CONF_INCLUDE_RESPONSE_DATA,
     CONF_NAME,
     CONF_RESPONSE_DATA_PATH,
     CONF_RESPONSE_DATA_PATH_ATTRIBUTES,
     CONF_SERVICE_ACTION,
+    DEFAULT_ATTRIBUTE_NAME,
     PARALLEL_UPDATES as PARALLEL_UPDATES,
 )
 from custom_components.action_result.entity import ActionResultEntitiesEntity
@@ -74,6 +76,16 @@ class ServiceResultBinarySensor(BinarySensorEntity, ActionResultEntitiesEntity):
 
         # Set translation key for proper naming
         self._attr_translation_key = "action_result"
+
+        # Set unrecorded attributes dynamically based on configuration
+        # Always exclude response_path and last_update from recorder (metadata)
+        # Also exclude response data attribute if user enabled it (can contain large data)
+        unrecorded = {"response_path", "last_update"}
+        if entry.data.get(CONF_INCLUDE_RESPONSE_DATA, False):
+            # Get the configured attribute name for response data
+            attribute_name = entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+            unrecorded.add(attribute_name)
+        self._attr_entity_component_unrecorded_attributes = frozenset(unrecorded)
 
         # Set device class if configured
         device_class = entry.data.get(CONF_DEVICE_CLASS)
@@ -134,10 +146,12 @@ class ServiceResultBinarySensor(BinarySensorEntity, ActionResultEntitiesEntity):
         include_response = self._entry.data.get(CONF_INCLUDE_RESPONSE_DATA, False)
         if include_response and self.coordinator.data:
             response = self.coordinator.data.get("response")
-            # Use separate attributes path if configured, otherwise use value path
-            attributes_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH_ATTRIBUTES, response_path)
+            # Use separate attributes path if configured, otherwise full response (empty path)
+            attributes_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH_ATTRIBUTES, "")
             extracted_data = extract_data_at_path(response, attributes_path)
-            attributes["response_data"] = extracted_data
+            # Use configured attribute name (default: "data")
+            attribute_name = self._entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+            attributes[attribute_name] = extracted_data
 
         # Add metadata
         if self.coordinator.data:

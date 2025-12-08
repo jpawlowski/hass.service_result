@@ -244,7 +244,6 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
 
     _attr_has_entity_name = True
     _attr_icon = "mdi:api"
-    _attr_entity_component_unrecorded_attributes = frozenset({"response_data", "response_path", "last_update"})
 
     def __init__(
         self,
@@ -264,6 +263,20 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
 
         # Set translation key for proper naming
         self._attr_translation_key = "action_result"
+
+        # Set unrecorded attributes dynamically based on configuration
+        # Always exclude response_path and last_update from recorder (metadata)
+        # Also exclude response data attribute if user enabled it (can contain large data)
+        # Also exclude translations attribute if enum is defined (can contain large multilingual data)
+        unrecorded = {"response_path", "last_update"}
+        if entry.data.get(CONF_INCLUDE_RESPONSE_DATA, False):
+            # Get the configured attribute name for response data
+            attribute_name = entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+            unrecorded.add(attribute_name)
+        if entry.data.get(CONF_DEFINE_ENUM, False):
+            # Enum translations can be large (multiple languages × multiple values)
+            unrecorded.add("translations")
+        self._attr_entity_component_unrecorded_attributes = frozenset(unrecorded)
 
         # Set unit of measurement if configured
         unit = entry.data.get(CONF_UNIT_OF_MEASUREMENT, "")
@@ -288,6 +301,8 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
             enum_values = entry.data.get(CONF_ENUM_VALUES, [])
             if enum_values:
                 self._attr_options = enum_values
+                # REQUIRED: Set device class to ENUM when options are provided
+                self._attr_device_class = SensorDeviceClass.ENUM
                 # Set translation key for enum state translations
                 self._attr_translation_key = "action_result_enum"
 
@@ -409,10 +424,12 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
         include_response = self._entry.data.get(CONF_INCLUDE_RESPONSE_DATA, False)
         if include_response and self.coordinator.data:
             response = self.coordinator.data.get("response")
-            # Use separate attributes path if configured, otherwise use value path
-            attributes_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH_ATTRIBUTES, response_path)
+            # Use separate attributes path if configured, otherwise full response (empty path)
+            attributes_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH_ATTRIBUTES, "")
             extracted_data = extract_data_at_path(response, attributes_path)
-            attributes["response_data"] = extracted_data
+            # Use configured attribute name (default: "data")
+            attribute_name = self._entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
+            attributes[attribute_name] = extracted_data
 
         # Add metadata
         if self.coordinator.data:
