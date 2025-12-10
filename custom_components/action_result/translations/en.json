@@ -15,7 +15,7 @@
       },
       "device_selection": {
         "title": "Parent Device (Optional)",
-        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here.",
+        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nOnly devices from the same integration as the selected action are shown.",
         "data": {
           "parent_device": "Parent Device"
         },

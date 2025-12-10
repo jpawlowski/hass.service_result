@@ -53,8 +53,12 @@ class ActionResultEntitiesOptionsFlow(config_entries.OptionsFlow):
 
         Args:
             config_entry: The config entry for this integration instance.
+
+        Note:
+            The config_entry parameter is automatically stored by the parent class.
+            We don't need to explicitly assign it to self.config_entry as that's
+            deprecated and will be removed in Home Assistant 2025.12.
         """
-        self.config_entry = config_entry
         self._options: dict[str, Any] = {}
 
     async def async_step_init(
