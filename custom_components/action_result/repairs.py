@@ -15,7 +15,7 @@ import voluptuous as vol
 from homeassistant.components.repairs import RepairsFlow
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import REPAIR_ISSUE_TRIGGER_ENTITY_MISSING
+from .const import REPAIR_ISSUE_ENUM_VALUE_ADDED, REPAIR_ISSUE_TRIGGER_ENTITY_MISSING
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -29,6 +29,10 @@ async def async_create_fix_flow(
     """Create a repair flow based on the issue_id."""
     if issue_id.startswith(REPAIR_ISSUE_TRIGGER_ENTITY_MISSING):
         return TriggerEntityMissingRepairFlow(issue_id, data)
+
+    # Enum value added issues
+    if issue_id.startswith(REPAIR_ISSUE_ENUM_VALUE_ADDED):
+        return EnumValueAddedRepairFlow(issue_id, data)
 
     # Service not found issues - extract config_entry_id from issue_id
     if "_service_not_found" in issue_id:
@@ -252,6 +256,38 @@ class ServiceCallFailedRepairFlow(RepairsFlow):
     ) -> FlowResult:
         """Ignore the issue."""
         return self.async_create_entry(data={})
+
+
+class EnumValueAddedRepairFlow(RepairsFlow):
+    """Handler for enum value added issues.
+
+    Notifies user that new enum values were discovered and translations should be added.
+    """
+
+    def __init__(
+        self,
+        issue_id: str,
+        data: dict[str, str | int | float | None] | None,
+    ) -> None:
+        """Initialize the enum value added repair flow."""
+        super().__init__()
+        self._issue_id = issue_id
+        self._data = data or {}
+
+    async def async_step_init(
+        self,
+        user_input: dict[str, str] | None = None,
+    ) -> FlowResult:
+        """Handle enum value added issue.
+
+        Informs the user that new enum values were discovered and added.
+        The user should add translations via the config entry reconfigure flow.
+        """
+        if user_input is not None:
+            # User acknowledged, close the repair issue
+            return self.async_create_entry(data={})
+
+        return self.async_show_form(step_id="init")
 
 
 class UnknownIssueRepairFlow(RepairsFlow):

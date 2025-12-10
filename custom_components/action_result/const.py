@@ -93,3 +93,4 @@ MAX_RETRY_DELAY_SECONDS = 300  # 5 minutes max backoff
 
 # Repair issue IDs
 REPAIR_ISSUE_TRIGGER_ENTITY_MISSING = "trigger_entity_missing"
+REPAIR_ISSUE_ENUM_VALUE_ADDED = "enum_value_added"

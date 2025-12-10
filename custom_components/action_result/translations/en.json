@@ -6,23 +6,21 @@
         "description": "Configure a sensor that exposes the response from a Home Assistant service call.\n\nSelect and configure a service action using the visual editor below.",
         "data": {
           "name": "Name",
-          "service_action": "Service Action",
-          "entity_category": "Entity Category"
+          "service_action": "Service Action"
         },
         "data_description": {
           "name": "A friendly name for this sensor (e.g., 'Tibber Prices')",
-          "service_action": "Select the service/action to call and configure its parameters. Use 'Show YAML' to paste or edit YAML directly.",
-          "entity_category": "Optional: Mark this entity as Configuration or Diagnostic. Leave empty for regular sensor. Data sensors default to Diagnostic (hidden from cloud/voice assistants)."
+          "service_action": "Select the service/action to call and configure its parameters. Use 'Show YAML' to paste or edit YAML directly."
         }
       },
       "device_selection": {
         "title": "Parent Device (Optional)",
-        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here but you can change or clear it.",
+        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to create a standalone sensor. If left empty, a virtual device will be created automatically.\n\nIf a device was selected in the action configuration, it will be pre-selected here.",
         "data": {
           "parent_device": "Parent Device"
         },
         "data_description": {
-          "parent_device": "Select a device or leave empty. Empty = standalone sensor with auto-generated virtual device."
+          "parent_device": "Select a device or leave empty for a standalone sensor with auto-generated virtual device."
         }
       },
       "sensor_type": {
@@ -94,13 +92,15 @@
           "value_type": "Value Type",
           "unit_of_measurement": "Unit of Measurement",
           "device_class": "Device Class",
-          "icon": "Custom Icon"
+          "icon": "Custom Icon",
+          "entity_category": "Entity Category"
         },
         "data_description": {
           "value_type": "Type of the sensor value: String, Number, Boolean, or Timestamp.",
           "unit_of_measurement": "Unit of measurement for the value (e.g., '°C', 'kWh'). Leave empty for none.",
           "device_class": "Device class for proper display and history handling (e.g., 'temperature', 'energy'). Leave empty for none.",
-          "icon": "Custom icon for this sensor (e.g., 'mdi:thermometer'). Leave empty to use the default 'mdi:api'."
+          "icon": "Custom icon for this sensor (e.g., 'mdi:thermometer'). Leave empty to use the default 'mdi:api'.",
+          "entity_category": "Optional: Mark this value sensor as Diagnostic (hidden from cloud/voice assistants). Leave empty for regular sensor. Note: Data sensors are always diagnostic."
         }
       },
       "composite_unit": {
@@ -117,14 +117,14 @@
       },
       "enum_definition": {
         "title": "Define Enum Values (Optional)",
-        "description": "For text sensors, you can optionally define a list of possible values (enum). This allows you to assign icons and translations to each value.",
+        "description": "For text sensors, you can optionally define a list of possible values (enum). This allows you to assign icons and translations to each value.\n\n**Note:** You don't need to know all possible values upfront. If the sensor encounters a new value, it will be automatically added to the configuration. You'll receive a notification to add translations for new values.",
         "data": {
           "define_enum": "Define Enum Values",
           "enum_values": "Enum Values"
         },
         "data_description": {
           "define_enum": "Enable this to define possible values for this text sensor.",
-          "enum_values": "Enter possible values separated by commas (e.g., 'open,closed,locked'). This field is only used if 'Define Enum Values' is enabled."
+          "enum_values": "Enter known values separated by commas (e.g., 'sunny,cloudy,rainy'). New values will be automatically added when discovered."
         }
       },
       "enum_icons": {
@@ -228,94 +228,105 @@
         }
       },
       "reconfigure": {
-        "title": "Reconfigure Action Result",
-        "description": "Update the service action configuration for this sensor.\n\nTo rename this entry, use Settings → Devices & Actions → [entry] → three-dot menu → Rename.",
+        "title": "Reconfigure Service Action",
+        "description": "Update the service action configuration for this sensor.\n\nTo rename this entry, use Settings → Devices & Actions → [entry] → three-dot menu → Rename.\n\nTo change update mode (polling, manual, state trigger), use the Options flow instead.",
         "data": {
-          "service_action": "Service Action",
-          "parent_device": "Parent Device",
+          "service_action": "Service Action"
+        },
+        "data_description": {
+          "service_action": "Select the service/action to call and configure its parameters. Use 'Show YAML' to paste or edit YAML directly."
+        }
+      },
+      "reconfigure_device_selection": {
+        "title": "Parent Device (Optional)",
+        "description": "Optionally associate this sensor with a device from the selected action's integration.\n\n**This is completely optional.** You can leave this empty to keep the sensor as is.",
+        "data": {
+          "parent_device": "Parent Device"
+        },
+        "data_description": {
+          "parent_device": "Select a device or leave empty. Empty = keep current device association."
+        }
+      },
+      "reconfigure_data_settings": {
+        "title": "Data Sensor Settings",
+        "description": "Configure how response data is stored in attributes.",
+        "data": {
+          "response_data_path": "Response Data Path",
+          "attribute_name": "Attribute Name"
+        },
+        "data_description": {
+          "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
+          "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
+        }
+      },
+      "reconfigure_value_path": {
+        "title": "Value Path Configuration",
+        "description": "Configure the path to extract the sensor value from the service response.",
+        "data": {
+          "response_data_path": "Response Data Path",
+          "response_data_path_attributes": "Attributes Data Path",
+          "include_response_data": "Include Full Response",
+          "attribute_name": "Attribute Name"
+        },
+        "data_description": {
+          "response_data_path": "Path to the value in the response (e.g., 'temperature' or 'sensors.0.value'). Leave empty for entire response.",
+          "response_data_path_attributes": "Optional: Path to extract additional attributes (e.g., 'metadata'). Leave empty to skip attributes extraction.",
+          "include_response_data": "Include full response data as attribute (in addition to the extracted value).",
+          "attribute_name": "Name of the attribute for full response data. Only used if 'Include Full Response' is enabled."
+        }
+      },
+      "reconfigure_value_configuration": {
+        "title": "Value Configuration",
+        "description": "Configure the value type, unit of measurement, device class, and icon.",
+        "data": {
+          "value_type": "Value Type",
+          "unit_of_measurement": "Unit of Measurement",
+          "device_class": "Device Class",
+          "icon": "Icon",
           "entity_category": "Entity Category"
         },
         "data_description": {
-          "service_action": "Select the service/action to call and configure its parameters. Use 'Show YAML' to paste or edit YAML directly.",
-          "parent_device": "Optional: Associate this sensor with a device from the same integration. Leave empty for standalone sensor or auto-generated device.",
-          "entity_category": "Optional: Mark this entity as Configuration or Diagnostic. Leave empty for regular sensor. Data sensors default to Diagnostic (hidden from cloud/voice assistants)."
+          "value_type": "The type of value this sensor will report (number, string, boolean, etc.).",
+          "unit_of_measurement": "Optional: Unit of measurement (e.g., °C, %, W). Use dropdown for common units or enter custom unit.",
+          "device_class": "Optional: Device class for better UI representation (temperature, humidity, power, etc.).",
+          "icon": "Optional: MDI icon to display (e.g., mdi:thermometer). Leave empty to use device class default.",
+          "entity_category": "Optional: Mark this value sensor as Diagnostic. Leave empty for regular sensor."
         }
       },
-      "reconfigure_update_mode": {
-        "title": "Update Mode",
-        "description": "Choose how the action should be called to update the sensor.",
+      "reconfigure_enum_definition": {
+        "title": "Enum Definition (Optional)",
+        "description": "Define a list of valid values for string sensors.\n\n**Automatic value learning:** If the sensor receives a value not in this list, it will be automatically added and you'll receive a notification to add translations.\n\nThis provides dropdown selection in dashboards and proper localization.",
         "data": {
-          "update_mode": "Update Mode"
+          "define_enum": "Define Enum Values",
+          "enum_values": "Enum Values"
         },
         "data_description": {
-          "update_mode": "How to trigger updates: Polling (cyclic at interval), Manual (via update_entity action), or Entity State Trigger (when another entity changes state)."
+          "define_enum": "Enable if this sensor should have a limited set of possible values (e.g., states, modes).",
+          "enum_values": "Comma-separated list of possible values (e.g., 'on,off,auto' or 'sunny,cloudy,rainy'). Values are automatically discovered if not initially known."
         }
       },
-      "reconfigure_polling_settings": {
-        "title": "Polling Settings",
-        "description": "Configure the polling interval for automatic updates.",
+      "reconfigure_enum_icons": {
+        "title": "Enum Icons (Optional)",
+        "description": "Assign Material Design Icons (MDI) to each enum value for better visual representation in the UI.",
+        "data_description": {
+          "[enum_value]": "MDI icon for this value (e.g., mdi:weather-sunny). Leave empty to use default."
+        }
+      },
+      "reconfigure_enum_translation_languages": {
+        "title": "Enum Translation Languages",
+        "description": "Select which languages you want to provide translations for.\n\nTranslations allow the sensor to display localized state values in the Home Assistant UI.",
         "data": {
-          "scan_interval": "Polling Interval"
+          "enum_translation_languages": "Languages to Translate"
         },
         "data_description": {
-          "scan_interval": "How often to call the action in seconds. Minimum 10 seconds."
-        },
-        "sections": {
-          "advanced_options": {
-            "name": "Advanced Options",
-            "data": {
-              "response_data_path": "Response Data Path",
-              "attribute_name": "Attribute Name"
-            },
-            "data_description": {
-              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
-              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
-            }
-          }
+          "enum_translation_languages": "Select one or more languages. You'll be able to enter translations for each enum value in the next step."
         }
       },
-      "reconfigure_state_trigger_settings": {
-        "title": "State Trigger Settings",
-        "description": "Configure which entity state changes should trigger an update.",
-        "data": {
-          "trigger_entity": "Trigger Entity",
-          "trigger_from_state": "Trigger From State",
-          "trigger_to_state": "Trigger To State"
-        },
+      "reconfigure_enum_translation": {
+        "title": "Enum Translations: {language}",
+        "description": "Enter translations for each enum value in {language}.\n\nThese translations will be displayed in the Home Assistant UI when the language is set to {language}.",
         "data_description": {
-          "trigger_entity": "Entity to watch for state changes.",
-          "trigger_from_state": "Only trigger when changing from this state (optional). Leave empty for any previous state.",
-          "trigger_to_state": "Only trigger when changing to this state (optional). Leave empty for any new state."
-        },
-        "sections": {
-          "advanced_options": {
-            "name": "Advanced Options",
-            "data": {
-              "response_data_path": "Response Data Path",
-              "attribute_name": "Attribute Name"
-            },
-            "data_description": {
-              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
-              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
-            }
-          }
-        }
-      },
-      "reconfigure_manual_settings": {
-        "title": "Manual Update Settings",
-        "description": "The sensor will only update when you call the homeassistant.update_entity action.",
-        "sections": {
-          "advanced_options": {
-            "name": "Advanced Options",
-            "data": {
-              "response_data_path": "Response Data Path",
-              "attribute_name": "Attribute Name"
-            },
-            "data_description": {
-              "response_data_path": "Optional path to extract data from the response (e.g., 'results.0.items'). Leave empty for full response.",
-              "attribute_name": "Name of the attribute that will contain the response data. Default is 'data'."
-            }
-          }
+          "[enum_value]": "Translation for '{enum_value}' in {language}"
         }
       }
     },
@@ -388,7 +399,6 @@
     },
     "entity_category": {
       "options": {
-        "config": "Configuration",
         "diagnostic": "Diagnostic"
       }
     }
@@ -443,6 +453,10 @@
     "trigger_entity_missing": {
       "title": "Trigger entity missing for {entry_name}",
       "description": "The trigger entity `{trigger_entity}` is no longer available. The integration is configured to update when this entity changes state, but it cannot be found.\n\nThis may be because:\n- The entity was deleted\n- The integration providing the entity was removed or disabled\n- The entity ID was changed\n\n**To fix this:**\n1. Check if the entity `{trigger_entity}` exists in your system\n2. Reconfigure this entry with a different trigger entity via the options flow\n3. Or change the update mode to polling or manual"
+    },
+    "enum_value_added": {
+      "title": "New enum value discovered for {sensor_name}",
+      "description": "The sensor `{sensor_name}` encountered a new value `{new_value}` that wasn't in the configured list of possible values.\n\nThe value has been automatically added to the configuration, but **translations are missing**.\n\n**To add translations:**\n1. Go to Settings → Devices & Services\n2. Find Action Result Entities integration\n3. Click on the sensor entry\n4. Click 'Reconfigure' (currently not available - use YAML for now)\n5. Add translations for the new value `{new_value}` in your preferred languages\n\n**Note:** The sensor will continue working with the new value. This notification is just to remind you to add proper translations for a better user experience."
     }
   }
 }

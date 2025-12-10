@@ -56,7 +56,7 @@ class ActionResultEntitiesEntity(CoordinatorEntity[ActionResultEntitiesDataUpdat
 
         # Check if we should associate with a parent device
         parent_device_id = coordinator.config_entry.data.get(CONF_PARENT_DEVICE, "")
-        via_device_tuple = None
+        parent_device_identifiers = None
 
         if parent_device_id:
             # Look up the parent device in the device registry
@@ -64,23 +64,19 @@ class ActionResultEntitiesEntity(CoordinatorEntity[ActionResultEntitiesDataUpdat
             parent_device = device_registry.async_get(parent_device_id)
 
             if parent_device and parent_device.identifiers:
-                # Use the first identifier as via_device
-                via_device_tuple = next(iter(parent_device.identifiers))
+                # Use the parent device's identifiers directly
+                # This makes our entity appear in the parent device's entity list
+                # Multiple integrations can share the same device this way
+                parent_device_identifiers = parent_device.identifiers
 
-        # Build device info - either standalone or associated with parent
-        if via_device_tuple:
-            # Associate with parent device
+        # Build device info - either standalone or shared with parent device
+        if parent_device_identifiers:
+            # Share the parent device - our entities appear directly in its entity list
+            # Add our integration identifier so we're listed as contributing to this device
             self._attr_device_info = DeviceInfo(
-                identifiers={
-                    (
-                        coordinator.config_entry.domain,
-                        coordinator.config_entry.entry_id,
-                    ),
-                },
-                name=entry_name,
-                manufacturer="Action Result Entities",
-                model="Action Response Bridge",
-                via_device=via_device_tuple,
+                identifiers=parent_device_identifiers,
+                # Note: We don't set name/manufacturer/model here
+                # Those come from the parent device's primary integration
             )
         else:
             # Standalone device

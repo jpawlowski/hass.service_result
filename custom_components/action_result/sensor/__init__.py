@@ -17,6 +17,7 @@ from custom_components.action_result.const import (
     CONF_ATTRIBUTE_NAME,
     CONF_DEFINE_ENUM,
     CONF_DEVICE_CLASS,
+    CONF_ENTITY_CATEGORY,
     CONF_ENUM_ICONS,
     CONF_ENUM_TRANSLATIONS,
     CONF_ENUM_VALUES,
@@ -30,9 +31,11 @@ from custom_components.action_result.const import (
     CONF_UNIT_OF_MEASUREMENT,
     CONF_VALUE_TYPE,
     DEFAULT_ATTRIBUTE_NAME,
+    DOMAIN,
     ERROR_TYPE_PERMANENT,
     ERROR_TYPE_TEMPORARY,
     PARALLEL_UPDATES as PARALLEL_UPDATES,
+    REPAIR_ISSUE_ENUM_VALUE_ADDED,
     SENSOR_TYPE_DATA,
     SENSOR_TYPE_VALUE,
     STATE_ERROR,
@@ -40,11 +43,14 @@ from custom_components.action_result.const import (
     STATE_RETRYING,
     STATE_UNAVAILABLE,
     VALUE_TYPE_NUMBER,
+    VALUE_TYPE_STRING,
     VALUE_TYPE_TIMESTAMP,
 )
 from custom_components.action_result.entity import ActionResultEntitiesEntity
 from custom_components.action_result.utils import extract_data_at_path
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
+from homeassistant.const import EntityCategory
+from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util import dt as dt_util
 
@@ -78,7 +84,7 @@ async def async_setup_entry(
     async_add_entities([sensor])
 
 
-class ServiceResultDataSensor(SensorEntity, ActionResultEntitiesEntity, RestoreEntity):
+class ServiceResultDataSensor(ActionResultEntitiesEntity, SensorEntity, RestoreEntity):
     """Data sensor that exposes service response data in attributes.
 
     This sensor type keeps the response data in attributes and uses the state
@@ -112,6 +118,12 @@ class ServiceResultDataSensor(SensorEntity, ActionResultEntitiesEntity, RestoreE
         # Set unrecorded attributes (must be set in __init__ since attribute_name is dynamic)
         attribute_name = entry.data.get(CONF_ATTRIBUTE_NAME, DEFAULT_ATTRIBUTE_NAME)
         self._attr_entity_component_unrecorded_attributes = frozenset({attribute_name, "response_path", "last_update"})
+
+        # Set entity_category if configured (only 'diagnostic' is supported for sensors)
+        entity_category = entry.data.get(CONF_ENTITY_CATEGORY, "")
+        if entity_category == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        # Note: 'config' is not supported for sensor entities - HA will raise an error
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to Home Assistant.
@@ -166,6 +178,14 @@ class ServiceResultDataSensor(SensorEntity, ActionResultEntitiesEntity, RestoreE
 
         data = self.coordinator.data
         if data and data.get("success"):
+            # Check if data extraction succeeded (for data sensors with response_path)
+            response_path = self._entry.data.get(CONF_RESPONSE_DATA_PATH, "")
+            if response_path:
+                response = data.get("response")
+                extracted_data = extract_data_at_path(response, response_path)
+                if extracted_data is None:
+                    # Data extraction failed - return error state
+                    return STATE_ERROR
             return STATE_OK
 
         return STATE_ERROR
@@ -193,19 +213,29 @@ class ServiceResultDataSensor(SensorEntity, ActionResultEntitiesEntity, RestoreE
             # Extract data at the specified path (if configured)
             extracted_data = extract_data_at_path(response, response_path)
 
-            # Use the configured attribute name
-            attributes[attribute_name] = extracted_data
-
-            # Add metadata
-            attributes["last_update"] = self.coordinator.data.get("last_update")
-            attributes["success"] = self.coordinator.data.get("success", False)
-
-            # Include path info if configured
-            if response_path:
+            # Check if data extraction failed when path was specified
+            if response_path and extracted_data is None:
+                # Data extraction failed - mark as error
+                attributes[attribute_name] = None
+                attributes["success"] = False
+                attributes["error_message"] = f"Failed to extract data at path: {response_path}"
                 attributes["response_path"] = response_path
+                # Mark sensor as unavailable since configured data path is invalid
+                self._attr_available = False
+            else:
+                # Use the configured attribute name
+                attributes[attribute_name] = extracted_data
 
-            if self.coordinator.data.get("error"):
-                attributes["error_message"] = self.coordinator.data.get("error")
+                # Add metadata
+                attributes["last_update"] = self.coordinator.data.get("last_update")
+                attributes["success"] = self.coordinator.data.get("success", False)
+
+                # Include path info if configured
+                if response_path:
+                    attributes["response_path"] = response_path
+
+                if self.coordinator.data.get("error"):
+                    attributes["error_message"] = self.coordinator.data.get("error")
         else:
             attributes[attribute_name] = None
             attributes["success"] = False
@@ -235,7 +265,7 @@ class ServiceResultDataSensor(SensorEntity, ActionResultEntitiesEntity, RestoreE
         return True
 
 
-class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, RestoreEntity):
+class ServiceResultValueSensor(ActionResultEntitiesEntity, SensorEntity, RestoreEntity):
     """Value sensor that extracts a value from service response and uses it as state.
 
     This sensor type extracts a specific value from the response and displays it
@@ -305,6 +335,12 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
                 self._attr_device_class = SensorDeviceClass.ENUM
                 # Set translation key for enum state translations
                 self._attr_translation_key = "action_result_enum"
+
+        # Set entity_category if configured (only 'diagnostic' is supported for sensors)
+        entity_category = entry.data.get(CONF_ENTITY_CATEGORY, "")
+        if entity_category == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        # Note: 'config' is not supported for sensor entities - HA will raise an error
 
     @property
     def icon(self) -> str | None:
@@ -390,6 +426,14 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
         value = extract_data_at_path(response, response_path)
 
         if value is None:
+            # Value extraction failed - mark sensor as unavailable
+            if response_path:  # Only if path was specified (empty path means use full response)
+                self.coordinator.logger.warning(
+                    "Failed to extract value at path '%s' for sensor %s",
+                    response_path,
+                    self.entity_id,
+                )
+                self._attr_available = False
             return None
 
         # Convert value to the configured value type
@@ -403,6 +447,16 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
                     value_type,
                     self.entity_id,
                 )
+                return None
+
+            # Handle automatic enum value learning for string enums
+            if (
+                value_type == VALUE_TYPE_STRING
+                and self._entry.data.get(CONF_DEFINE_ENUM, False)
+                and converted_value is not None
+            ):
+                self._handle_enum_value_learning(converted_value)
+
             return converted_value
 
         return value
@@ -477,3 +531,61 @@ class ServiceResultValueSensor(SensorEntity, ActionResultEntitiesEntity, Restore
 
         data = self.coordinator.data
         return bool(data and data.get("success"))
+
+    def _handle_enum_value_learning(self, value: str) -> None:
+        """Handle automatic enum value learning.
+
+        If a new enum value is encountered that's not in the configured list,
+        add it to the config entry and create a repair issue to notify the user
+        about missing translations.
+
+        Args:
+            value: The enum value to check and potentially add.
+        """
+        current_enum_values = self._entry.data.get(CONF_ENUM_VALUES, [])
+
+        # Check if value is already in the list
+        if value in current_enum_values:
+            return
+
+        # Value is new - add it to the config entry
+        self.coordinator.logger.info(
+            "Discovered new enum value '%s' for sensor %s - adding to configuration",
+            value,
+            self.entity_id,
+        )
+
+        # Create updated enum values list
+        updated_enum_values = list(current_enum_values)
+        updated_enum_values.append(value)
+
+        # Update config entry data
+        updated_data = dict(self._entry.data)
+        updated_data[CONF_ENUM_VALUES] = updated_enum_values
+
+        # Update options in the entity immediately
+        self._attr_options = updated_enum_values
+
+        # Schedule config entry update
+        self.hass.config_entries.async_update_entry(
+            self._entry,
+            data=updated_data,
+        )
+
+        # Create a repair issue to notify user about missing translations
+        issue_id = f"{REPAIR_ISSUE_ENUM_VALUE_ADDED}_{self._entry.entry_id}"
+        sensor_name = self._entry.data.get(CONF_NAME, "Unknown")
+
+        ir.async_create_issue(
+            self.hass,
+            DOMAIN,
+            issue_id,
+            is_fixable=True,
+            severity=ir.IssueSeverity.WARNING,
+            translation_key="enum_value_added",
+            translation_placeholders={
+                "sensor_name": sensor_name,
+                "new_value": value,
+                "entry_id": self._entry.entry_id,
+            },
+        )

@@ -173,15 +173,14 @@ def get_device_selection_schema(
     defaults = defaults or {}
 
     # Build device selector filtered by integration domain
-    device_selector_config = None
     if integration_domain:
-        device_selector_config = selector.DeviceSelectorConfig(
-            integration=integration_domain,
+        device_selector = selector.DeviceSelector(
+            selector.DeviceSelectorConfig(
+                integration=integration_domain,
+            )
         )
-
-    device_selector = (
-        selector.DeviceSelector(device_selector_config) if device_selector_config else selector.DeviceSelector()
-    )
+    else:
+        device_selector = selector.DeviceSelector()
 
     return vol.Schema(
         {
@@ -223,16 +222,6 @@ def get_user_schema(defaults: Mapping[str, Any] | None = None) -> vol.Schema:
                 CONF_SERVICE_ACTION,
                 default=defaults.get(CONF_SERVICE_ACTION, vol.UNDEFINED),
             ): selector.ActionSelector(),
-            vol.Optional(
-                CONF_ENTITY_CATEGORY,
-                default=defaults.get(CONF_ENTITY_CATEGORY, vol.UNDEFINED),
-            ): selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=["config", "diagnostic"],
-                    mode=selector.SelectSelectorMode.DROPDOWN,
-                    translation_key="entity_category",
-                ),
-            ),
         },
     )
 
@@ -384,6 +373,17 @@ def get_value_configuration_schema(defaults: Mapping[str, Any] | None = None) ->
                 CONF_ICON,
                 default=defaults.get(CONF_ICON, ""),
             ): selector.IconSelector(),
+            vol.Optional(
+                CONF_ENTITY_CATEGORY,
+                # Use 'or vol.UNDEFINED' to treat empty strings as UNDEFINED (no default)
+                default=defaults.get(CONF_ENTITY_CATEGORY, vol.UNDEFINED) or vol.UNDEFINED,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=["diagnostic"],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                    translation_key="entity_category",
+                ),
+            ),
         },
     )
 
@@ -447,6 +447,21 @@ def get_enum_definition_schema(defaults: Mapping[str, Any] | None = None) -> vol
     """
     defaults = defaults or {}
 
+    # Get current value if available to prefill
+    enum_values_default = defaults.get(CONF_ENUM_VALUES, "")
+
+    # If current value is provided, include it in the default
+    current_value = defaults.get("_current_value")
+    if current_value and enum_values_default:
+        # Ensure current value is in the list
+        values_list = [v.strip() for v in str(enum_values_default).split(",") if v.strip()]
+        if current_value not in values_list:
+            values_list.insert(0, current_value)
+            enum_values_default = ", ".join(values_list)
+    elif current_value and not enum_values_default:
+        # Only current value - use it as default
+        enum_values_default = current_value
+
     return vol.Schema(
         {
             vol.Optional(
@@ -455,7 +470,7 @@ def get_enum_definition_schema(defaults: Mapping[str, Any] | None = None) -> vol
             ): selector.BooleanSelector(),
             vol.Optional(
                 CONF_ENUM_VALUES,
-                default=defaults.get(CONF_ENUM_VALUES, ""),
+                default=enum_values_default,
             ): selector.TextSelector(
                 selector.TextSelectorConfig(
                     type=selector.TextSelectorType.TEXT,
@@ -725,7 +740,8 @@ def get_state_trigger_settings_schema(defaults: Mapping[str, Any] | None = None)
         {
             vol.Optional(
                 CONF_TRIGGER_ENTITY,
-                default=defaults.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED),
+                # Use 'or vol.UNDEFINED' to treat empty strings as UNDEFINED (no default)
+                default=defaults.get(CONF_TRIGGER_ENTITY, vol.UNDEFINED) or vol.UNDEFINED,
             ): selector.EntitySelector(),
             vol.Optional(
                 CONF_TRIGGER_FROM_STATE,
@@ -780,6 +796,11 @@ def get_reconfigure_schema(current_data: Mapping[str, Any], integration_domain: 
     Returns:
         Voluptuous schema for reconfiguration.
     """
+    _LOGGER.debug(
+        "get_reconfigure_schema: integration_domain=%s, current_data keys=%s",
+        integration_domain,
+        list(current_data.keys()),
+    )
     # Build action default from domain/name if present
     service_action = current_data.get(CONF_SERVICE_ACTION, {})
     if not service_action:
@@ -790,38 +811,28 @@ def get_reconfigure_schema(current_data: Mapping[str, Any], integration_domain: 
             service_action = {"action": f"{domain}.{name}"}
 
     # Build device selector with optional integration filter
-    device_selector_config = None
     if integration_domain:
-        device_selector_config = selector.DeviceSelectorConfig(
+        config = selector.DeviceSelectorConfig(
             integration=integration_domain,
         )
+        _LOGGER.debug("Creating DeviceSelector with config: integration=%s", integration_domain)
+        device_selector = selector.DeviceSelector(config)
+        _LOGGER.debug("DeviceSelector created: %s", device_selector)
+    else:
+        _LOGGER.debug("Creating DeviceSelector without integration filter")
+        device_selector = selector.DeviceSelector()
 
-    device_selector = (
-        selector.DeviceSelector(device_selector_config) if device_selector_config else selector.DeviceSelector()
-    )
-
-    return vol.Schema(
+    schema = vol.Schema(
         {
             vol.Optional(
                 CONF_SERVICE_ACTION,
                 default=service_action if service_action else vol.UNDEFINED,
             ): selector.ActionSelector(),
-            vol.Optional(
-                CONF_PARENT_DEVICE,
-                default=current_data.get(CONF_PARENT_DEVICE, ""),
-            ): device_selector,
-            vol.Optional(
-                CONF_ENTITY_CATEGORY,
-                default=current_data.get(CONF_ENTITY_CATEGORY, vol.UNDEFINED),
-            ): selector.SelectSelector(
-                selector.SelectSelectorConfig(
-                    options=["config", "diagnostic"],
-                    mode=selector.SelectSelectorMode.DROPDOWN,
-                    translation_key="entity_category",
-                ),
-            ),
         },
     )
+
+    _LOGGER.debug("Reconfigure schema: service_action only")
+    return schema
 
 
 __all__ = [
